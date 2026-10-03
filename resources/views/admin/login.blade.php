@@ -13,7 +13,7 @@
 </head>
 <body class="flex min-h-screen items-center justify-center bg-soft px-5 text-ink antialiased">
     <div class="w-full max-w-sm">
-        <a href="{{ route('home') }}" class="display block text-center text-5xl">{{ $siteName }}<span class="text-brand-500">.</span></a>
+        <a href="{{ route('home') }}" class="display block text-center text-5xl text-brand-500 transition-colors hover:text-brand-700">{{ $siteName }}<span class="text-brand-300">.</span></a>
         <p class="mt-1 text-center text-sm text-muted">Admin panel</p>
 
         <form method="POST" action="{{ route('admin.login.post') }}" class="mt-8 space-y-4 rounded-3xl border border-line bg-white p-7 shadow-sm">

@@ -15,8 +15,13 @@ document.documentElement.classList.add('js');
     const io = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('in');
-                io.unobserve(entry.target);
+                const el = entry.target;
+                el.classList.add('in');
+                io.unobserve(el);
+
+                // Once it has faded in, drop the reveal classes so hover and press effects animate normally.
+                const delay = parseInt(getComputedStyle(el).getPropertyValue('--d'), 10) || 0;
+                setTimeout(() => el.classList.remove('reveal', 'in'), 760 + delay);
             }
         });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
@@ -180,3 +185,95 @@ document.querySelectorAll('.ba').forEach((root) => {
     range.addEventListener('input', set);
     set();
 });
+
+// Click feedback --------------------------------------------------------------------------
+
+// Ripple from the pointer on buttons and on anything marked data-ripple.
+(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    document.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0) return;
+
+        const el = e.target.closest('.btn, .btn-primary, .btn-dark, .btn-ghost, .btn-light, [data-ripple]');
+        if (!el || el.disabled) return;
+
+        const rect = el.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 2.2;
+        const dot = document.createElement('span');
+
+        dot.className = 'ripple';
+        dot.style.width = dot.style.height = size + 'px';
+        dot.style.left = (e.clientX - rect.left - size / 2) + 'px';
+        dot.style.top = (e.clientY - rect.top - size / 2) + 'px';
+
+        if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+        el.style.overflow = 'hidden';
+        el.appendChild(dot);
+        dot.addEventListener('animationend', () => dot.remove());
+        setTimeout(() => dot.remove(), 900); // safety net if the animation never reports back (hidden tab)
+    });
+})();
+
+// Submit buttons: spinner + disabled while the form is being sent (stops double submits).
+document.addEventListener('submit', (e) => {
+    const form = e.target;
+
+    // A confirm() on the form (delete buttons) or validation may have cancelled it already.
+    if (e.defaultPrevented || form.hasAttribute('data-no-loading')) return;
+
+    const button = form.querySelector('button[type=submit], button:not([type])');
+    if (!button || button.dataset.loading === '1') return;
+
+    button.dataset.loading = '1';
+
+    // Disable on the next tick so the browser still submits the form normally.
+    setTimeout(() => {
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner';
+        button.prepend(spinner);
+        button.classList.add('opacity-80', 'pointer-events-none');
+        button.setAttribute('aria-busy', 'true');
+    }, 0);
+
+    // If the page does not change (e.g. the browser blocks the request), allow another try.
+    setTimeout(() => {
+        button.dataset.loading = '';
+        button.classList.remove('opacity-80', 'pointer-events-none');
+        button.removeAttribute('aria-busy');
+        button.querySelector('.spinner')?.remove();
+    }, 15000);
+});
+
+// Thin progress bar while the next page loads.
+(() => {
+    const bar = document.createElement('div');
+    bar.id = 'nav-progress';
+    document.body.appendChild(bar);
+
+    const reset = () => {
+        bar.classList.remove('run');
+        bar.style.transition = 'none';
+        bar.style.width = '0';
+        bar.offsetWidth; // restart the transition next time
+        bar.style.transition = '';
+    };
+
+    window.addEventListener('pageshow', reset);
+
+    document.addEventListener('click', (e) => {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+        const a = e.target.closest('a[href]');
+        if (!a || a.target === '_blank' || a.hasAttribute('download') || a.hasAttribute('data-lightbox')) return;
+
+        const url = new URL(a.href, location.href);
+        if (url.origin !== location.origin || (url.pathname === location.pathname && url.search === location.search)) return;
+
+        bar.classList.add('run');
+    });
+
+    document.addEventListener('submit', (e) => {
+        if (!e.defaultPrevented) bar.classList.add('run');
+    });
+})();

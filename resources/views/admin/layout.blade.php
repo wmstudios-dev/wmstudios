@@ -20,7 +20,7 @@
 
     <aside class="shrink-0 border-b border-line bg-white lg:sticky lg:top-0 lg:h-screen lg:w-64 lg:overflow-y-auto lg:border-b-0 lg:border-r">
         <div class="flex items-center justify-between px-5 py-4 lg:block lg:py-6">
-            <a href="{{ route('admin.dashboard') }}" class="display text-3xl">{{ $siteName }}<span class="text-brand-500">.</span> <span class="ml-1 align-middle text-[0.65rem] font-sans font-semibold normal-case tracking-wider text-muted">ADMIN</span></a>
+            <a href="{{ route('admin.dashboard') }}" class="display text-3xl text-brand-500 transition-colors hover:text-brand-700">{{ $siteName }}<span class="text-brand-300">.</span> <span class="ml-1 align-middle text-[0.65rem] font-sans font-semibold normal-case tracking-wider text-muted">ADMIN</span></a>
             <a href="{{ route('home') }}" target="_blank" class="text-xs font-medium text-brand-600 hover:underline lg:mt-2 lg:block">View site &nearr;</a>
         </div>
 

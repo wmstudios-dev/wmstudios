@@ -1,6 +1,6 @@
 {{-- Article card. $thought, optional $delay. --}}
 @php $cover = $thought->coverUrl(true); @endphp
-<a href="{{ route('thoughts.show', $thought) }}" class="reveal group block" style="--d: {{ $delay ?? 0 }}ms">
+<a href="{{ route('thoughts.show', $thought) }}" class="reveal group block transition-transform duration-200 active:scale-[0.98]" style="--d: {{ $delay ?? 0 }}ms">
     <div class="relative aspect-[16/10] overflow-hidden rounded-3xl bg-soft">
         @if($cover)
             <img src="{{ $cover }}" alt="" loading="lazy" class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">

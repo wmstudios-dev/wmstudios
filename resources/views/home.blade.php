@@ -106,7 +106,7 @@
                 $span = $inLastRow ? ($remainder === 2 ? 'lg:col-span-3' : 'lg:col-span-6') : 'lg:col-span-2';
             @endphp
             <a href="{{ route('services') }}#{{ $service->slug }}"
-               class="reveal group flex flex-col rounded-3xl bg-soft p-7 {{ $span }} transition-all duration-300 hover:-translate-y-1 hover:bg-brand-500 hover:shadow-xl hover:shadow-brand-500/20"
+               class="reveal group flex flex-col rounded-3xl bg-soft p-7 {{ $span }} active:scale-[0.98] transition-all duration-300 hover:-translate-y-1 hover:bg-brand-500 hover:shadow-xl hover:shadow-brand-500/20"
                style="--d: {{ ($loop->index % 3) * 70 }}ms">
                 <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-brand-500 transition-colors duration-300 group-hover:bg-white/15 group-hover:text-white">
                     <x-icon :name="$service->icon" class="h-6 w-6" />

@@ -53,14 +53,14 @@
                 @if($logo)
                     <img src="{{ $logo }}" alt="{{ $siteName }}" class="h-8 w-auto transition-transform duration-300 group-hover:scale-105">
                 @else
-                    <span class="display text-[1.7rem] text-ink transition-colors duration-200 group-hover:text-brand-500">{{ $siteName }}<span class="text-brand-500 transition-colors duration-200 group-hover:text-ink">.</span></span>
+                    <span class="display text-[1.7rem] text-brand-500 transition-all duration-200 group-hover:text-brand-700 group-active:scale-95">{{ $siteName }}<span class="text-brand-300 transition-colors duration-200 group-hover:text-brand-500">.</span></span>
                 @endif
             </a>
 
             <nav class="hidden items-center gap-1 md:flex" aria-label="Main">
                 @foreach($navItems as [$route, $pattern, $label])
                     <a href="{{ route($route) }}"
-                       class="rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs($pattern) ? 'bg-brand-50 text-brand-600' : 'text-ink/70 hover:bg-soft hover:text-ink' }}">{{ __($label) }}</a>
+                       class="rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 {{ request()->routeIs($pattern) ? 'bg-brand-50 text-brand-600' : 'text-ink/70 hover:bg-soft hover:text-ink' }}">{{ __($label) }}</a>
                 @endforeach
             </nav>
 
@@ -73,7 +73,7 @@
                 <a href="{{ route('contact') }}" class="btn-primary hidden !px-5 !py-2.5 sm:inline-flex">{{ __('site.nav.lets_talk') }}</a>
 
                 <button id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="{{ __('site.nav.menu') }}"
-                        class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-brand-300 md:hidden">
+                        class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-all hover:border-brand-300 active:scale-90 md:hidden">
                     <x-icon name="menu" class="h-5 w-5" />
                 </button>
             </div>
@@ -106,7 +106,7 @@
                     @if($logo)
                         <img src="{{ $logo }}" alt="{{ $siteName }}" class="h-9 w-auto brightness-0 invert">
                     @else
-                        <p class="display text-5xl">{{ $siteName }}<span class="text-brand-400">.</span></p>
+                        <p class="display text-5xl text-brand-400">{{ $siteName }}<span class="text-brand-200">.</span></p>
                     @endif
                     <p class="mt-4 max-w-sm text-sm leading-relaxed text-white/60">{{ Setting::t('footer_note', __('site.footer.default_note')) }}</p>
                     <div class="mt-6">
@@ -152,7 +152,7 @@
 
     @if($whatsappUrl)
         <a href="{{ $whatsappUrl }}" target="_blank" rel="noopener" aria-label="WhatsApp"
-           class="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#25d366] text-white shadow-lg shadow-black/20 transition-all duration-200 hover:scale-110 hover:shadow-xl active:scale-95 print:hidden">
+           class="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#25d366] text-white shadow-lg shadow-black/20 transition-all duration-200 hover:scale-110 hover:shadow-xl active:scale-90 print:hidden" data-ripple>
             <x-icon name="whatsapp" class="h-7 w-7" />
         </a>
     @endif

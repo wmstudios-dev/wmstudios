@@ -9,10 +9,10 @@
 <section class="mx-auto max-w-7xl px-5 sm:px-8">
     <div class="flex flex-wrap gap-2">
         <a href="{{ route('works.index') }}"
-           class="rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 {{ ! $category ? 'border-brand-500 bg-brand-500 text-white' : 'border-line text-ink hover:border-brand-300 hover:text-brand-600' }}">{{ __('site.categories.all') }}</a>
+           class="rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 active:scale-95 {{ ! $category ? 'border-brand-500 bg-brand-500 text-white' : 'border-line text-ink hover:border-brand-300 hover:text-brand-600' }}">{{ __('site.categories.all') }}</a>
         @foreach($categories as $cat)
             <a href="{{ route('works.index', ['c' => $cat]) }}"
-               class="rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 {{ $category === $cat ? 'border-brand-500 bg-brand-500 text-white' : 'border-line text-ink hover:border-brand-300 hover:text-brand-600' }}">{{ __('site.categories.' . $cat) }}</a>
+               class="rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 active:scale-95 {{ $category === $cat ? 'border-brand-500 bg-brand-500 text-white' : 'border-line text-ink hover:border-brand-300 hover:text-brand-600' }}">{{ __('site.categories.' . $cat) }}</a>
         @endforeach
     </div>
 

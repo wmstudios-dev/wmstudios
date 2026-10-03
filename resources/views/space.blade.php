@@ -10,10 +10,10 @@
     @if($tags->count() > 1)
         <div class="flex flex-wrap gap-2">
             <a href="{{ route('space') }}"
-               class="rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 {{ ! $tag ? 'border-brand-500 bg-brand-500 text-white' : 'border-line text-ink hover:border-brand-300 hover:text-brand-600' }}">{{ __('site.categories.all') }}</a>
+               class="rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 active:scale-95 {{ ! $tag ? 'border-brand-500 bg-brand-500 text-white' : 'border-line text-ink hover:border-brand-300 hover:text-brand-600' }}">{{ __('site.categories.all') }}</a>
             @foreach($tags as $t)
                 <a href="{{ route('space', ['tag' => $t]) }}"
-                   class="rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 {{ $tag === $t ? 'border-brand-500 bg-brand-500 text-white' : 'border-line text-ink hover:border-brand-300 hover:text-brand-600' }}">{{ __('site.space.tags.' . $t) }}</a>
+                   class="rounded-full border px-5 py-2 text-sm font-semibold transition-all duration-200 active:scale-95 {{ $tag === $t ? 'border-brand-500 bg-brand-500 text-white' : 'border-line text-ink hover:border-brand-300 hover:text-brand-600' }}">{{ __('site.space.tags.' . $t) }}</a>
             @endforeach
         </div>
     @endif
