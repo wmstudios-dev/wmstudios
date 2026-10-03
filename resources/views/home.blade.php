@@ -98,25 +98,30 @@
     </div>
 
     @if($clients->isNotEmpty())
+        {{-- Brands we have worked with. A few logos sit evenly in a row; many scroll as a marquee. --}}
+        @php $scrolling = $clients->count() > 5; @endphp
         <div class="relative">
             <div class="mx-auto max-w-7xl px-5 sm:px-8">
-                <div class="flex items-center gap-8 border-t border-white/20 py-7">
-                    <p class="hidden shrink-0 text-xs font-medium text-white/70 sm:block">{{ __('site.hero.trusted') }}</p>
-                    <div class="marquee relative min-w-0 flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
-                        <div class="marquee-track flex w-max items-center gap-14">
-                            @foreach([1, 2] as $copy)
-                                @foreach($clients as $client)
-                                    <span class="flex shrink-0 items-center" @if($copy === 2) aria-hidden="true" @endif>
-                                        @if($client->logoUrl())
-                                            <img src="{{ $client->logoUrl() }}" alt="{{ $client->name }}" loading="lazy" class="h-8 w-auto opacity-70 brightness-0 invert transition hover:opacity-100">
-                                        @else
-                                            <span class="display text-2xl text-white/70 transition-colors hover:text-white">{{ $client->name }}</span>
-                                        @endif
-                                    </span>
+                <div class="flex flex-col gap-5 border-t border-white/20 py-7 sm:flex-row sm:items-center sm:gap-10">
+                    <p class="max-w-[10rem] shrink-0 text-xs font-medium leading-snug text-white/70">{{ __('site.hero.trusted') }}</p>
+
+                    @if($scrolling)
+                        <div class="marquee relative min-w-0 flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+                            <div class="marquee-track flex w-max items-center gap-14">
+                                @foreach([1, 2] as $copy)
+                                    @foreach($clients as $client)
+                                        @include('partials.client-logo', ['client' => $client, 'hidden' => $copy === 2])
+                                    @endforeach
                                 @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <div class="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-x-10 gap-y-5">
+                            @foreach($clients as $client)
+                                @include('partials.client-logo', ['client' => $client])
                             @endforeach
                         </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>

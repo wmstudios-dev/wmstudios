@@ -218,7 +218,7 @@ class AdminResources
 
             'clients' => [
                 'model' => Client::class,
-                'label' => 'Clients',
+                'label' => 'Clients (brands you worked with)',
                 'singular' => 'client',
                 'nav' => 'Clients',
                 'search' => ['name'],
@@ -229,7 +229,7 @@ class AdminResources
                     ['label' => 'Active', 'field' => 'is_active', 'type' => 'bool'],
                 ],
                 'fields' => [
-                    ['name' => 'name', 'label' => 'Client name', 'type' => 'text', 'required' => true],
+                    ['name' => 'name', 'label' => 'Brand / client name', 'type' => 'text', 'required' => true, 'hint' => 'Shown in the "Trusted by" row on the home page (as the logo, or as text when there is no logo).'],
                     ['name' => 'logo', 'label' => 'Logo', 'type' => 'image', 'folder' => 'clients', 'hint' => 'A white or transparent-background logo looks best.'],
                     ['name' => 'url', 'label' => 'Website', 'type' => 'url'],
                     ['name' => 'is_active', 'label' => 'Visible on the site', 'type' => 'checkbox', 'default' => true],

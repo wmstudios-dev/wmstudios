@@ -30,7 +30,7 @@ return [
         'subtitle' => 'We help businesses show up through social media, documentation, design, photo & video production, and clean, fast websites.',
         'cta_primary' => 'Start a project',
         'cta_secondary' => 'See our work',
-        'trusted' => 'Trusted by',
+        'trusted' => 'Trusted by local & national brands',
         'free_note' => 'Free first consultation. No obligation.',
         'card_label' => 'Creative services',
     ],

@@ -30,7 +30,7 @@ return [
         'subtitle' => 'Kami membantu bisnis tampil lewat sosial media, dokumentasi, desain, produksi foto & video, serta website yang rapi dan cepat.',
         'cta_primary' => 'Mulai proyek',
         'cta_secondary' => 'Lihat karya',
-        'trusted' => 'Dipercaya oleh',
+        'trusted' => 'Dipercaya brand lokal & nasional',
         'free_note' => 'Konsultasi awal gratis, tanpa kewajiban.',
         'card_label' => 'Layanan kreatif',
     ],
