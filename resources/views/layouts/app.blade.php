@@ -57,7 +57,7 @@
                 @if($logo)
                     <img src="{{ $logo }}" alt="{{ $siteName }}" class="h-8 w-auto transition-transform duration-300 group-hover:scale-105">
                 @else
-                    <span class="display text-[1.7rem] text-brand-500 transition-all duration-200 group-hover:text-brand-700 group-active:scale-95 group-data-[over-hero=true]/header:text-white group-data-[over-hero=true]/header:group-hover:text-white">{{ $siteName }}<span class="text-brand-300 transition-colors duration-200 group-hover:text-brand-500 group-data-[over-hero=true]/header:text-lime group-data-[over-hero=true]/header:group-hover:text-lime">.</span></span>
+                    <span class="display inline-flex text-[1.7rem] transition-transform duration-200 group-active:scale-95"><span class="logo-word">{{ $siteName }}</span><span class="logo-dot">.</span></span>
                 @endif
             </a>
 
@@ -112,7 +112,7 @@
                     @if($logo)
                         <img src="{{ $logo }}" alt="{{ $siteName }}" class="h-9 w-auto brightness-0 invert">
                     @else
-                        <p class="display text-5xl text-brand-400">{{ $siteName }}<span class="text-brand-200">.</span></p>
+                        <a href="{{ route('home') }}" class="group display inline-flex text-5xl" aria-label="{{ $siteName }}"><span class="logo-word on-dark">{{ $siteName }}</span><span class="logo-dot on-dark">.</span></a>
                     @endif
                     <p class="mt-4 max-w-sm text-sm leading-relaxed text-white/60">{{ Setting::t('footer_note', __('site.footer.default_note')) }}</p>
                     <div class="mt-6">

@@ -338,3 +338,67 @@
 .overlay.open {
     @apply flex;
 }
+
+/* Logo: on hover the colour is wiped across the letters from left to right */
+.logo-word {
+    --a: var(--color-brand-500);
+    --b: var(--color-brand-700);
+    display: inline-block;
+    color: transparent;
+    background-image: linear-gradient(90deg, var(--b) 50%, var(--a) 50%);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    transition: background-position 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.logo-dot {
+    color: var(--color-brand-300);
+    transition: color 0.3s ease;
+}
+
+a:hover > .logo-word,
+a:hover > * > .logo-word,
+.group:hover .logo-word {
+    background-position: 0 0;
+}
+
+.group:hover .logo-dot {
+    color: var(--color-brand-500);
+}
+
+/* Over the blue hero (home page, top of the page) */
+[data-over-hero='true'] .logo-word {
+    --a: #fff;
+    --b: var(--color-lime);
+}
+
+[data-over-hero='true'] .logo-dot {
+    color: var(--color-lime);
+}
+
+[data-over-hero='true'] .group:hover .logo-dot {
+    color: #fff;
+}
+
+/* Footer (dark background) */
+.logo-word.on-dark {
+    --a: var(--color-brand-400);
+    --b: var(--color-lime);
+}
+
+.logo-dot.on-dark {
+    color: var(--color-brand-200);
+}
+
+.group:hover .logo-dot.on-dark {
+    color: var(--color-lime);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logo-word,
+    .logo-dot {
+        transition: none;
+    }
+}
