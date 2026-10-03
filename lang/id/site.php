@@ -31,6 +31,8 @@ return [
         'cta_primary' => 'Mulai proyek',
         'cta_secondary' => 'Lihat karya',
         'trusted' => 'Dipercaya oleh',
+        'free_note' => 'Konsultasi awal gratis, tanpa kewajiban.',
+        'card_label' => 'Layanan kreatif',
     ],
 
     'home' => [

@@ -31,6 +31,8 @@ return [
         'cta_primary' => 'Start a project',
         'cta_secondary' => 'See our work',
         'trusted' => 'Trusted by',
+        'free_note' => 'Free first consultation. No obligation.',
+        'card_label' => 'Creative services',
     ],
 
     'home' => [

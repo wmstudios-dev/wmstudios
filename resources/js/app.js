@@ -36,7 +36,12 @@ document.documentElement.classList.add('js');
     const menu = document.getElementById('mobile-menu');
 
     if (header) {
-        const onScroll = () => header.classList.toggle('shadow-sm', window.scrollY > 8);
+        const hasHero = !!document.querySelector('[data-hero]');
+        const onScroll = () => {
+            header.classList.toggle('shadow-sm', window.scrollY > 8);
+            // On the home page the header floats over the blue hero until you scroll.
+            if (hasHero) header.dataset.overHero = window.scrollY > 8 ? 'false' : 'true';
+        };
         onScroll();
         window.addEventListener('scroll', onScroll, { passive: true });
     }

@@ -22,60 +22,106 @@
 @endphp
 
 @section('content')
-{{-- Hero --}}
-<section class="relative overflow-hidden">
-    <div class="pointer-events-none absolute -right-40 -top-40 h-[34rem] w-[34rem] rounded-full bg-brand-100/70 blur-3xl"></div>
+{{-- Hero: one blue block that also holds the header, like the reference --}}
+<section data-hero class="relative -mt-16 overflow-hidden rounded-bl-[3.5rem] rounded-br-[1.5rem] bg-gradient-to-tr from-brand-500 via-brand-500 to-brand-400 text-white sm:rounded-bl-[6rem] sm:rounded-br-[2rem]">
+    <div class="pointer-events-none absolute -right-32 -top-32 h-[30rem] w-[30rem] rounded-full bg-white/10 blur-3xl"></div>
+    <div class="pointer-events-none absolute -bottom-40 left-1/4 h-[26rem] w-[26rem] rounded-full bg-brand-700/40 blur-3xl"></div>
 
-    <div class="relative mx-auto max-w-7xl px-5 pb-16 pt-12 sm:px-8 sm:pb-20 sm:pt-16">
-        <p class="reveal chip bg-brand-50 text-brand-600"><span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>{{ __('site.hero.eyebrow') }}</p>
+    <div class="relative mx-auto max-w-7xl px-5 pb-10 pt-28 sm:px-8 lg:pt-32">
+        <div class="grid items-start gap-6 lg:grid-cols-12">
 
-        <h1 class="display reveal mt-6 max-w-6xl text-[3.6rem] text-ink sm:text-[7rem] lg:text-[8rem]" style="--d: 60ms">
-            @foreach($words as $i => $word)
-                {{ $word }}
-                @if(($slot = array_search($i, $slots, true)) !== false)
-                    @php $pill = $pills[$slot] ?? null; @endphp
-                    @if($pill)
-                        <span class="bob relative -mt-1 inline-block h-[0.62em] w-[1.35em] overflow-hidden rounded-full align-middle {{ $pill['bg'] }}" style="--r: {{ $pill['rot'] }}">
-                            @if($pill['photo'])
-                                <img src="{{ $pill['photo'] }}" alt="" class="h-full w-full object-cover">
+            {{-- Left card: real numbers only --}}
+            <div class="reveal hidden lg:col-span-2 lg:block">
+                <div class="w-36 rounded-3xl bg-butter p-5 text-ink shadow-lg shadow-ink/10 transition-transform duration-300 hover:-translate-y-1 hover:rotate-[-2deg]">
+                    <x-icon name="spark" class="h-6 w-6 text-brand-600" />
+                    <p class="display mt-6 text-6xl leading-none">{{ $services->count() ?: '5' }}</p>
+                    <p class="mt-1 text-[0.7rem] font-bold uppercase leading-tight tracking-wider">{{ __('site.hero.card_label') }}</p>
+                </div>
+            </div>
+
+            {{-- Headline --}}
+            <div class="lg:col-span-8 lg:text-center">
+                <p class="reveal chip bg-white/15 text-white backdrop-blur"><span class="h-1.5 w-1.5 rounded-full bg-lime"></span>{{ __('site.hero.eyebrow') }}</p>
+
+                <h1 class="display reveal mt-6 text-[3.4rem] text-white sm:text-[6rem] lg:text-[6.2rem] xl:text-[6.8rem]" style="--d: 60ms">
+                    @foreach($words as $i => $word)
+                        <span class="whitespace-nowrap @if($loop->last) text-lime @endif">@if($loop->last && $count > 2)<x-icon name="arrow" class="mr-1 inline-block h-[0.55em] w-[0.55em] -translate-y-[0.06em] text-white" stroke="2.6" />@endif{{ $word }}</span>
+                        @if(($slot = array_search($i, $slots, true)) !== false)
+                            @php $pill = $pills[$slot] ?? null; @endphp
+                            @if($pill)
+                                <span class="bob relative -mt-1 inline-block h-[0.62em] w-[1.35em] overflow-hidden rounded-full align-middle {{ $pill['bg'] }}" style="--r: {{ $pill['rot'] }}">
+                                    @if($pill['photo'])
+                                        <img src="{{ $pill['photo'] }}" alt="" class="h-full w-full object-cover">
+                                    @else
+                                        <span class="flex h-full w-full items-center justify-center text-ink/40"><x-icon :name="$pill['icon']" class="h-[0.36em] w-[0.36em]" stroke="1.6" /></span>
+                                    @endif
+                                </span>
+                            @endif
+                        @endif
+                    @endforeach
+                </h1>
+            </div>
+
+            {{-- Right card: a featured project --}}
+            <div class="reveal hidden lg:col-span-2 lg:flex lg:justify-end lg:self-end" style="--d: 120ms">
+                @php $feature = $works->first(); @endphp
+                @if($feature)
+                    <a href="{{ route('works.show', $feature) }}" class="group block w-44 overflow-hidden rounded-3xl bg-white shadow-xl shadow-ink/20 transition-all duration-300 hover:-translate-y-1.5 hover:rotate-2 active:scale-95">
+                        <span class="block aspect-[4/5] overflow-hidden bg-brand-100">
+                            @if($feature->coverUrl(true))
+                                <img src="{{ $feature->coverUrl(true) }}" alt="" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
                             @else
-                                <span class="flex h-full w-full items-center justify-center text-ink/40"><x-icon :name="$pill['icon']" class="h-[0.36em] w-[0.36em]" stroke="1.6" /></span>
+                                <span class="flex h-full w-full items-center justify-center text-brand-300"><x-icon name="image" class="h-12 w-12" stroke="1.2" /></span>
                             @endif
                         </span>
-                    @endif
+                        <span class="flex items-center justify-between gap-2 bg-lime px-4 py-3 text-sm font-bold text-ink">
+                            <span class="truncate">{{ $feature->t('title') }}</span>
+                            <x-icon name="arrow-up-right" class="h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" stroke="2.4" />
+                        </span>
+                    </a>
                 @endif
-            @endforeach
-        </h1>
+            </div>
+        </div>
 
-        <p class="reveal mt-8 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl" style="--d: 120ms">{{ $subtitle }}</p>
+        {{-- Subtitle + call to action --}}
+        <div class="mt-8 grid items-start gap-8 lg:mt-8 lg:grid-cols-12">
+            <p class="reveal max-w-md text-base leading-relaxed text-white/85 lg:col-span-4 lg:text-sm" style="--d: 120ms">{{ $subtitle }}</p>
 
-        <div class="reveal mt-10 flex flex-wrap gap-3" style="--d: 180ms">
-            <a href="{{ route('contact') }}" class="btn-primary">{{ __('site.hero.cta_primary') }} <x-icon name="arrow" class="h-4 w-4" /></a>
-            <a href="{{ route('works.index') }}" class="btn-ghost">{{ __('site.hero.cta_secondary') }}</a>
+            <div class="reveal lg:col-span-5 lg:-mt-2 lg:text-center" style="--d: 180ms">
+                <div class="flex flex-wrap gap-3 lg:justify-center">
+                    <a href="{{ route('contact') }}" class="btn-light !px-8 !py-4 !text-base">{{ __('site.hero.cta_primary') }} <x-icon name="arrow" class="h-4 w-4" /></a>
+                    <a href="{{ route('works.index') }}" class="btn border border-white/40 text-white hover:bg-white/10 hover:-translate-y-0.5 !px-6 !py-4">{{ __('site.hero.cta_secondary') }}</a>
+                </div>
+                <p class="mt-4 text-xs text-white/70">{{ __('site.hero.free_note') }}</p>
+            </div>
         </div>
     </div>
 
     @if($clients->isNotEmpty())
-        <div class="relative border-y border-line bg-white/60 py-7 backdrop-blur">
-            <div class="mx-auto flex max-w-7xl items-center gap-8 px-5 sm:px-8">
-                <p class="hidden shrink-0 text-xs font-semibold uppercase tracking-[0.18em] text-muted sm:block">{{ __('site.hero.trusted') }}</p>
-                <div class="marquee relative min-w-0 flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
-                    <div class="marquee-track flex w-max items-center gap-14">
-                        @foreach([1, 2] as $copy)
-                            @foreach($clients as $client)
-                                <span class="flex shrink-0 items-center" @if($copy === 2) aria-hidden="true" @endif>
-                                    @if($client->logoUrl())
-                                        <img src="{{ $client->logoUrl() }}" alt="{{ $client->name }}" loading="lazy" class="h-8 w-auto opacity-60 grayscale transition hover:opacity-100 hover:grayscale-0">
-                                    @else
-                                        <span class="display text-2xl text-ink/45">{{ $client->name }}</span>
-                                    @endif
-                                </span>
+        <div class="relative">
+            <div class="mx-auto max-w-7xl px-5 sm:px-8">
+                <div class="flex items-center gap-8 border-t border-white/20 py-7">
+                    <p class="hidden shrink-0 text-xs font-medium text-white/70 sm:block">{{ __('site.hero.trusted') }}</p>
+                    <div class="marquee relative min-w-0 flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+                        <div class="marquee-track flex w-max items-center gap-14">
+                            @foreach([1, 2] as $copy)
+                                @foreach($clients as $client)
+                                    <span class="flex shrink-0 items-center" @if($copy === 2) aria-hidden="true" @endif>
+                                        @if($client->logoUrl())
+                                            <img src="{{ $client->logoUrl() }}" alt="{{ $client->name }}" loading="lazy" class="h-8 w-auto opacity-70 brightness-0 invert transition hover:opacity-100">
+                                        @else
+                                            <span class="display text-2xl text-white/70 transition-colors hover:text-white">{{ $client->name }}</span>
+                                        @endif
+                                    </span>
+                                @endforeach
                             @endforeach
-                        @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    @else
+        <div class="h-6"></div>
     @endif
 </section>
 

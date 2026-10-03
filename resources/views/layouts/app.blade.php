@@ -50,33 +50,34 @@
     <div id="mega-overlay" class="pointer-events-none fixed inset-0 z-40 bg-ink/45 opacity-0 backdrop-blur-[2px] transition-opacity duration-200" aria-hidden="true"></div>
 
     {{-- Header --}}
-    <header id="site-header" class="sticky top-0 z-50 border-b border-line bg-white/85 backdrop-blur-md transition-shadow">
+    <header id="site-header" data-over-hero="{{ request()->routeIs('home') ? 'true' : 'false' }}"
+            class="group/header sticky top-0 z-50 border-b border-line bg-white/85 backdrop-blur-md transition-all duration-300 data-[over-hero=true]:border-white/15 data-[over-hero=true]:bg-transparent data-[over-hero=true]:backdrop-blur-none">
         <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
             <a href="{{ route('home') }}" class="group flex shrink-0 items-center" aria-label="{{ $siteName }}">
                 @if($logo)
                     <img src="{{ $logo }}" alt="{{ $siteName }}" class="h-8 w-auto transition-transform duration-300 group-hover:scale-105">
                 @else
-                    <span class="display text-[1.7rem] text-brand-500 transition-all duration-200 group-hover:text-brand-700 group-active:scale-95">{{ $siteName }}<span class="text-brand-300 transition-colors duration-200 group-hover:text-brand-500">.</span></span>
+                    <span class="display text-[1.7rem] text-brand-500 transition-all duration-200 group-hover:text-brand-700 group-active:scale-95 group-data-[over-hero=true]/header:text-white group-data-[over-hero=true]/header:group-hover:text-white">{{ $siteName }}<span class="text-brand-300 transition-colors duration-200 group-hover:text-brand-500 group-data-[over-hero=true]/header:text-lime group-data-[over-hero=true]/header:group-hover:text-lime">.</span></span>
                 @endif
             </a>
 
             <nav class="hidden items-center gap-1 md:flex" aria-label="Main">
                 @foreach($navItems as [$route, $pattern, $label, $key])
                     <a href="{{ route($route) }}" data-mega="{{ $key }}" aria-haspopup="true" aria-expanded="false"
-                       class="group/trigger inline-flex items-center gap-1 rounded-full px-3 py-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-200 lg:px-4 text-sm font-medium transition-all duration-200 active:scale-95 aria-expanded:bg-brand-500 aria-expanded:text-white {{ request()->routeIs($pattern) ? 'bg-brand-50 text-brand-600' : 'text-ink/70 hover:bg-soft hover:text-ink' }}">{{ __($label) }}<x-icon name="chevron" class="h-3.5 w-3.5 opacity-60 transition-transform duration-200 group-aria-expanded/trigger:rotate-180 group-aria-expanded/trigger:opacity-100" stroke="2.4" /></a>
+                       class="group/trigger inline-flex items-center gap-1 rounded-full px-3 py-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-200 lg:px-4 text-sm font-medium transition-all duration-200 active:scale-95 aria-expanded:bg-brand-500 aria-expanded:text-white group-data-[over-hero=true]/header:text-white/90 group-data-[over-hero=true]/header:hover:bg-white/15 group-data-[over-hero=true]/header:hover:text-white group-data-[over-hero=true]/header:aria-expanded:bg-white group-data-[over-hero=true]/header:aria-expanded:text-brand-600 {{ request()->routeIs($pattern) ? 'bg-brand-50 text-brand-600 group-data-[over-hero=true]/header:bg-white/15' : 'text-ink/70 hover:bg-soft hover:text-ink' }}">{{ __($label) }}<x-icon name="chevron" class="h-3.5 w-3.5 opacity-60 transition-transform duration-200 group-aria-expanded/trigger:rotate-180 group-aria-expanded/trigger:opacity-100" stroke="2.4" /></a>
                 @endforeach
             </nav>
 
             <div class="flex items-center gap-3">
                 <div class="hidden items-center gap-1 text-xs font-semibold sm:flex" aria-label="{{ __('site.footer.language') }}">
-                    <a href="{{ route('locale.switch', 'id') }}" class="rounded-full px-2 py-1 transition-colors {{ app()->getLocale() === 'id' ? 'bg-ink text-white' : 'text-muted hover:text-ink' }}">ID</a>
-                    <a href="{{ route('locale.switch', 'en') }}" class="rounded-full px-2 py-1 transition-colors {{ app()->getLocale() === 'en' ? 'bg-ink text-white' : 'text-muted hover:text-ink' }}">EN</a>
+                    <a href="{{ route('locale.switch', 'id') }}" class="rounded-full px-2 py-1 transition-colors {{ app()->getLocale() === 'id' ? 'bg-ink text-white group-data-[over-hero=true]/header:bg-white group-data-[over-hero=true]/header:text-brand-600' : 'text-muted hover:text-ink group-data-[over-hero=true]/header:text-white/80 group-data-[over-hero=true]/header:hover:text-white' }}">ID</a>
+                    <a href="{{ route('locale.switch', 'en') }}" class="rounded-full px-2 py-1 transition-colors {{ app()->getLocale() === 'en' ? 'bg-ink text-white group-data-[over-hero=true]/header:bg-white group-data-[over-hero=true]/header:text-brand-600' : 'text-muted hover:text-ink group-data-[over-hero=true]/header:text-white/80 group-data-[over-hero=true]/header:hover:text-white' }}">EN</a>
                 </div>
 
-                <a href="{{ route('contact') }}" class="btn-primary hidden !px-5 !py-2.5 sm:inline-flex">{{ __('site.nav.lets_talk') }}</a>
+                <a href="{{ route('contact') }}" class="btn-primary hidden !px-5 !py-2.5 group-data-[over-hero=true]/header:border group-data-[over-hero=true]/header:border-white/60 group-data-[over-hero=true]/header:!bg-transparent group-data-[over-hero=true]/header:hover:!bg-white/15 group-data-[over-hero=true]/header:hover:shadow-none sm:inline-flex">{{ __('site.nav.lets_talk') }}</a>
 
                 <button id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="{{ __('site.nav.menu') }}"
-                        class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-all hover:border-brand-300 active:scale-90 md:hidden">
+                        class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-all hover:border-brand-300 active:scale-90 group-data-[over-hero=true]/header:border-white/40 group-data-[over-hero=true]/header:text-white md:hidden">
                     <x-icon name="menu" class="h-5 w-5" />
                 </button>
             </div>
