@@ -162,6 +162,14 @@ return [
         'language' => 'Language',
     ],
 
+    'mega' => [
+        'works_all' => 'See all work',
+        'works_count' => ':n projects',
+        'cta_title' => 'Free consultation',
+        'cta_text' => 'Tell us your idea and we will help find the service that fits.',
+        'browse' => 'Browse',
+    ],
+
     'pagination' => [
         'prev' => 'Previous',
         'next' => 'Next',

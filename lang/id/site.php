@@ -162,6 +162,14 @@ return [
         'language' => 'Bahasa',
     ],
 
+    'mega' => [
+        'works_all' => 'Lihat semua karya',
+        'works_count' => ':n karya',
+        'cta_title' => 'Konsultasi gratis',
+        'cta_text' => 'Ceritakan idemu, kami bantu carikan layanan yang paling pas.',
+        'browse' => 'Jelajahi',
+    ],
+
     'pagination' => [
         'prev' => 'Sebelumnya',
         'next' => 'Berikutnya',

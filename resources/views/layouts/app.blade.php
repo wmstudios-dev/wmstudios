@@ -12,11 +12,11 @@
     $logo = Setting::image('logo');
     $whatsappUrl = WhatsApp::chatUrl();
     $navItems = [
-        ['works.index', 'works*', 'site.nav.works'],
-        ['services', 'services', 'site.nav.services'],
-        ['process', 'process', 'site.nav.process'],
-        ['space', 'space', 'site.nav.space'],
-        ['thoughts.index', 'thoughts*', 'site.nav.thoughts'],
+        ['works.index', 'works*', 'site.nav.works', 'works'],
+        ['services', 'services', 'site.nav.services', 'services'],
+        ['process', 'process', 'site.nav.process', 'process'],
+        ['space', 'space', 'site.nav.space', 'space'],
+        ['thoughts.index', 'thoughts*', 'site.nav.thoughts', 'thoughts'],
     ];
 @endphp
 <html lang="{{ app()->getLocale() }}" class="scroll-smooth">
@@ -46,6 +46,9 @@
 
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-white">Skip to content</a>
 
+    {{-- Dims the page while a menu panel is open --}}
+    <div id="mega-overlay" class="pointer-events-none fixed inset-0 z-40 bg-ink/45 opacity-0 backdrop-blur-[2px] transition-opacity duration-200" aria-hidden="true"></div>
+
     {{-- Header --}}
     <header id="site-header" class="sticky top-0 z-50 border-b border-line bg-white/85 backdrop-blur-md transition-shadow">
         <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
@@ -58,9 +61,9 @@
             </a>
 
             <nav class="hidden items-center gap-1 md:flex" aria-label="Main">
-                @foreach($navItems as [$route, $pattern, $label])
-                    <a href="{{ route($route) }}"
-                       class="rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 {{ request()->routeIs($pattern) ? 'bg-brand-50 text-brand-600' : 'text-ink/70 hover:bg-soft hover:text-ink' }}">{{ __($label) }}</a>
+                @foreach($navItems as [$route, $pattern, $label, $key])
+                    <a href="{{ route($route) }}" data-mega="{{ $key }}" aria-haspopup="true" aria-expanded="false"
+                       class="group/trigger inline-flex items-center gap-1 rounded-full px-3 py-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-200 lg:px-4 text-sm font-medium transition-all duration-200 active:scale-95 aria-expanded:bg-brand-500 aria-expanded:text-white {{ request()->routeIs($pattern) ? 'bg-brand-50 text-brand-600' : 'text-ink/70 hover:bg-soft hover:text-ink' }}">{{ __($label) }}<x-icon name="chevron" class="h-3.5 w-3.5 opacity-60 transition-transform duration-200 group-aria-expanded/trigger:rotate-180 group-aria-expanded/trigger:opacity-100" stroke="2.4" /></a>
                 @endforeach
             </nav>
 
@@ -78,6 +81,8 @@
                 </button>
             </div>
         </div>
+
+        @include('layouts._mega')
 
         <div id="mobile-menu" class="hidden border-t border-line bg-white md:hidden">
             <nav class="mx-auto flex max-w-7xl flex-col px-5 py-4" aria-label="Mobile">

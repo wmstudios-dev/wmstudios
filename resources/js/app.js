@@ -277,3 +277,83 @@ document.addEventListener('submit', (e) => {
         if (!e.defaultPrevented) bar.classList.add('run');
     });
 })();
+
+// Header menu panels ----------------------------------------------------------------------
+// Hover (or click) a menu item: the page dims and a panel with that item's content opens.
+// Hover opens it for a moment; a click pins it open until you click outside, press Esc or click the item again.
+(() => {
+    const triggers = Array.from(document.querySelectorAll('[data-mega]'));
+    const overlay = document.getElementById('mega-overlay');
+    if (!triggers.length || !overlay) return;
+
+    const panels = {};
+    document.querySelectorAll('[data-panel]').forEach((p) => { panels[p.dataset.panel] = p; });
+
+    const desktop = window.matchMedia('(min-width: 768px)');
+    let current = null;
+    let pinned = false;
+    let openTimer;
+    let closeTimer;
+
+    const show = (name) => {
+        if (!panels[name]) return;
+        clearTimeout(closeTimer);
+        current = name;
+
+        Object.entries(panels).forEach(([key, el]) => el.classList.toggle('open', key === name));
+        triggers.forEach((t) => t.setAttribute('aria-expanded', t.dataset.mega === name ? 'true' : 'false'));
+        overlay.classList.add('open');
+    };
+
+    const hide = () => {
+        clearTimeout(openTimer);
+        clearTimeout(closeTimer);
+        current = null;
+        pinned = false;
+
+        Object.values(panels).forEach((el) => el.classList.remove('open'));
+        triggers.forEach((t) => t.setAttribute('aria-expanded', 'false'));
+        overlay.classList.remove('open');
+    };
+
+    const scheduleHide = () => {
+        if (pinned) return;
+        clearTimeout(openTimer);
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(hide, 160); // lets the pointer travel from the item down into the panel
+    };
+
+    triggers.forEach((t) => {
+        t.addEventListener('mouseenter', () => {
+            if (!desktop.matches || pinned) return;
+            clearTimeout(closeTimer);
+            clearTimeout(openTimer);
+            openTimer = setTimeout(() => show(t.dataset.mega), current ? 0 : 90);
+        });
+
+        t.addEventListener('mouseleave', scheduleHide);
+
+        t.addEventListener('click', (e) => {
+            if (!desktop.matches) return; // on phones the item is a normal link
+            e.preventDefault();
+
+            if (current === t.dataset.mega && pinned) {
+                hide();
+            } else {
+                pinned = true;
+                show(t.dataset.mega);
+            }
+        });
+    });
+
+    Object.values(panels).forEach((el) => {
+        el.addEventListener('mouseenter', () => clearTimeout(closeTimer));
+        el.addEventListener('mouseleave', scheduleHide);
+        el.addEventListener('click', (e) => { if (e.target.closest('a')) hide(); });
+    });
+
+    overlay.addEventListener('click', hide);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && current) hide(); });
+    desktop.addEventListener('change', hide);
+    window.addEventListener('pageshow', hide);
+})();

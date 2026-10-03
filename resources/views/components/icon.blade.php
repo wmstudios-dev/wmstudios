@@ -29,6 +29,7 @@
         'menu' => '<path d="M4 7h16M4 12h16M4 17h16"/>',
         'close' => '<path d="M6 6l12 12M18 6L6 18"/>',
         'check' => '<path d="M5 12.5l4.5 4.5L19 7"/>',
+        'chevron' => '<path d="M6 9l6 6 6-6"/>',
         'plus' => '<path d="M12 5v14M5 12h14"/>',
         'image' => '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 9"/>',
 

@@ -58,7 +58,7 @@
     .btn-dark,
     .btn-ghost,
     .btn-light {
-        @apply relative inline-flex select-none items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-200 disabled:pointer-events-none disabled:opacity-70;
+        @apply relative inline-flex select-none items-center whitespace-nowrap justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-200 disabled:pointer-events-none disabled:opacity-70;
     }
 
     .btn-primary {
@@ -196,6 +196,52 @@
     opacity: 1;
     width: 78%;
     transition: width 6s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+/* Header menu panels */
+.mega-panel {
+    position: absolute;
+    left: 1.25rem;
+    right: 1.25rem;
+    top: 0.5rem;
+    padding: 1.25rem;
+    border-radius: 2rem;
+    background: #fff;
+    box-shadow: 0 30px 70px -20px rgb(11 18 32 / 0.35);
+    border: 1px solid var(--color-line);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-10px) scale(0.985);
+    transform-origin: top center;
+    transition: opacity 0.18s ease, transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.22s;
+}
+
+.mega-panel.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    transition-delay: 0s;
+}
+
+@media (min-width: 640px) {
+    .mega-panel {
+        left: 2rem;
+        right: 2rem;
+    }
+}
+
+#mega-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mega-panel,
+    #mega-overlay {
+        transition: none;
+    }
 }
 
 /* Client logos marquee */
