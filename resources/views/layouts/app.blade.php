@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+@php
+    use App\Models\Setting;
+    use App\Support\WhatsApp;
+
+    $siteName = Setting::get('site_name', config('app.name'));
+    $tagline = Setting::t('tagline', __('site.default_tagline'));
+    $pageTitle = trim($__env->yieldContent('title'));
+    $fullTitle = $pageTitle ? $pageTitle . ' — ' . $siteName : $siteName . ' — ' . $tagline;
+    $metaDescription = trim($__env->yieldContent('meta_description')) ?: $tagline;
+    $metaImage = trim($__env->yieldContent('og_image')) ?: Setting::image('hero_photo_1') ?: Setting::image('logo');
+    $logo = Setting::image('logo');
+    $whatsappUrl = WhatsApp::chatUrl();
+    $navItems = [
+        ['works.index', 'works*', 'site.nav.works'],
+        ['services', 'services', 'site.nav.services'],
+        ['process', 'process', 'site.nav.process'],
+        ['space', 'space', 'site.nav.space'],
+        ['thoughts.index', 'thoughts*', 'site.nav.thoughts'],
+    ];
+@endphp
+<html lang="{{ app()->getLocale() }}" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ $fullTitle }}</title>
+    <meta name="description" content="{{ \Illuminate\Support\Str::limit(strip_tags($metaDescription), 180) }}">
+    <link rel="canonical" href="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:title" content="{{ $fullTitle }}">
+    <meta property="og:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($metaDescription), 180) }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    @if($metaImage)
+        <meta property="og:image" content="{{ $metaImage }}">
+        <meta name="twitter:card" content="summary_large_image">
+    @endif
+    <meta name="theme-color" content="#2e59bf">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('head')
+</head>
+<body class="min-h-screen bg-white text-ink antialiased">
+
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-white">Skip to content</a>
+
+    {{-- Header --}}
+    <header id="site-header" class="sticky top-0 z-50 border-b border-line bg-white/85 backdrop-blur-md transition-shadow">
+        <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
+            <a href="{{ route('home') }}" class="group flex shrink-0 items-center" aria-label="{{ $siteName }}">
+                @if($logo)
+                    <img src="{{ $logo }}" alt="{{ $siteName }}" class="h-8 w-auto transition-transform duration-300 group-hover:scale-105">
+                @else
+                    <span class="display text-[1.7rem] text-ink transition-colors duration-200 group-hover:text-brand-500">{{ $siteName }}<span class="text-brand-500 transition-colors duration-200 group-hover:text-ink">.</span></span>
+                @endif
+            </a>
+
+            <nav class="hidden items-center gap-1 md:flex" aria-label="Main">
+                @foreach($navItems as [$route, $pattern, $label])
+                    <a href="{{ route($route) }}"
+                       class="rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs($pattern) ? 'bg-brand-50 text-brand-600' : 'text-ink/70 hover:bg-soft hover:text-ink' }}">{{ __($label) }}</a>
+                @endforeach
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <div class="hidden items-center gap-1 text-xs font-semibold sm:flex" aria-label="{{ __('site.footer.language') }}">
+                    <a href="{{ route('locale.switch', 'id') }}" class="rounded-full px-2 py-1 transition-colors {{ app()->getLocale() === 'id' ? 'bg-ink text-white' : 'text-muted hover:text-ink' }}">ID</a>
+                    <a href="{{ route('locale.switch', 'en') }}" class="rounded-full px-2 py-1 transition-colors {{ app()->getLocale() === 'en' ? 'bg-ink text-white' : 'text-muted hover:text-ink' }}">EN</a>
+                </div>
+
+                <a href="{{ route('contact') }}" class="btn-primary hidden !px-5 !py-2.5 sm:inline-flex">{{ __('site.nav.lets_talk') }}</a>
+
+                <button id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="{{ __('site.nav.menu') }}"
+                        class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-brand-300 md:hidden">
+                    <x-icon name="menu" class="h-5 w-5" />
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden border-t border-line bg-white md:hidden">
+            <nav class="mx-auto flex max-w-7xl flex-col px-5 py-4" aria-label="Mobile">
+                @foreach($navItems as [$route, $pattern, $label])
+                    <a href="{{ route($route) }}" class="display border-b border-line py-4 text-3xl {{ request()->routeIs($pattern) ? 'text-brand-500' : 'text-ink' }}">{{ __($label) }}</a>
+                @endforeach
+                <a href="{{ route('contact') }}" class="display py-4 text-3xl text-brand-500">{{ __('site.nav.contact') }}</a>
+
+                <div class="mt-2 flex items-center gap-2 text-sm font-semibold">
+                    <a href="{{ route('locale.switch', 'id') }}" class="rounded-full px-3 py-1.5 {{ app()->getLocale() === 'id' ? 'bg-ink text-white' : 'border border-line text-muted' }}">Indonesia</a>
+                    <a href="{{ route('locale.switch', 'en') }}" class="rounded-full px-3 py-1.5 {{ app()->getLocale() === 'en' ? 'bg-ink text-white' : 'border border-line text-muted' }}">English</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main">
+        @yield('content')
+    </main>
+
+    {{-- Footer --}}
+    <footer class="mt-24 rounded-t-[2.5rem] bg-ink text-white">
+        <div class="mx-auto max-w-7xl px-5 pb-8 pt-16 sm:px-8">
+            <div class="grid gap-12 md:grid-cols-12">
+                <div class="md:col-span-5">
+                    @if($logo)
+                        <img src="{{ $logo }}" alt="{{ $siteName }}" class="h-9 w-auto brightness-0 invert">
+                    @else
+                        <p class="display text-5xl">{{ $siteName }}<span class="text-brand-400">.</span></p>
+                    @endif
+                    <p class="mt-4 max-w-sm text-sm leading-relaxed text-white/60">{{ Setting::t('footer_note', __('site.footer.default_note')) }}</p>
+                    <div class="mt-6">
+                        @include('partials.socials', ['tone' => 'dark'])
+                    </div>
+                </div>
+
+                <div class="md:col-span-3 md:col-start-7">
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">{{ __('site.footer.explore') }}</p>
+                    <ul class="mt-4 space-y-2.5 text-sm">
+                        @foreach($navItems as [$route, $pattern, $label])
+                            <li><a href="{{ route($route) }}" class="text-white/75 transition-colors hover:text-white">{{ __($label) }}</a></li>
+                        @endforeach
+                        <li><a href="{{ route('contact') }}" class="text-white/75 transition-colors hover:text-white">{{ __('site.nav.contact') }}</a></li>
+                    </ul>
+                </div>
+
+                <div class="md:col-span-3">
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">{{ __('site.footer.contact') }}</p>
+                    <ul class="mt-4 space-y-2.5 text-sm text-white/75">
+                        @if($email = Setting::get('email'))
+                            <li><a href="mailto:{{ $email }}" class="transition-colors hover:text-white">{{ $email }}</a></li>
+                        @endif
+                        @if($whatsappUrl)
+                            <li><a href="{{ $whatsappUrl }}" target="_blank" rel="noopener" class="transition-colors hover:text-white">WhatsApp +{{ \App\Support\WhatsApp::normalize(Setting::get('whatsapp')) }}</a></li>
+                        @endif
+                        @if($address = Setting::t('address'))
+                            <li class="text-white/60">{{ $address }}</li>
+                        @endif
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-14 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/45 sm:flex-row sm:items-center">
+                <p>&copy; {{ date('Y') }} {{ $siteName }}. {{ __('site.footer.rights') }}</p>
+                <div class="flex items-center gap-1 font-semibold">
+                    <a href="{{ route('locale.switch', 'id') }}" class="rounded-full px-2 py-1 {{ app()->getLocale() === 'id' ? 'bg-white text-ink' : 'hover:text-white' }}">ID</a>
+                    <a href="{{ route('locale.switch', 'en') }}" class="rounded-full px-2 py-1 {{ app()->getLocale() === 'en' ? 'bg-white text-ink' : 'hover:text-white' }}">EN</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    @if($whatsappUrl)
+        <a href="{{ $whatsappUrl }}" target="_blank" rel="noopener" aria-label="WhatsApp"
+           class="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#25d366] text-white shadow-lg shadow-black/20 transition-all duration-200 hover:scale-110 hover:shadow-xl active:scale-95 print:hidden">
+            <x-icon name="whatsapp" class="h-7 w-7" />
+        </a>
+    @endif
+
+    @stack('scripts')
+</body>
+</html>

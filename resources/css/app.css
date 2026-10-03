@@ -1,0 +1,233 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    --font-display: 'Barlow Condensed', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+    /* Brand blue #2E59BF */
+    --color-brand-50: #eef3fc;
+    --color-brand-100: #dce6f8;
+    --color-brand-200: #b9cdf1;
+    --color-brand-300: #8faee6;
+    --color-brand-400: #5c86d6;
+    --color-brand-500: #2e59bf;
+    --color-brand-600: #2549a0;
+    --color-brand-700: #1e3b82;
+    --color-brand-800: #172e66;
+    --color-brand-900: #10214a;
+
+    --color-ink: #0b1220;
+    --color-soft: #f5f7fb;
+    --color-line: #e6e9f2;
+    --color-muted: #5b6477;
+
+    /* Soft accent tags, used sparingly */
+    --color-lilac: #d9ccff;
+    --color-mint: #d3f5dc;
+    --color-butter: #ffeaa8;
+
+    --radius-4xl: 2rem;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: var(--font-sans);
+        color: var(--color-ink);
+        background: #fff;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+        background: var(--color-brand-500);
+        color: #fff;
+    }
+}
+
+@layer components {
+    .btn,
+    .btn-primary,
+    .btn-dark,
+    .btn-ghost,
+    .btn-light {
+        @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200;
+    }
+
+    .btn-primary {
+        @apply bg-brand-500 text-white hover:bg-brand-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-500/25 active:translate-y-0;
+    }
+
+    .btn-dark {
+        @apply bg-ink text-white hover:bg-brand-700 hover:-translate-y-0.5 active:translate-y-0;
+    }
+
+    .btn-ghost {
+        @apply border border-line bg-white text-ink hover:border-brand-300 hover:text-brand-600 hover:-translate-y-0.5;
+    }
+
+    .btn-light {
+        @apply bg-white text-brand-700 hover:bg-brand-50 hover:-translate-y-0.5;
+    }
+
+    .chip {
+        @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
+    }
+
+    .display {
+        font-family: var(--font-display);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+        line-height: 0.95;
+    }
+
+    .eyebrow {
+        @apply text-xs font-semibold uppercase tracking-[0.18em] text-brand-500;
+    }
+
+    .field {
+        @apply w-full rounded-2xl border border-line bg-white px-4 py-3 text-sm text-ink placeholder:text-muted/60 transition focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-100;
+    }
+
+    .prose-site {
+        @apply text-[1.05rem] leading-relaxed text-ink/85;
+    }
+
+    .prose-site h2 {
+        @apply font-display mt-10 mb-3 text-3xl font-bold uppercase leading-none text-ink;
+    }
+
+    .prose-site h3 {
+        @apply mt-8 mb-2 text-xl font-bold text-ink;
+    }
+
+    .prose-site p {
+        @apply my-4;
+    }
+
+    .prose-site ul {
+        @apply my-4 list-disc space-y-1.5 pl-6;
+    }
+
+    .prose-site ol {
+        @apply my-4 list-decimal space-y-1.5 pl-6;
+    }
+
+    .prose-site a {
+        @apply text-brand-600 underline underline-offset-4;
+    }
+
+    .prose-site blockquote {
+        @apply my-6 border-l-4 border-brand-300 pl-5 text-xl italic text-ink;
+    }
+}
+
+/* Scroll reveal: only hidden when JS is on, so the page still works without it. */
+.js .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--d, 0ms);
+}
+
+.js .reveal.in {
+    opacity: 1;
+    transform: none;
+}
+
+/* Client logos marquee */
+@keyframes marquee {
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.marquee-track {
+    animation: marquee 38s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+    animation-play-state: paused;
+}
+
+/* Gentle float for the hero photo pills */
+@keyframes bob {
+    0%,
+    100% {
+        transform: translateY(0) rotate(var(--r, 0deg));
+    }
+    50% {
+        transform: translateY(-6px) rotate(var(--r, 0deg));
+    }
+}
+
+.bob {
+    animation: bob 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .marquee-track,
+    .bob {
+        animation: none;
+    }
+
+    .js .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* Before / after comparison */
+.ba {
+    --pos: 50%;
+}
+
+.ba-after {
+    clip-path: inset(0 0 0 var(--pos));
+}
+
+.ba-handle {
+    left: var(--pos);
+}
+
+.ba input[type='range'] {
+    appearance: none;
+    background: transparent;
+    cursor: ew-resize;
+}
+
+.ba input[type='range']::-webkit-slider-thumb {
+    appearance: none;
+    width: 44px;
+    height: 100vh;
+    background: transparent;
+}
+
+.ba input[type='range']::-moz-range-thumb {
+    width: 44px;
+    height: 100vh;
+    background: transparent;
+    border: 0;
+}
+
+/* Lightbox + video modal */
+.overlay {
+    @apply fixed inset-0 z-[100] hidden items-center justify-center bg-ink/90 p-4 backdrop-blur-sm;
+}
+
+.overlay.open {
+    @apply flex;
+}
