@@ -73,6 +73,6 @@ class MessageController extends Controller
             }
 
             fclose($out);
-        }, 'wmspace-messages-' . now()->format('Y-m-d') . '.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+        }, 'wmstudios-messages-' . now()->format('Y-m-d') . '.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
 }

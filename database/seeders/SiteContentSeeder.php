@@ -28,7 +28,7 @@ class SiteContentSeeder extends Seeder
     private function settings(): void
     {
         $defaults = [
-            'site_name' => 'WMSPACE',
+            'site_name' => 'WMSTUDIOS',
             'tagline_id' => 'Studio kreatif untuk sosial media, foto & video, desain, dan web.',
             'tagline_en' => 'A creative studio for social media, photo & video, design and web.',
         ];

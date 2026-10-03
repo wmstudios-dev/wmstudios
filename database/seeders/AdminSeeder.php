@@ -8,14 +8,14 @@ use Illuminate\Support\Facades\Hash;
 
 /**
  * Creates (or refreshes) the admin account from ADMIN_EMAIL / ADMIN_PASSWORD / ADMIN_NAME.
- * Locally it falls back to admin@wmspace.test / "password". In production a password must be set
+ * Locally it falls back to admin@wmstudios.test / "password". In production a password must be set
  * in the environment, otherwise no account is created.
  */
 class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $email = env('ADMIN_EMAIL', app()->environment('local') ? 'admin@wmspace.test' : null);
+        $email = env('ADMIN_EMAIL', app()->environment('local') ? 'admin@wmstudios.test' : null);
         $password = env('ADMIN_PASSWORD', app()->environment('local') ? 'password' : null);
 
         if (! $email || ! $password) {

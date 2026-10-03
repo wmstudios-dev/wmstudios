@@ -1,4 +1,4 @@
-# WMSPACE
+# WMSTUDIOS
 
 Website for a creative agency (social media, documentation, design, photo & video production, web design & development).
 Laravel 12 + Tailwind v4, Indonesian / English, with an admin panel at `/admin`.
@@ -8,7 +8,7 @@ Laravel 12 + Tailwind v4, Indonesian / English, with an admin panel at `/admin`.
 ```bash
 composer install && npm install
 cp .env.example .env && php artisan key:generate
-php artisan migrate --seed      # admin@wmspace.test / password + sample content (local only)
+php artisan migrate --seed      # admin@wmstudios.test / password + sample content (local only)
 php artisan storage:link
 npm run build                   # public/build is committed, rebuild after CSS/JS/Blade class changes
 php artisan serve
