@@ -8,6 +8,10 @@ use App\Models\Package;
 use App\Models\ProcessStep;
 use App\Models\Service;
 use App\Models\Setting;
+use App\Models\Work;
+use App\Support\ImageUploader;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 
 /**
@@ -25,6 +29,53 @@ class SiteContentSeeder extends Seeder
         $this->packages();
         $this->faqs();
         $this->sampleClients();
+        $this->sampleWorks();
+    }
+
+    /**
+     * Six made-up portfolio pieces with abstract cover art (database/data/sample), so the Works menu, the home page
+     * and the Works page can be judged before real work is added. Added ONCE (a settings flag remembers it), and
+     * only while there are no works at all. Every title and client is fictional; delete or edit them in Admin > Works.
+     */
+    private function sampleWorks(): void
+    {
+        if (Setting::get('sample_works_seeded') !== null || Work::query()->exists()) {
+            return;
+        }
+
+        $rows = [
+            ['photo', 'Kopi Senja Campaign', 'Kampanye Kopi Senja', 'Kopi Senja', 2025, true, 'Product photography for a new seasonal menu.', 'Foto produk untuk menu musiman yang baru.'],
+            ['video', 'Aftermovie Pameran Kriya', 'Aftermovie Pameran Kriya', 'Dewan Kriya', 2025, true, 'A two-minute highlight film of a three-day craft expo.', 'Film highlight dua menit dari pameran kriya tiga hari.'],
+            ['design', 'Brand Identity Aksara Studio', 'Identitas Brand Aksara Studio', 'Aksara Studio', 2024, true, 'Logo, colour system and social templates for a design studio.', 'Logo, sistem warna, dan template sosial media untuk studio desain.'],
+            ['web', 'Rumah Tenun Website', 'Website Rumah Tenun', 'Rumah Tenun', 2025, true, 'A fast storefront and catalogue with an admin panel.', 'Etalase dan katalog yang cepat, lengkap dengan panel admin.'],
+            ['social', 'Fitkita Instagram Revamp', 'Revamp Instagram Fitkita', 'Fitkita', 2025, true, 'Feed redesign and a three-month content plan.', 'Desain ulang feed dan rencana konten tiga bulan.'],
+            ['photo', 'Wedding Documentation', 'Dokumentasi Pernikahan', 'Private client', 2024, false, 'A full-day documentary-style wedding set.', 'Satu set dokumentasi pernikahan sehari penuh bergaya dokumenter.'],
+        ];
+
+        foreach ($rows as $i => [$category, $titleEn, $titleId, $client, $year, $featured, $summaryEn, $summaryId]) {
+            $art = database_path('data/sample/work-' . ($i + 1) . '.jpg');
+            $cover = is_file($art)
+                ? ImageUploader::store(new UploadedFile($art, basename($art), 'image/jpeg', null, true), 'works')
+                : null;
+
+            Work::create([
+                'slug' => Str::slug($titleEn),
+                'category' => $category,
+                'title_en' => $titleEn, 'title_id' => $titleId,
+                'client' => $client, 'year' => $year, 'is_featured' => $featured,
+                'summary_en' => $summaryEn, 'summary_id' => $summaryId,
+                'description_en' => $summaryEn . "
+
+Sample project text. Replace it with the real story: the brief, what you did, and the result.",
+                'description_id' => $summaryId . "
+
+Teks contoh proyek. Ganti dengan cerita asli: brief, apa yang dikerjakan, dan hasilnya.",
+                'cover_photo' => $cover,
+                'sort_order' => $i + 1,
+            ]);
+        }
+
+        Setting::put('sample_works_seeded', '1');
     }
 
     /**
