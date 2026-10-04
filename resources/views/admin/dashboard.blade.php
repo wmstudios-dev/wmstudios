@@ -6,6 +6,13 @@
 <h1 class="display text-5xl">Overview</h1>
 <p class="mt-1 text-sm text-muted">Welcome back, {{ auth()->user()->name }}.</p>
 
+@unless($imageOptimization)
+    <div class="mt-6 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        <p class="font-semibold">Photo optimisation is off</p>
+        <p class="mt-0.5">This server has no PHP <code class="rounded bg-amber-100 px-1">gd</code> extension, so uploaded photos are saved exactly as they are (not resized or converted to WebP). Big photos will make pages load slowly. Resize photos to about 1920 px wide before uploading until this is fixed.</p>
+    </div>
+@endunless
+
 <div class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
     @foreach([
         ['New messages', $stats['new_messages'], route('admin.messages.index', ['status' => 'new']), $stats['new_messages'] > 0],

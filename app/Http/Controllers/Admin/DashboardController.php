@@ -21,6 +21,9 @@ class DashboardController extends Controller
         $recentMessages = ContactMessage::latest()->take(6)->get();
         $recentWorks = Work::latest()->take(5)->get();
 
-        return view('admin.dashboard', compact('stats', 'recentMessages', 'recentWorks'));
+        // Without PHP's GD extension uploaded photos are stored untouched (big and slow), so the dashboard says so.
+        $imageOptimization = function_exists('imagewebp');
+
+        return view('admin.dashboard', compact('stats', 'recentMessages', 'recentWorks', 'imageOptimization'));
     }
 }
