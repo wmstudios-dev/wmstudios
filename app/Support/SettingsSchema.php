@@ -24,6 +24,18 @@ class SettingsSchema
                 ['key' => 'hero_photo_2', 'label' => 'Hero photo 2', 'type' => 'image'],
                 ['key' => 'hero_photo_3', 'label' => 'Hero photo 3', 'type' => 'image'],
             ],
+            'Proof (numbers & rating)' => [
+                ['key' => 'stat_1_value', 'label' => 'Number 1', 'type' => 'text', 'hint' => 'Real figures only, e.g. 120+. The numbers section on the home page shows only the ones you fill in; leave all empty to hide it.'],
+                ['key' => 'stat_1_label', 'label' => 'Number 1 label', 'type' => 'text', 'bilingual' => true],
+                ['key' => 'stat_2_value', 'label' => 'Number 2', 'type' => 'text'],
+                ['key' => 'stat_2_label', 'label' => 'Number 2 label', 'type' => 'text', 'bilingual' => true],
+                ['key' => 'stat_3_value', 'label' => 'Number 3', 'type' => 'text'],
+                ['key' => 'stat_3_label', 'label' => 'Number 3 label', 'type' => 'text', 'bilingual' => true],
+                ['key' => 'stat_4_value', 'label' => 'Number 4', 'type' => 'text'],
+                ['key' => 'stat_4_label', 'label' => 'Number 4 label', 'type' => 'text', 'bilingual' => true],
+                ['key' => 'rating_value', 'label' => 'Client rating', 'type' => 'text', 'hint' => 'e.g. 5.0 or 4.9. Shown under the hero buttons with stars. Leave empty to hide.'],
+                ['key' => 'rating_label', 'label' => 'Rating caption', 'type' => 'text', 'bilingual' => true, 'hint' => 'e.g. from 40+ client reviews'],
+            ],
             'Contact' => [
                 ['key' => 'whatsapp', 'label' => 'WhatsApp number', 'type' => 'text', 'hint' => 'Digits only with country code, e.g. 6281234567890.'],
                 ['key' => 'email', 'label' => 'Public email', 'type' => 'text'],

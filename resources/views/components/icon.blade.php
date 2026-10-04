@@ -20,6 +20,7 @@
         'heart' => '<path d="M12 20s-7.5-4.6-9-9.5A5 5 0 0112 7a5 5 0 019 3.5C19.5 15.4 12 20 12 20z"/>',
 
         // interface
+        'star' => '<path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2 6.3 20.3l1.2-6.4L2.8 9.5l6.4-.8z" fill="currentColor" stroke="none"/>',
         'arrow' => '<path d="M5 12h14M13 6l6 6-6 6"/>',
         'arrow-up-right' => '<path d="M7 17L17 7M8 7h9v9"/>',
         'play' => '<path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/>',

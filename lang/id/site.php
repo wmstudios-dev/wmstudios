@@ -32,10 +32,12 @@ return [
         'cta_secondary' => 'Lihat karya',
         'trusted' => 'Dipercaya brand lokal & nasional',
         'free_note' => 'Konsultasi awal gratis, tanpa kewajiban.',
+        'rating_aria' => 'Rating :n dari 5',
         'card_label' => 'Layanan kreatif',
     ],
 
     'home' => [
+        'faq_more' => 'Pertanyaan lainnya',
         'statement' => 'Kami bukan sekadar membuat konten. Kami merancang cerita, visual, dan pengalaman digital yang terasa jujur, konsisten, dan menghasilkan.',
         'services_eyebrow' => 'Layanan',
         'services_title' => 'Semua kebutuhan visual & digital',
@@ -162,6 +164,12 @@ return [
         'explore' => 'Jelajahi',
         'contact' => 'Kontak',
         'rights' => 'Hak cipta dilindungi.',
+        'form_title' => 'Punya proyek di kepala?',
+        'form_text' => 'Tinggalkan pesan singkat, kami akan segera membalas.',
+        'form_name' => 'Nama kamu',
+        'form_email' => 'Email',
+        'form_message' => 'Ceritakan proyekmu',
+        'form_send' => 'Kirim pesan',
         'language' => 'Bahasa',
     ],
 

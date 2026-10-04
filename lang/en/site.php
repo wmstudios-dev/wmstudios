@@ -33,9 +33,11 @@ return [
         'trusted' => 'Trusted by local & national brands',
         'free_note' => 'Free first consultation. No obligation.',
         'card_label' => 'Creative services',
+        'rating_aria' => 'Rated :n out of 5',
     ],
 
     'home' => [
+        'faq_more' => 'More questions',
         'statement' => 'We do not just make content. We shape stories, visuals and digital experiences that feel honest, consistent and deliver results.',
         'services_eyebrow' => 'Services',
         'services_title' => 'Every visual & digital need',
@@ -163,6 +165,12 @@ return [
         'contact' => 'Contact',
         'rights' => 'All rights reserved.',
         'language' => 'Language',
+        'form_title' => 'Got a project in mind?',
+        'form_text' => 'Leave a short message and we will get back to you.',
+        'form_name' => 'Your name',
+        'form_email' => 'Email',
+        'form_message' => 'Tell us about your project',
+        'form_send' => 'Send message',
     ],
 
     'mega' => [

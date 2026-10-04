@@ -22,6 +22,7 @@ class SiteController extends Controller
             'services' => Service::active()->ordered()->get(),
             'steps' => ProcessStep::active()->ordered()->get(),
             'clients' => Client::active()->ordered()->get(),
+            'faqs' => Faq::active()->ordered()->take(6)->get(),
             'testimonials' => Testimonial::active()->ordered()->get(),
             'thoughts' => Thought::published()->latestFirst()->take(3)->get(),
             'space' => SpaceItem::active()->orderBy('sort_order')->orderByDesc('id')->take(6)->get(),

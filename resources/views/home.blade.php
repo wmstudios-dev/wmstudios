@@ -93,6 +93,13 @@
                     <a href="{{ route('works.index') }}" class="btn border border-white/40 text-white hover:bg-white/10 hover:-translate-y-0.5 !px-6 !py-4">{{ __('site.hero.cta_secondary') }}</a>
                 </div>
                 <p class="mt-4 text-xs text-white/70">{{ __('site.hero.free_note') }}</p>
+                @if($rating = Setting::get('rating_value'))
+                    <p class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-semibold text-white lg:justify-center" aria-label="{{ __('site.hero.rating_aria', ['n' => $rating]) }}">
+                        <span class="flex gap-0.5 text-lime" aria-hidden="true">@for($s = 0; $s < 5; $s++)<x-icon name="star" class="h-4 w-4" />@endfor</span>
+                        <span>{{ $rating }}</span>
+                        @if($ratingLabel = Setting::t('rating_label'))<span class="font-normal text-white/75">{{ $ratingLabel }}</span>@endif
+                    </p>
+                @endif
             </div>
         </div>
     </div>
@@ -133,6 +140,26 @@
 <section class="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
     <p class="reveal max-w-5xl text-3xl font-semibold leading-[1.2] tracking-tight text-ink sm:text-5xl">{{ __('site.home.statement') }}</p>
 </section>
+
+{{-- Numbers: only the figures the admin filled in (real claims only) --}}
+@php
+    $stats = collect(range(1, 4))
+        ->map(fn ($n) => ['value' => Setting::get("stat_{$n}_value"), 'label' => Setting::t("stat_{$n}_label")])
+        ->filter(fn ($s) => filled($s['value']))
+        ->values();
+@endphp
+@if($stats->isNotEmpty())
+<section class="mx-auto max-w-7xl px-5 pb-20 sm:px-8">
+    <div class="reveal grid gap-px overflow-hidden rounded-[2rem] bg-line sm:grid-cols-2 {{ [1 => 'lg:grid-cols-1', 2 => 'lg:grid-cols-2', 3 => 'lg:grid-cols-3', 4 => 'lg:grid-cols-4'][min($stats->count(), 4)] }}">
+        @foreach($stats as $stat)
+            <div class="bg-soft px-7 py-9">
+                <p class="display text-6xl text-brand-600 sm:text-7xl">{{ $stat['value'] }}</p>
+                @if($stat['label'])<p class="mt-3 text-sm font-semibold text-ink/80">{{ $stat['label'] }}</p>@endif
+            </div>
+        @endforeach
+    </div>
+</section>
+@endif
 
 {{-- Services: preview of the selected service on the left, the list of services on the right --}}
 @if($services->isNotEmpty())
@@ -295,6 +322,8 @@
     </div>
 </section>
 @endif
+
+@include('partials.faq', ['more' => true])
 
 @include('partials.cta-band')
 @endsection

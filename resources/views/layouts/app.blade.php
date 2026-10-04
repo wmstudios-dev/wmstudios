@@ -107,6 +107,43 @@
     {{-- Footer --}}
     <footer class="mt-24 rounded-t-[2.5rem] bg-ink text-white">
         <div class="mx-auto max-w-7xl px-5 pb-8 pt-16 sm:px-8">
+            @unless(request()->routeIs('contact'))
+                <div id="footer-contact" class="mb-16 grid gap-8 rounded-[2rem] bg-white/5 p-6 sm:p-10 lg:grid-cols-12 lg:gap-12">
+                    <div class="lg:col-span-4">
+                        <h2 class="display text-4xl sm:text-5xl">{{ __('site.footer.form_title') }}</h2>
+                        <p class="mt-3 text-sm text-white/60">{{ __('site.footer.form_text') }}</p>
+                    </div>
+                    <form method="POST" action="{{ route('contact.store') }}" class="space-y-4 lg:col-span-8">
+                        @csrf
+                        <div class="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+                            <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                        </div>
+                        @php $ff = 'w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/40 outline-none transition-colors focus:border-lime focus:bg-white/10'; @endphp
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <label for="f-name" class="sr-only">{{ __('site.footer.form_name') }}</label>
+                                <input id="f-name" name="name" value="{{ old('name') }}" required maxlength="120" autocomplete="name" placeholder="{{ __('site.footer.form_name') }}" class="{{ $ff }}">
+                                @error('name')<p class="mt-1.5 text-xs text-red-300">{{ $message }}</p>@enderror
+                            </div>
+                            <div>
+                                <label for="f-email" class="sr-only">{{ __('site.footer.form_email') }}</label>
+                                <input id="f-email" type="email" name="email" value="{{ old('email') }}" required maxlength="190" autocomplete="email" placeholder="{{ __('site.footer.form_email') }}" class="{{ $ff }}">
+                                @error('email')<p class="mt-1.5 text-xs text-red-300">{{ $message }}</p>@enderror
+                            </div>
+                        </div>
+                        <div>
+                            <label for="f-message" class="sr-only">{{ __('site.footer.form_message') }}</label>
+                            <textarea id="f-message" name="message" rows="3" required minlength="10" maxlength="3000" placeholder="{{ __('site.footer.form_message') }}" class="{{ $ff }} resize-y">{{ old('message') }}</textarea>
+                            @error('message')<p class="mt-1.5 text-xs text-red-300">{{ $message }}</p>@enderror
+                        </div>
+                        <button type="submit" class="btn-light">{{ __('site.footer.form_send') }} <x-icon name="arrow" class="h-4 w-4" /></button>
+                    </form>
+                </div>
+                @if($errors->any())
+                    <script>document.getElementById('footer-contact')?.scrollIntoView({block: 'center'});</script>
+                @endif
+            @endunless
+
             <div class="grid gap-12 md:grid-cols-12">
                 <div class="md:col-span-5">
                     @if($logo)
