@@ -6,6 +6,13 @@
     $title = Setting::t('hero_title', __('site.hero.title'));
     $subtitle = Setting::t('hero_subtitle', __('site.hero.subtitle'));
 
+    // Words wrapped in *asterisks* in the statement get a coloured highlight.
+    $marks = ['bg-lime', 'bg-lilac', 'bg-butter', 'bg-mint'];
+    $n = 0;
+    $statement = preg_replace_callback('/\*(.+?)\*/', function ($m) use ($marks, &$n) {
+        return '<mark class="' . $marks[$n++ % count($marks)] . ' rounded-lg px-2 text-ink [box-decoration-break:clone]">' . $m[1] . '</mark>';
+    }, e(__('site.home.statement')));
+
     // Photo pills sit inside the headline, after roughly the 1st, 2nd and 3rd quarter of the words.
     $words = preg_split('/\s+/', trim($title));
     $count = count($words);
@@ -138,7 +145,7 @@
 
 {{-- Statement --}}
 <section class="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
-    <p class="reveal max-w-5xl text-3xl font-semibold leading-[1.2] tracking-tight text-ink sm:text-5xl">{{ __('site.home.statement') }}</p>
+    <p class="reveal max-w-5xl text-3xl font-semibold leading-[1.2] tracking-tight text-ink sm:text-5xl">{!! $statement !!}</p>
 </section>
 
 {{-- Why us: big running headline, then the figures the admin filled in (real claims only) --}}
@@ -238,25 +245,31 @@
 </section>
 @endif
 
-{{-- Featured works --}}
+{{-- Featured works, in a blue band --}}
 @if($works->isNotEmpty())
-<section class="mx-auto mt-28 max-w-7xl px-5 sm:px-8">
-    <div class="flex flex-wrap items-end justify-between gap-4">
-        <div>
-            <p class="eyebrow reveal">{{ __('site.home.works_eyebrow') }}</p>
-            <h2 class="display reveal mt-2 text-5xl text-ink sm:text-7xl" style="--d: 60ms">{{ __('site.home.works_title') }}</h2>
-        </div>
-        <a href="{{ route('works.index') }}" class="btn-ghost reveal">{{ __('site.home.works_all') }} <x-icon name="arrow" class="h-4 w-4" /></a>
-    </div>
+<section class="mx-auto mt-28 max-w-[88rem] px-3 sm:px-5">
+    <div class="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-tr from-brand-600 via-brand-500 to-brand-400 px-5 py-14 text-white sm:px-10 sm:py-20">
+        <div class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-white/10 blur-3xl"></div>
+        <div class="pointer-events-none absolute -bottom-32 left-1/4 h-80 w-80 rounded-full bg-brand-700/50 blur-3xl"></div>
 
-    <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        @foreach($works as $work)
-            @include('partials.work-card', ['work' => $work, 'delay' => ($loop->index % 3) * 80])
-        @endforeach
+        <div class="relative mx-auto max-w-7xl">
+            <div class="flex flex-wrap items-end justify-between gap-4">
+                <div>
+                    <p class="reveal text-xs font-semibold uppercase tracking-[0.18em] text-lime">{{ __('site.home.works_eyebrow') }}</p>
+                    <h2 class="display reveal mt-2 text-5xl text-white sm:text-7xl" style="--d: 60ms">{{ __('site.home.works_title') }}</h2>
+                </div>
+                <a href="{{ route('works.index') }}" class="btn-light reveal">{{ __('site.home.works_all') }} <x-icon name="arrow" class="h-4 w-4" /></a>
+            </div>
+
+            <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach($works as $work)
+                    @include('partials.work-card', ['work' => $work, 'delay' => ($loop->index % 3) * 80])
+                @endforeach
+            </div>
+        </div>
     </div>
 </section>
 @endif
-
 {{-- Process --}}
 @if($steps->isNotEmpty())
 <section class="mx-auto mt-28 max-w-7xl px-5 sm:px-8">

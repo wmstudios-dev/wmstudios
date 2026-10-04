@@ -40,7 +40,7 @@ return [
         'why_title' => 'Kenapa :name?',
         'culture' => 'Karya bagus lahir dari ruang yang baik: obrolan jujur, orang-orang yang penasaran, dan kopi yang tidak pernah habis.',
         'faq_more' => 'Pertanyaan lainnya',
-        'statement' => 'Kami bukan sekadar membuat konten. Kami merancang cerita, visual, dan pengalaman digital yang terasa jujur, konsisten, dan menghasilkan.',
+        'statement' => 'Kami bukan sekadar membuat konten. Kami merancang *cerita*, *visual*, dan *pengalaman digital* yang terasa jujur, konsisten, dan *menghasilkan*.',
         'services_eyebrow' => 'Layanan',
         'services_title' => 'Semua kebutuhan visual & digital',
         'services_all' => 'Semua layanan',
@@ -94,6 +94,8 @@ return [
         'choose' => 'Pilih paket ini',
         'faq_eyebrow' => 'FAQ',
         'faq_title' => 'Pertanyaan yang sering muncul',
+        'faq_text' => 'Belum nemu jawabannya? Tanya langsung ke kami, dengan senang hati kami jelaskan.',
+        'faq_ask' => 'Tanya kami',
     ],
 
     'process' => [

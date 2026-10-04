@@ -40,7 +40,7 @@ return [
         'faq_more' => 'More questions',
         'why_title' => 'Why :name?',
         'culture' => 'Good work comes from a good space: honest conversations, curious people and a lot of coffee.',
-        'statement' => 'We do not just make content. We shape stories, visuals and digital experiences that feel honest, consistent and deliver results.',
+        'statement' => 'We do not just make content. We shape *stories*, *visuals* and *digital experiences* that feel honest, consistent and *deliver results*.',
         'services_eyebrow' => 'Services',
         'services_title' => 'Every visual & digital need',
         'services_all' => 'All services',
@@ -94,6 +94,8 @@ return [
         'choose' => 'Choose this package',
         'faq_eyebrow' => 'FAQ',
         'faq_title' => 'Frequently asked questions',
+        'faq_text' => 'Cannot find your answer? Ask us directly, we are happy to explain.',
+        'faq_ask' => 'Ask us',
     ],
 
     'process' => [

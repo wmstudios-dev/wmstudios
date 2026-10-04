@@ -26,6 +26,12 @@
     @endif
 
     <div class="absolute inset-x-0 bottom-0 p-5 text-white">
+        @if($work->metric_value)
+            <span class="mb-2 inline-flex items-baseline gap-1.5 rounded-full bg-lime px-3 py-1 text-ink">
+                <span class="display text-xl leading-none">{{ $work->metric_value }}</span>
+                @if($metricLabel = $work->t('metric_label'))<span class="text-[0.7rem] font-semibold">{{ $metricLabel }}</span>@endif
+            </span>
+        @endif
         <h3 class="display text-3xl leading-[0.95]">{{ $work->t('title') }}</h3>
         <p class="mt-1.5 flex items-center gap-2 text-xs text-white/75">
             @if($work->client)<span>{{ $work->client }}</span>@endif

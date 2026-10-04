@@ -5,7 +5,7 @@
         @if($cover)
             <img src="{{ $cover }}" alt="" loading="lazy" class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
         @else
-            <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-100 via-brand-50 to-white text-brand-300">
+            <div class="flex h-full w-full items-center justify-center text-ink/50 {{ ['bg-lilac', 'bg-butter', 'bg-mint', 'bg-lime'][$thought->id % 4] }}">
                 <x-icon name="pen" class="h-14 w-14" stroke="1.2" />
             </div>
         @endif

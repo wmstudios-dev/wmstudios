@@ -70,6 +70,8 @@ class AdminResources
                     ['name' => 'year', 'label' => 'Year', 'type' => 'number'],
                     ['name' => 'summary', 'label' => 'Short summary', 'type' => 'textarea', 'rows' => 2, 'bilingual' => true, 'hint' => 'Shown on the cards.'],
                     ['name' => 'description', 'label' => 'Full description', 'type' => 'textarea', 'rows' => 6, 'bilingual' => true, 'hint' => 'Shown on the work page. Blank lines make new paragraphs.'],
+                    ['name' => 'metric_value', 'label' => 'Result number (optional)', 'type' => 'text', 'hint' => 'A real headline result, e.g. 250K. Shown as a green badge on the work card. Leave empty to hide.'],
+                    ['name' => 'metric_label', 'label' => 'Result caption (optional)', 'type' => 'text', 'bilingual' => true, 'hint' => 'e.g. views in 30 days'],
                     ['name' => 'cover_photo', 'label' => 'Cover photo', 'type' => 'image', 'folder' => 'works', 'hint' => 'Photos are resized and converted to WebP automatically.'],
                     ['name' => 'video_url', 'label' => 'Video link', 'type' => 'url', 'hint' => 'YouTube, Vimeo, Instagram reel, or a direct .mp4 link. For a video work, the YouTube thumbnail is used when there is no cover.'],
                     ['name' => 'project_url', 'label' => 'Live project link', 'type' => 'url', 'hint' => 'For websites: link to the live site.'],
