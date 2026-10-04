@@ -134,7 +134,7 @@
     <p class="reveal max-w-5xl text-3xl font-semibold leading-[1.2] tracking-tight text-ink sm:text-5xl">{{ __('site.home.statement') }}</p>
 </section>
 
-{{-- Services --}}
+{{-- Services: preview of the selected service on the left, the list of services on the right --}}
 @if($services->isNotEmpty())
 <section class="mx-auto max-w-7xl px-5 sm:px-8">
     <div class="flex flex-wrap items-end justify-between gap-4">
@@ -145,27 +145,43 @@
         <a href="{{ route('services') }}" class="btn-ghost reveal">{{ __('site.home.services_all') }} <x-icon name="arrow" class="h-4 w-4" /></a>
     </div>
 
-    @php
-        // Three cards per row; if the last row is short, its cards stretch to fill it.
-        $remainder = $services->count() % 3;
-    @endphp
-    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
-        @foreach($services as $service)
-            @php
-                $inLastRow = $remainder > 0 && $loop->iteration > $services->count() - $remainder;
-                $span = $inLastRow ? ($remainder === 2 ? 'lg:col-span-3' : 'lg:col-span-6') : 'lg:col-span-2';
-            @endphp
-            <a href="{{ route('services') }}#{{ $service->slug }}"
-               class="reveal group flex flex-col rounded-3xl bg-soft p-7 {{ $span }} active:scale-[0.98] transition-all duration-300 hover:-translate-y-1 hover:bg-brand-500 hover:shadow-xl hover:shadow-brand-500/20"
-               style="--d: {{ ($loop->index % 3) * 70 }}ms">
-                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-brand-500 transition-colors duration-300 group-hover:bg-white/15 group-hover:text-white">
-                    <x-icon :name="$service->icon" class="h-6 w-6" />
-                </span>
-                <h3 class="display mt-8 text-4xl text-ink transition-colors duration-300 group-hover:text-white">{{ $service->t('title') }}</h3>
-                <p class="mt-3 flex-1 text-sm leading-relaxed text-muted transition-colors duration-300 group-hover:text-white/80">{{ $service->t('summary') }}</p>
-                <x-icon name="arrow-up-right" class="mt-6 h-6 w-6 text-ink/30 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white" />
-            </a>
-        @endforeach
+    <div class="mt-12 grid gap-10 lg:grid-cols-12 lg:gap-16" data-services>
+
+        {{-- Preview card of the selected service --}}
+        <div class="reveal lg:col-span-5" aria-live="polite">
+            @foreach($services as $service)
+                @php $cover = $service->coverUrl(); @endphp
+                <article class="svc-preview {{ $loop->first ? 'active' : '' }}" data-preview="{{ $loop->index }}">
+                    <div class="aspect-[16/10] overflow-hidden rounded-[2rem] rounded-tr-[2.5rem] bg-soft">
+                        @if($cover)
+                            <img src="{{ $cover }}" alt="{{ $service->t('title') }}" loading="lazy" class="h-full w-full object-cover">
+                        @else
+                            <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-100 via-lilac/40 to-brand-50 text-brand-400">
+                                <x-icon :name="$service->icon" class="h-20 w-20" stroke="1.2" />
+                            </div>
+                        @endif
+                    </div>
+                    <h3 class="display mt-8 text-4xl text-ink">{{ $service->t('title') }}</h3>
+                    <p class="mt-3 max-w-sm text-sm leading-relaxed text-ink/80">{{ $service->t('summary') }}</p>
+                    <a href="{{ route('services') }}#{{ $service->slug }}" class="btn-dark mt-6">{{ __('site.home.service_more') }}</a>
+                </article>
+            @endforeach
+        </div>
+
+        {{-- The services, large --}}
+        <ul class="reveal divide-y divide-line border-b border-line lg:col-span-7" style="--d: 80ms">
+            @foreach($services as $service)
+                <li>
+                    <a href="{{ route('services') }}#{{ $service->slug }}" data-svc="{{ $loop->index }}"
+                       class="svc-item flex items-center justify-between gap-6 py-4 {{ $loop->first ? 'active' : '' }}">
+                        <span class="svc-title display min-w-0 text-4xl sm:text-5xl lg:text-[3.3rem] xl:text-[3.6rem]">{{ $service->t('title') }}</span>
+                        <span class="svc-icon flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-lilac text-ink">
+                            <x-icon :name="$service->icon" class="h-5 w-5" />
+                        </span>
+                    </a>
+                </li>
+            @endforeach
+        </ul>
     </div>
 </section>
 @endif

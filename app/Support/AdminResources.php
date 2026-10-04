@@ -91,6 +91,7 @@ class AdminResources
                 'order' => [['sort_order', 'asc'], ['id', 'asc']],
                 'slug_from' => 'title_en',
                 'columns' => [
+                    ['label' => '', 'field' => 'cover_photo', 'type' => 'image'],
                     ['label' => 'Title', 'field' => 'title_id', 'type' => 'title', 'sub' => 'summary_id'],
                     ['label' => 'Icon', 'field' => 'icon', 'type' => 'badge'],
                     ['label' => 'Active', 'field' => 'is_active', 'type' => 'bool'],
@@ -99,6 +100,7 @@ class AdminResources
                     ['name' => 'title', 'label' => 'Title', 'type' => 'text', 'bilingual' => true, 'required' => true],
                     ['name' => 'icon', 'label' => 'Icon', 'type' => 'icon', 'options' => $icons, 'required' => true],
                     ['name' => 'summary', 'label' => 'Short description', 'type' => 'textarea', 'rows' => 3, 'bilingual' => true],
+                    ['name' => 'cover_photo', 'label' => 'Photo', 'type' => 'image', 'folder' => 'services', 'hint' => 'Shown in the preview card of the Services section on the home page. A landscape photo works best.'],
                     ['name' => 'details', 'label' => 'What you get', 'type' => 'lines', 'bilingual' => true, 'hint' => 'One item per line.'],
                     ['name' => 'is_active', 'label' => 'Visible on the site', 'type' => 'checkbox', 'default' => true],
                     ['name' => 'sort_order', 'label' => 'Order (smaller = first)', 'type' => 'number', 'default' => 0],

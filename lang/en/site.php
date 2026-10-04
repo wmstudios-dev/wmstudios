@@ -40,6 +40,7 @@ return [
         'services_eyebrow' => 'Services',
         'services_title' => 'Every visual & digital need',
         'services_all' => 'All services',
+        'service_more' => 'Learn more',
         'works_eyebrow' => 'Selected work',
         'works_title' => 'Projects we are proud of',
         'works_all' => 'See all work',

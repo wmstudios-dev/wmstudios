@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\Localizes;
+use App\Support\ImageUploader;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +16,11 @@ class Service extends Model
     protected function casts(): array
     {
         return ['is_active' => 'boolean'];
+    }
+
+    public function coverUrl(bool $thumb = false): ?string
+    {
+        return ImageUploader::url($this->cover_photo, $thumb);
     }
 
     public function scopeActive(Builder $query): Builder

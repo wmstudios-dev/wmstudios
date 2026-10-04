@@ -40,6 +40,7 @@ return [
         'services_eyebrow' => 'Layanan',
         'services_title' => 'Semua kebutuhan visual & digital',
         'services_all' => 'Semua layanan',
+        'service_more' => 'Pelajari lebih lanjut',
         'works_eyebrow' => 'Karya pilihan',
         'works_title' => 'Proyek yang kami banggakan',
         'works_all' => 'Lihat semua karya',

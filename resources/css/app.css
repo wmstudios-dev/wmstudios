@@ -31,6 +31,7 @@
     --color-mint: #d3f5dc;
     --color-butter: #ffeaa8;
     --color-lime: #cdfba6;
+    --color-mist: #b4c0c9;
 
     --radius-4xl: 2rem;
 }
@@ -399,6 +400,63 @@ a:hover > * > .logo-word,
 @media (prefers-reduced-motion: reduce) {
     .logo-word,
     .logo-dot {
+        transition: none;
+    }
+}
+
+/* Home > Services: list of names on the right, preview of the active one on the left */
+.svc-item .svc-title {
+    color: var(--color-mist);
+    transition: color 0.25s ease, transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.svc-item .svc-icon {
+    opacity: 0;
+    transform: scale(0.7) rotate(-12deg);
+    transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.4);
+}
+
+.svc-item.active .svc-title,
+.svc-item:hover .svc-title {
+    color: var(--color-ink);
+}
+
+.svc-item.active .svc-title {
+    transform: translateX(6px);
+}
+
+.svc-item.active .svc-icon {
+    opacity: 1;
+    transform: none;
+}
+
+.svc-preview {
+    display: none;
+}
+
+.svc-preview.active {
+    display: block;
+    animation: svc-in 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes svc-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .svc-preview.active {
+        animation: none;
+    }
+
+    .svc-item .svc-title,
+    .svc-item .svc-icon {
         transition: none;
     }
 }

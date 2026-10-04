@@ -362,3 +362,28 @@ document.addEventListener('submit', (e) => {
     desktop.addEventListener('change', hide);
     window.addEventListener('pageshow', hide);
 })();
+
+// Home > Services: hover, focus or tap a service name to preview it on the left.
+document.querySelectorAll('[data-services]').forEach((root) => {
+    const items = Array.from(root.querySelectorAll('[data-svc]'));
+    const previews = Array.from(root.querySelectorAll('[data-preview]'));
+    const noHover = window.matchMedia('(hover: none)');
+
+    const activate = (index) => {
+        items.forEach((el) => el.classList.toggle('active', el.dataset.svc === index));
+        previews.forEach((el) => el.classList.toggle('active', el.dataset.preview === index));
+    };
+
+    items.forEach((el) => {
+        el.addEventListener('mouseenter', () => activate(el.dataset.svc));
+        el.addEventListener('focus', () => activate(el.dataset.svc));
+
+        // On touch screens the first tap previews it, a second tap opens the page.
+        el.addEventListener('click', (e) => {
+            if (noHover.matches && !el.classList.contains('active')) {
+                e.preventDefault();
+                activate(el.dataset.svc);
+            }
+        });
+    });
+});
