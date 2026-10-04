@@ -6,24 +6,44 @@
 @section('content')
 @include('partials.page-header', ['title' => __('site.services.title'), 'subtitle' => __('site.services.subtitle')])
 
+{{-- Quick jump between services --}}
+@if($services->count() > 1)
+<nav class="sticky top-16 z-30 -mt-4 mb-10 border-b border-line bg-white/85 backdrop-blur-md" aria-label="{{ __('site.nav.services') }}">
+    <div class="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-5 py-3 sm:px-8 [scrollbar-width:none]">
+        @foreach($services as $service)
+            <a href="#{{ $service->slug }}" class="inline-flex shrink-0 items-center gap-2 rounded-full border border-line px-4 py-1.5 text-sm font-semibold text-ink transition-all duration-200 hover:border-brand-500 hover:bg-brand-500 hover:text-white active:scale-95">
+                <x-icon :name="$service->icon" class="h-4 w-4" /> {{ $service->t('title') }}
+            </a>
+        @endforeach
+    </div>
+</nav>
+@endif
+
 {{-- Services --}}
 <section class="mx-auto max-w-7xl px-5 sm:px-8">
     <div class="divide-y divide-line border-y border-line">
         @foreach($services as $service)
-            <div id="{{ $service->slug }}" class="reveal grid scroll-mt-28 gap-8 py-12 lg:grid-cols-12">
+            @php $cover = $service->coverUrl(); @endphp
+            <div id="{{ $service->slug }}" class="reveal grid scroll-mt-40 gap-8 py-12 lg:grid-cols-12 lg:gap-12">
                 <div class="lg:col-span-5">
-                    <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-brand-500">
-                        <x-icon :name="$service->icon" class="h-7 w-7" />
-                    </span>
-                    <h2 class="display mt-6 text-5xl text-ink sm:text-6xl">{{ $service->t('title') }}</h2>
-                    <p class="mt-4 max-w-md leading-relaxed text-muted">{{ $service->t('summary') }}</p>
-                    <a href="{{ route('contact', ['service' => $service->slug]) }}" class="btn-ghost mt-6">{{ __('site.services.ask') }} <x-icon name="arrow" class="h-4 w-4" /></a>
+                    <div class="aspect-[16/10] overflow-hidden rounded-[2rem] rounded-tr-[2.5rem] bg-soft">
+                        @if($cover)
+                            <img src="{{ $cover }}" alt="{{ $service->t('title') }}" loading="lazy" class="h-full w-full object-cover">
+                        @else
+                            <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-100 via-lilac/40 to-brand-50 text-brand-400">
+                                <x-icon :name="$service->icon" class="h-16 w-16" stroke="1.2" />
+                            </div>
+                        @endif
+                    </div>
                 </div>
 
-                @if($service->tLines('details'))
-                    <div class="lg:col-span-6 lg:col-start-7">
-                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-muted">{{ __('site.services.get') }}</p>
-                        <ul class="mt-4 grid gap-3 sm:grid-cols-2">
+                <div class="lg:col-span-7">
+                    <p class="display text-3xl text-brand-500">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</p>
+                    <h2 class="display mt-1 text-5xl text-ink sm:text-6xl">{{ $service->t('title') }}</h2>
+                    <p class="mt-4 max-w-xl leading-relaxed text-muted">{{ $service->t('summary') }}</p>
+
+                    @if($service->tLines('details'))
+                        <ul class="mt-6 grid gap-3 sm:grid-cols-2">
                             @foreach($service->tLines('details') as $line)
                                 <li class="flex items-start gap-3 rounded-2xl bg-soft px-4 py-3 text-sm font-medium text-ink">
                                     <x-icon name="check" class="mt-0.5 h-4 w-4 shrink-0 text-brand-500" stroke="2.4" />
@@ -31,13 +51,14 @@
                                 </li>
                             @endforeach
                         </ul>
-                    </div>
-                @endif
+                    @endif
+
+                    <a href="{{ route('contact', ['service' => $service->slug]) }}" class="btn-dark mt-7">{{ __('site.services.ask') }} <x-icon name="arrow" class="h-4 w-4" /></a>
+                </div>
             </div>
         @endforeach
     </div>
 </section>
-
 {{-- Packages --}}
 @if($packages->isNotEmpty())
 <section class="mx-auto mt-24 max-w-7xl px-5 sm:px-8">

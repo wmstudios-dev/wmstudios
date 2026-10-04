@@ -40,7 +40,8 @@ document.documentElement.classList.add('js');
         const onScroll = () => {
             header.classList.toggle('shadow-sm', window.scrollY > 8);
             // On the home page the header floats over the blue hero until you scroll.
-            if (hasHero) header.dataset.overHero = window.scrollY > 8 ? 'false' : 'true';
+            // While the mobile menu is open the bar must look like a normal white bar.
+            if (hasHero) header.dataset.overHero = window.scrollY > 8 || header.dataset.menuOpen === 'true' ? 'false' : 'true';
         };
         onScroll();
         window.addEventListener('scroll', onScroll, { passive: true });
@@ -51,12 +52,27 @@ document.documentElement.classList.add('js');
             const open = menu.classList.toggle('hidden') === false;
             toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
             document.body.classList.toggle('overflow-hidden', open);
+            header.dataset.menuOpen = open ? 'true' : 'false';
+            window.dispatchEvent(new Event('scroll'));
         });
+
+        // Chevron next to each item opens its submenu; only one stays open at a time.
+        const subToggles = [...menu.querySelectorAll('[data-sub-toggle]')];
+        subToggles.forEach((btn) => btn.addEventListener('click', () => {
+            const open = btn.getAttribute('aria-expanded') !== 'true';
+            subToggles.forEach((other) => {
+                const isThis = other === btn;
+                other.setAttribute('aria-expanded', isThis && open ? 'true' : 'false');
+                document.getElementById(other.getAttribute('aria-controls'))?.toggleAttribute('hidden', !(isThis && open));
+            });
+        }));
 
         menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
             menu.classList.add('hidden');
             toggle.setAttribute('aria-expanded', 'false');
             document.body.classList.remove('overflow-hidden');
+            header.dataset.menuOpen = 'false';
+            window.dispatchEvent(new Event('scroll'));
         }));
     }
 })();

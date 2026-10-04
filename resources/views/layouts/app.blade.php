@@ -50,7 +50,7 @@
     <div id="mega-overlay" class="pointer-events-none fixed inset-0 z-40 bg-ink/45 opacity-0 backdrop-blur-[2px] transition-opacity duration-200" aria-hidden="true"></div>
 
     {{-- Header --}}
-    <header id="site-header" data-over-hero="{{ request()->routeIs('home') ? 'true' : 'false' }}"
+    <header id="site-header" data-over-hero="{{ request()->routeIs('home', 'works.index', 'services', 'process', 'space', 'thoughts.index', 'contact', 'privacy', 'terms') ? 'true' : 'false' }}"
             class="group/header sticky top-0 z-50 border-b border-line bg-white/85 backdrop-blur-md transition-all duration-300 data-[over-hero=true]:border-white/15 data-[over-hero=true]:bg-transparent data-[over-hero=true]:backdrop-blur-none">
         <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
             <a href="{{ route('home') }}" class="group flex shrink-0 items-center" aria-label="{{ $siteName }}">
@@ -92,17 +92,7 @@
         @include('layouts._mega')
 
         <div id="mobile-menu" class="hidden border-t border-line bg-white md:hidden">
-            <nav class="mx-auto flex max-w-7xl flex-col px-5 py-4" aria-label="Mobile">
-                @foreach($navItems as [$route, $pattern, $label])
-                    <a href="{{ route($route) }}" class="display border-b border-line py-4 text-3xl {{ request()->routeIs($pattern) ? 'text-brand-500' : 'text-ink' }}">{{ __($label) }}</a>
-                @endforeach
-                <a href="{{ route('contact') }}" class="display py-4 text-3xl text-brand-500">{{ __('site.nav.contact') }}</a>
-
-                <div class="mt-2 flex items-center gap-2 text-sm font-semibold">
-                    <a href="{{ route('locale.switch', 'id') }}" class="rounded-full px-3 py-1.5 {{ app()->getLocale() === 'id' ? 'bg-ink text-white' : 'border border-line text-muted' }}">Indonesia</a>
-                    <a href="{{ route('locale.switch', 'en') }}" class="rounded-full px-3 py-1.5 {{ app()->getLocale() === 'en' ? 'bg-ink text-white' : 'border border-line text-muted' }}">English</a>
-                </div>
-            </nav>
+            @include('layouts._mobile-nav')
         </div>
     </header>
 
