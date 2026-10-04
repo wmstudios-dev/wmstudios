@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\LegalController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\SeoController;
 use App\Http\Controllers\SiteController;
@@ -20,6 +21,8 @@ Route::get('/space', [SiteController::class, 'space'])->name('space');
 Route::get('/thoughts', [ThoughtController::class, 'index'])->name('thoughts.index');
 Route::get('/thoughts/{thought}', [ThoughtController::class, 'show'])->name('thoughts.show');
 Route::get('/contact', [ContactController::class, 'show'])->name('contact');
+Route::get('/privacy', [LegalController::class, 'privacy'])->name('privacy');
+Route::get('/terms', [LegalController::class, 'terms'])->name('terms');
 Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,1,contact')->name('contact.store');
 
 Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');

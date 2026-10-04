@@ -41,6 +41,7 @@ class SettingsSchema
                 ['key' => 'email', 'label' => 'Public email', 'type' => 'text'],
                 ['key' => 'notify_email', 'label' => 'Send new messages to', 'type' => 'text', 'hint' => 'Contact form messages are emailed here. Leave empty to use the public email.'],
                 ['key' => 'address', 'label' => 'Address / location', 'type' => 'text', 'bilingual' => true],
+                ['key' => 'hours', 'label' => 'Working hours', 'type' => 'text', 'bilingual' => true, 'hint' => 'e.g. Mon-Fri, 09.00-17.00. Shown in the footer.'],
             ],
             'Social media' => [
                 ['key' => 'instagram', 'label' => 'Instagram URL', 'type' => 'url'],

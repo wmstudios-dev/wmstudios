@@ -74,6 +74,12 @@
                     <a href="{{ route('locale.switch', 'en') }}" class="rounded-full px-2 py-1 transition-colors {{ app()->getLocale() === 'en' ? 'bg-ink text-white group-data-[over-hero=true]/header:bg-white group-data-[over-hero=true]/header:text-brand-600' : 'text-muted hover:text-ink group-data-[over-hero=true]/header:text-white/80 group-data-[over-hero=true]/header:hover:text-white' }}">EN</a>
                 </div>
 
+                @if($phone = \App\Support\WhatsApp::normalize(Setting::get('whatsapp')))
+                    <a href="tel:+{{ $phone }}" class="hidden items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-brand-600 group-data-[over-hero=true]/header:text-white group-data-[over-hero=true]/header:hover:text-lime xl:inline-flex" aria-label="{{ __('site.footer.call') }}">
+                        <x-icon name="phone" class="h-4 w-4" /> +{{ $phone }}
+                    </a>
+                @endif
+
                 <a href="{{ route('contact') }}" class="btn-primary hidden !px-5 !py-2.5 group-data-[over-hero=true]/header:border group-data-[over-hero=true]/header:border-white/60 group-data-[over-hero=true]/header:!bg-transparent group-data-[over-hero=true]/header:hover:!bg-white/15 group-data-[over-hero=true]/header:hover:shadow-none sm:inline-flex">{{ __('site.nav.lets_talk') }}</a>
 
                 <button id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="{{ __('site.nav.menu') }}"
@@ -145,7 +151,7 @@
             @endunless
 
             <div class="grid gap-12 md:grid-cols-12">
-                <div class="md:col-span-5">
+                <div class="md:col-span-4">
                     @if($logo)
                         <img src="{{ $logo }}" alt="{{ $siteName }}" class="h-9 w-auto brightness-0 invert">
                     @else
@@ -157,7 +163,7 @@
                     </div>
                 </div>
 
-                <div class="md:col-span-3 md:col-start-7">
+                <div class="md:col-span-2 md:col-start-6">
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">{{ __('site.footer.explore') }}</p>
                     <ul class="mt-4 space-y-2.5 text-sm">
                         @foreach($navItems as [$route, $pattern, $label])
@@ -167,7 +173,18 @@
                     </ul>
                 </div>
 
-                <div class="md:col-span-3">
+                @if($mega['services']->isNotEmpty())
+                    <div class="md:col-span-3">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">{{ __('site.footer.services') }}</p>
+                        <ul class="mt-4 space-y-2.5 text-sm">
+                            @foreach($mega['services'] as $svc)
+                                <li><a href="{{ route('services') }}#{{ $svc->slug }}" class="text-white/75 transition-colors hover:text-white">{{ $svc->t('title') }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <div class="md:col-span-2">
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">{{ __('site.footer.contact') }}</p>
                     <ul class="mt-4 space-y-2.5 text-sm text-white/75">
                         @if($email = Setting::get('email'))
@@ -179,12 +196,20 @@
                         @if($address = Setting::t('address'))
                             <li class="text-white/60">{{ $address }}</li>
                         @endif
+                        @if($hours = Setting::t('hours'))
+                            <li class="text-white/60">{{ $hours }}</li>
+                        @endif
                     </ul>
                 </div>
             </div>
 
             <div class="mt-14 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/45 sm:flex-row sm:items-center">
-                <p>&copy; {{ date('Y') }} {{ $siteName }}. {{ __('site.footer.rights') }}</p>
+                <p>&copy; {{ date('Y') }} {{ $siteName }}. {{ __('site.footer.rights') }}
+                    <span class="ml-2 inline-flex gap-3">
+                        <a href="{{ route('privacy') }}" class="underline-offset-4 transition-colors hover:text-white hover:underline">{{ __('site.footer.privacy') }}</a>
+                        <a href="{{ route('terms') }}" class="underline-offset-4 transition-colors hover:text-white hover:underline">{{ __('site.footer.terms') }}</a>
+                    </span>
+                </p>
                 <div class="flex items-center gap-1 font-semibold">
                     <a href="{{ route('locale.switch', 'id') }}" class="rounded-full px-2 py-1 {{ app()->getLocale() === 'id' ? 'bg-white text-ink' : 'hover:text-white' }}">ID</a>
                     <a href="{{ route('locale.switch', 'en') }}" class="rounded-full px-2 py-1 {{ app()->getLocale() === 'en' ? 'bg-white text-ink' : 'hover:text-white' }}">EN</a>
