@@ -1,9 +1,9 @@
 {{-- Big blue call-to-action block with photos floating on the right. Optional $title and $text. --}}
 @php
     $wa = \App\Support\WhatsApp::chatUrl();
-    $pics = \App\Models\SpaceItem::active()->orderBy('sort_order')->orderByDesc('id')->take(4)->get()->map(fn ($i) => $i->photoUrl(true));
+    $pics = \App\Models\SpaceItem::active()->orderBy('sort_order')->orderByDesc('id')->take(4)->get()->map(fn ($i) => $i->photoUrl(true))->toBase();
     if ($pics->filter()->count() < 4) {
-        $pics = $pics->concat(\App\Models\Work::active()->ordered()->take(4)->get()->map(fn ($w) => $w->coverUrl(true)));
+        $pics = $pics->concat(\App\Models\Work::active()->ordered()->take(4)->get()->map(fn ($w) => $w->coverUrl(true))->toBase());
     }
     $pics = $pics->filter()->unique()->take(4)->values();
     $floats = [
