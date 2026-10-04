@@ -98,30 +98,29 @@
     </div>
 
     @if($clients->isNotEmpty())
-        {{-- Brands we have worked with. A few logos sit evenly in a row; many scroll as a marquee. --}}
-        @php $scrolling = $clients->count() > 6; @endphp
+        {{-- Brands we have worked with, drifting right to left. The list is repeated until one set is wider
+             than the row, so the loop never shows a gap, however few brands there are. --}}
+        @php
+            $group = $clients;
+            while ($group->count() < 8) {
+                $group = $group->concat($clients);
+            }
+            $marqueeSeconds = max(24, $group->count() * 4);
+        @endphp
         <div class="relative">
             <div class="mx-auto max-w-7xl px-5 sm:px-8">
                 <div class="flex flex-col gap-5 border-t border-white/20 py-7 sm:flex-row sm:items-center sm:gap-10">
                     <p class="max-w-[10rem] shrink-0 text-xs font-medium leading-snug text-white/70">{{ __('site.hero.trusted') }}</p>
 
-                    @if($scrolling)
-                        <div class="marquee relative min-w-0 flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
-                            <div class="marquee-track flex w-max items-center gap-14">
-                                @foreach([1, 2] as $copy)
-                                    @foreach($clients as $client)
-                                        @include('partials.client-logo', ['client' => $client, 'hidden' => $copy === 2])
-                                    @endforeach
+                    <div class="marquee relative min-w-0 flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+                        <div class="marquee-track flex w-max items-center gap-14" style="animation-duration: {{ $marqueeSeconds }}s">
+                            @foreach([1, 2] as $copy)
+                                @foreach($group as $client)
+                                    @include('partials.client-logo', ['client' => $client, 'hidden' => $copy === 2 || $loop->index >= $clients->count()])
                                 @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <div class="flex min-w-0 flex-1 flex-wrap items-center gap-x-10 gap-y-4 lg:flex-nowrap lg:justify-between lg:gap-x-6">
-                            @foreach($clients as $client)
-                                @include('partials.client-logo', ['client' => $client])
                             @endforeach
                         </div>
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>
