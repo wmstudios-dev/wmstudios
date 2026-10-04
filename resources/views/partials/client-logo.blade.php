@@ -7,6 +7,6 @@
     @if($logo)
         <img src="{{ $logo }}" alt="{{ $client->name }}" loading="lazy" class="h-8 w-auto opacity-70 brightness-0 invert transition-opacity duration-200 hover:opacity-100">
     @else
-        <span class="display text-2xl text-white/70 transition-colors duration-200 hover:text-white">{{ $client->name }}</span>
+        <span class="display whitespace-nowrap text-xl text-white/70 lg:text-2xl transition-colors duration-200 hover:text-white">{{ $client->name }}</span>
     @endif
 </a>

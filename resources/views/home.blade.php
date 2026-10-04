@@ -116,7 +116,7 @@
                             </div>
                         </div>
                     @else
-                        <div class="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-x-10 gap-y-5">
+                        <div class="flex min-w-0 flex-1 flex-wrap items-center gap-x-10 gap-y-4 lg:flex-nowrap lg:justify-between lg:gap-x-6">
                             @foreach($clients as $client)
                                 @include('partials.client-logo', ['client' => $client])
                             @endforeach
