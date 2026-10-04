@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Client;
 use App\Models\Faq;
 use App\Models\Package;
 use App\Models\ProcessStep;
@@ -23,6 +24,25 @@ class SiteContentSeeder extends Seeder
         $this->process();
         $this->packages();
         $this->faqs();
+        $this->sampleClients();
+    }
+
+    /**
+     * A handful of made-up brands so the "Trusted by" row on the home page can be judged before real
+     * clients exist. They are added ONCE (a flag in the settings remembers it), so deleting them in the
+     * admin is permanent. All names are fictional; replace them under Admin > Clients.
+     */
+    private function sampleClients(): void
+    {
+        if (Setting::get('sample_clients_seeded') !== null || Client::query()->exists()) {
+            return;
+        }
+
+        foreach (['Kopi Senja', 'Dewan Kriya', 'Aksara Studio', 'Rumah Tenun', 'Fitkita', 'Langit Biru'] as $i => $name) {
+            Client::create(['name' => $name, 'sort_order' => $i + 1]);
+        }
+
+        Setting::put('sample_clients_seeded', '1');
     }
 
     private function settings(): void

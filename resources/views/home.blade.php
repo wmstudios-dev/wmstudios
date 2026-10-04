@@ -99,7 +99,7 @@
 
     @if($clients->isNotEmpty())
         {{-- Brands we have worked with. A few logos sit evenly in a row; many scroll as a marquee. --}}
-        @php $scrolling = $clients->count() > 5; @endphp
+        @php $scrolling = $clients->count() > 6; @endphp
         <div class="relative">
             <div class="mx-auto max-w-7xl px-5 sm:px-8">
                 <div class="flex flex-col gap-5 border-t border-white/20 py-7 sm:flex-row sm:items-center sm:gap-10">
