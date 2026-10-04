@@ -38,6 +38,8 @@ return [
 
     'home' => [
         'faq_more' => 'More questions',
+        'why_title' => 'Why :name?',
+        'culture' => 'Good work comes from a good space: honest conversations, curious people and a lot of coffee.',
         'statement' => 'We do not just make content. We shape stories, visuals and digital experiences that feel honest, consistent and deliver results.',
         'services_eyebrow' => 'Services',
         'services_title' => 'Every visual & digital need',

@@ -141,26 +141,51 @@
     <p class="reveal max-w-5xl text-3xl font-semibold leading-[1.2] tracking-tight text-ink sm:text-5xl">{{ __('site.home.statement') }}</p>
 </section>
 
-{{-- Numbers: only the figures the admin filled in (real claims only) --}}
+{{-- Why us: big running headline, then the figures the admin filled in (real claims only) --}}
 @php
     $stats = collect(range(1, 4))
         ->map(fn ($n) => ['value' => Setting::get("stat_{$n}_value"), 'label' => Setting::t("stat_{$n}_label")])
         ->filter(fn ($s) => filled($s['value']))
         ->values();
+    $statStyles = [
+        ['bg-lilac', 'spark'],
+        ['bg-butter', 'heart'],
+        ['bg-mint', 'check'],
+        ['bg-lime', 'star'],
+    ];
+    $whyText = __('site.home.why_title', ['name' => Setting::get('site_name', config('app.name'))]);
 @endphp
-@if($stats->isNotEmpty())
-<section class="mx-auto max-w-7xl px-5 pb-20 sm:px-8">
-    <div class="reveal grid gap-px overflow-hidden rounded-[2rem] bg-line sm:grid-cols-2 {{ [1 => 'lg:grid-cols-1', 2 => 'lg:grid-cols-2', 3 => 'lg:grid-cols-3', 4 => 'lg:grid-cols-4'][min($stats->count(), 4)] }}">
-        @foreach($stats as $stat)
-            <div class="bg-soft px-7 py-9">
-                <p class="display text-6xl text-brand-600 sm:text-7xl">{{ $stat['value'] }}</p>
-                @if($stat['label'])<p class="mt-3 text-sm font-semibold text-ink/80">{{ $stat['label'] }}</p>@endif
-            </div>
-        @endforeach
+<section class="overflow-hidden pb-14 sm:pb-20" aria-label="{{ $whyText }}">
+    <div class="marquee" aria-hidden="true">
+        <div class="marquee-track flex w-max" style="animation-duration: 36s">
+            @foreach([1, 2] as $copy)
+                <div class="flex shrink-0 items-center gap-8 pr-8 sm:gap-12 sm:pr-12">
+                    @foreach(range(1, 3) as $i)
+                        <span class="display whitespace-nowrap text-[5rem] leading-none text-brand-500 sm:text-[9rem]">{{ $whyText }}</span>
+                        <x-icon name="spark" class="h-10 w-10 shrink-0 text-lime sm:h-16 sm:w-16" />
+                        <span class="display whitespace-nowrap text-[5rem] leading-none text-transparent [-webkit-text-stroke:2px_var(--color-brand-500)] sm:text-[9rem]">{{ $whyText }}</span>
+                        <x-icon name="spark" class="h-10 w-10 shrink-0 text-lime sm:h-16 sm:w-16" />
+                    @endforeach
+                </div>
+            @endforeach
+        </div>
     </div>
-</section>
-@endif
 
+    @if($stats->isNotEmpty())
+        <div class="mx-auto mt-10 max-w-7xl px-5 sm:mt-14 sm:px-8">
+            <div class="grid gap-4 sm:grid-cols-2 {{ [1 => 'lg:grid-cols-1', 2 => 'lg:grid-cols-2', 3 => 'lg:grid-cols-3', 4 => 'lg:grid-cols-4'][min($stats->count(), 4)] }}">
+                @foreach($stats as $stat)
+                    @php [$bg, $icon] = $statStyles[$loop->index % count($statStyles)]; @endphp
+                    <div class="reveal rounded-3xl {{ $bg }} p-6 transition-transform duration-300 hover:-translate-y-1 sm:p-7" style="--d: {{ $loop->index * 70 }}ms">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/70 text-ink"><x-icon :name="$icon" class="h-5 w-5" /></span>
+                        <p class="display mt-8 text-6xl text-ink sm:text-7xl">{{ $stat['value'] }}</p>
+                        @if($stat['label'])<p class="mt-2 text-sm font-semibold text-ink/80">{{ $stat['label'] }}</p>@endif
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+</section>
 {{-- Services: preview of the selected service on the left, the list of services on the right --}}
 @if($services->isNotEmpty())
 <section class="mx-auto max-w-7xl px-5 sm:px-8">
@@ -255,27 +280,43 @@
 </section>
 @endif
 
-{{-- Space --}}
+{{-- Culture: one big sentence with photos from the Space page scattered around it --}}
 @if($space->isNotEmpty())
+@php
+    $scatter = [
+        'left-0 top-2 w-36 rotate-[-6deg]',
+        'right-2 top-0 w-40 rotate-[5deg]',
+        'left-[9%] bottom-0 w-32 rotate-[4deg]',
+        'right-[10%] bottom-2 w-36 rotate-[-4deg]',
+    ];
+    $shots = $space->take(4)->values();
+@endphp
 <section class="mx-auto mt-28 max-w-7xl px-5 sm:px-8">
-    <div class="flex flex-wrap items-end justify-between gap-4">
-        <div>
-            <p class="eyebrow reveal">{{ __('site.home.space_eyebrow') }}</p>
-            <h2 class="display reveal mt-2 text-5xl text-ink sm:text-7xl" style="--d: 60ms">{{ __('site.home.space_title') }}</h2>
+    <div class="relative py-6 lg:py-24">
+        {{-- Phone: a small row of photos above the text --}}
+        <div class="reveal mb-8 grid grid-cols-4 gap-2 lg:hidden">
+            @foreach($shots as $item)
+                <a href="{{ route('space') }}" class="aspect-square overflow-hidden rounded-2xl bg-soft {{ $loop->odd ? 'rotate-[-3deg]' : 'rotate-[3deg]' }}">
+                    <img src="{{ $item->photoUrl(true) }}" alt="{{ $item->t('caption') }}" loading="lazy" class="h-full w-full object-cover">
+                </a>
+            @endforeach
         </div>
-        <a href="{{ route('space') }}" class="btn-ghost reveal">{{ __('site.home.space_all') }} <x-icon name="arrow" class="h-4 w-4" /></a>
-    </div>
 
-    <div class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        @foreach($space as $item)
-            <a href="{{ route('space') }}" class="reveal group relative aspect-[3/4] overflow-hidden rounded-2xl bg-soft {{ $loop->odd ? 'lg:mt-8' : '' }}" style="--d: {{ $loop->index * 60 }}ms">
-                <img src="{{ $item->photoUrl(true) }}" alt="{{ $item->t('caption') }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
+        {{-- Desktop: scattered around the text --}}
+        @foreach($shots as $item)
+            <a href="{{ route('space') }}" class="reveal group absolute z-10 hidden aspect-[3/4] overflow-hidden rounded-3xl bg-soft shadow-xl shadow-ink/10 transition-all duration-500 hover:z-20 hover:scale-105 hover:rotate-0 lg:block {{ $scatter[$loop->index] }}" style="--d: {{ $loop->index * 80 }}ms">
+                <img src="{{ $item->photoUrl(true) }}" alt="{{ $item->t('caption') }}" loading="lazy" class="h-full w-full object-cover">
             </a>
         @endforeach
+
+        <div class="relative mx-auto max-w-3xl text-center">
+            <p class="eyebrow reveal">{{ __('site.home.space_eyebrow') }}</p>
+            <p class="display reveal mt-4 text-4xl text-ink sm:text-6xl" style="--d: 60ms">{{ __('site.home.culture') }}</p>
+            <a href="{{ route('space') }}" class="btn-dark reveal mt-8" style="--d: 120ms">{{ __('site.home.space_all') }} <x-icon name="arrow" class="h-4 w-4" /></a>
+        </div>
     </div>
 </section>
 @endif
-
 {{-- Testimonials --}}
 @if($testimonials->isNotEmpty())
 <section class="mx-auto mt-28 max-w-7xl px-5 sm:px-8">

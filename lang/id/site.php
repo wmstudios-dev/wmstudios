@@ -37,6 +37,8 @@ return [
     ],
 
     'home' => [
+        'why_title' => 'Kenapa :name?',
+        'culture' => 'Karya bagus lahir dari ruang yang baik: obrolan jujur, orang-orang yang penasaran, dan kopi yang tidak pernah habis.',
         'faq_more' => 'Pertanyaan lainnya',
         'statement' => 'Kami bukan sekadar membuat konten. Kami merancang cerita, visual, dan pengalaman digital yang terasa jujur, konsisten, dan menghasilkan.',
         'services_eyebrow' => 'Layanan',
