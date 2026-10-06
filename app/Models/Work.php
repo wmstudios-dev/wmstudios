@@ -51,6 +51,15 @@ class Work extends Model
         return ImageUploader::url($this->cover_photo, $thumb) ?? $this->video()['thumb'] ?? null;
     }
 
+    /** Is the main photo wider than tall? (A landscape one can run full width; a poster must be shown whole.) */
+    public function coverIsLandscape(): bool
+    {
+        $file = $this->cover_photo ? \App\Support\StorageSetup::locate($this->cover_photo) : null;
+        $size = $file ? @getimagesize($file) : false;
+
+        return $size ? $size[0] > $size[1] : false;
+    }
+
     public function beforeUrl(): ?string
     {
         return ImageUploader::url($this->before_photo);

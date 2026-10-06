@@ -37,6 +37,7 @@ class SiteContentSeeder extends Seeder
         $this->portfolio();
         $this->once('portfolio_logos_v1', fn () => $this->portfolioLogos());
         $this->once('portfolio_photos_v2', fn () => $this->portfolioPhotos());
+        $this->once('portfolio_covers_v1', fn () => $this->portfolioCovers());
     }
 
     private function once(string $flag, \Closure $seed): void
@@ -251,6 +252,49 @@ class SiteContentSeeder extends Seeder
             }
         }
     }
+    /**
+     * Gives works the hand-picked landscape main photo (covers.json) in place of the first picture they were seeded
+     * with (runs once). A cover chosen in the admin is never replaced, and the former cover stays on the work page
+     * as a gallery picture.
+     */
+    private function portfolioCovers(): void
+    {
+        $file = database_path('data/portfolio/covers.json');
+
+        if (! is_file($file)) {
+            return;
+        }
+
+        $base = database_path('data/portfolio');
+        $disk = Storage::disk('public');
+        $manifest = self::portfolioManifest();
+
+        foreach (json_decode(file_get_contents($file), true) ?: [] as $slug => $name) {
+            $work = Work::where('slug', $slug)->first();
+            $new = "uploads/works/{$slug}/{$name}.webp";
+            $old = (string) $work?->cover_photo;
+
+            if (! $work || $old === $new || ! preg_match('#/\d\d\.webp$#', $old) || ! is_file("{$base}/{$slug}/{$name}.webp")) {
+                continue;
+            }
+
+            foreach ([$name . '.webp', $name . '_thumb.webp'] as $picture) {
+                if (is_file("{$base}/{$slug}/{$picture}")) {
+                    $disk->put("uploads/works/{$slug}/{$picture}", file_get_contents("{$base}/{$slug}/{$picture}"));
+                }
+            }
+
+            $work->update(['cover_photo' => $new]);
+
+            $number = basename($old, '.webp');
+
+            if (isset($manifest[$slug][$number]) && ! $work->photos()->where('path', $old)->exists()) {
+                [$kind, $caption, $order] = $manifest[$slug][$number];
+                $work->photos()->create(['path' => $old, 'kind' => $kind, 'caption' => $caption, 'sort_order' => $order + 1]);
+            }
+        }
+    }
+
     /**
      * Gives a client its white-ready logo from database/data/portfolio/logos, but only where the client has none yet
      * (the portfolio seed above ran before every logo existed). Runs once; a logo set in the admin is never replaced.
