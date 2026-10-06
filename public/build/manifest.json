@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-C8YB0Zjr.css",
+    "file": "assets/app-Bcnp7AbZ.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -8,10 +8,19 @@
       "app.css"
     ]
   },
+  "resources/js/admin-gallery.js": {
+    "file": "assets/admin-gallery-BXz7AIJ8.js",
+    "name": "admin-gallery",
+    "src": "resources/js/admin-gallery.js",
+    "isDynamicEntry": true
+  },
   "resources/js/app.js": {
-    "file": "assets/app-CL406VSD.js",
+    "file": "assets/app-D7c5-KaJ.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/js/admin-gallery.js"
+    ]
   }
 }

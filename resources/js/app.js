@@ -1,5 +1,10 @@
 import './bootstrap';
 
+// The gallery editor (drag to re-order, group by type) is only needed in the admin, so it loads on demand.
+if (document.querySelector('[data-gallery]')) {
+    import('./admin-gallery.js');
+}
+
 document.documentElement.classList.add('js');
 
 // Scroll reveal

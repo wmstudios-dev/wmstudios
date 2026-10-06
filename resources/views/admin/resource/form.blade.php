@@ -65,43 +65,83 @@
             </div>
 
         @elseif($f['type'] === 'gallery')
-            <div>
-                <label class="mb-2 block text-sm font-semibold">{{ $label }}</label>
-                @if($editing && $item->{$f['relation']}->isNotEmpty())
-                    <div class="mb-3 grid grid-cols-3 gap-3 sm:grid-cols-5">
-                        @foreach($item->{$f['relation']} as $photo)
-                            <label class="group relative block cursor-pointer overflow-hidden rounded-2xl bg-soft">
-                                <img src="{{ $photo->url(true) }}" alt="" class="aspect-square w-full object-cover">
-                                <span class="absolute inset-x-0 bottom-0 flex items-center gap-1.5 bg-ink/70 px-2 py-1.5 text-[11px] font-medium text-white">
-                                    <input type="checkbox" name="{{ $name }}_remove[]" value="{{ $photo->id }}" class="rounded border-white/50"> Remove
-                                </span>
-                            </label>
-                            @if(! empty($f['kinds']))
-                                <select name="{{ $name }}_kind[{{ $photo->id }}]" aria-label="Type" class="-mt-1 w-full rounded-xl border border-line bg-white px-2 py-1.5 text-xs">
-                                    @foreach(\App\Models\WorkPhoto::KINDS as $kindValue => $kindLabel)
-                                        <option value="{{ $kindValue }}" @selected(($photo->kind ?? 'other') === $kindValue)>{{ $kindLabel }}</option>
+            @php
+                $kinds = ! empty($f['kinds']) ? \App\Models\WorkPhoto::KINDS : ['other' => 'Photos'];
+                $galleryPhotos = $editing ? $item->{$f['relation']} : collect();
+                $byKind = $galleryPhotos->groupBy(fn ($p) => array_key_exists($p->kind ?? 'other', $kinds) ? ($p->kind ?? 'other') : 'other');
+            @endphp
+            <div data-gallery data-field="{{ $name }}">
+                <label class="mb-1 block text-sm font-semibold">{{ $label }}</label>
+
+                @if($editing)
+                    <p class="mb-4 text-xs text-muted">
+                        Drag a photo to re-order it, or drop it into another group to change its type. On a phone, hold a photo a moment before dragging, or use "Move to". Changes are saved with the button at the bottom.
+                    </p>
+
+                    @if(! empty($f['cover_field']))
+                        <input type="hidden" name="{{ $name }}_cover" value="" data-cover-input>
+                    @endif
+
+                    <div class="space-y-4">
+                        @foreach($kinds as $kindValue => $kindLabel)
+                            <section data-group data-kind="{{ $kindValue }}" class="gal-group rounded-2xl border border-line bg-soft/60 p-3">
+                                <header class="mb-2 flex items-center justify-between px-1">
+                                    <h3 class="text-sm font-bold text-ink">{{ $kindLabel }}</h3>
+                                    <span class="rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-muted" data-count>{{ ($byKind[$kindValue] ?? collect())->count() }}</span>
+                                </header>
+
+                                <ul data-list class="gal-list grid min-h-[3.5rem] grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+                                    @foreach($byKind[$kindValue] ?? [] as $photo)
+                                        <li data-tile data-id="{{ $photo->id }}" class="gal-tile group relative cursor-grab overflow-hidden rounded-xl border border-line bg-white active:cursor-grabbing">
+                                            <input type="hidden" name="{{ $name }}_order[]" value="{{ $photo->id }}">
+                                            @if(! empty($f['kinds']))
+                                                <input type="hidden" name="{{ $name }}_kind[{{ $photo->id }}]" value="{{ $kindValue }}" data-kind-input>
+                                            @endif
+                                            <img src="{{ $photo->url(true) }}" alt="" draggable="false" loading="lazy" class="aspect-square w-full object-cover">
+
+                                            <div class="space-y-1.5 p-2 text-[11px]">
+                                                @if(! empty($f['cover_field']))
+                                                    <button type="button" data-make-cover="{{ $photo->id }}" aria-pressed="false" class="gal-cover w-full rounded-lg border border-line px-2 py-1 font-semibold text-ink hover:border-brand-500">Make main photo</button>
+                                                @endif
+                                                @if(! empty($f['kinds']))
+                                                    <select data-move aria-label="Move to" class="w-full rounded-lg border border-line bg-white px-1.5 py-1">
+                                                        @foreach($kinds as $moveValue => $moveLabel)
+                                                            <option value="{{ $moveValue }}" @selected($moveValue === $kindValue)>Move to: {{ $moveLabel }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    {{-- only visible while the photo sits in the Carousel group (see app.css) --}}
+                                                    <input type="text" name="{{ $name }}_caption[{{ $photo->id }}]" value="{{ $photo->caption }}" maxlength="120" placeholder="Set name, e.g. Carousel 1" aria-label="Carousel set name" class="gal-caption w-full rounded-lg border border-line px-2 py-1">
+                                                @endif
+                                                <label class="flex cursor-pointer items-center gap-1.5 font-medium text-muted">
+                                                    <input type="checkbox" name="{{ $name }}_remove[]" value="{{ $photo->id }}" data-remove class="rounded border-line text-red-500"> Remove
+                                                </label>
+                                            </div>
+                                        </li>
                                     @endforeach
-                                </select>
-                            @endif
+                                </ul>
+                            </section>
                         @endforeach
                     </div>
                 @endif
-                <input type="file" name="{{ $name }}_new[]" multiple accept="image/jpeg,image/png,image/webp,image/gif"
-                       class="block w-full text-sm text-muted file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-700 hover:file:bg-brand-100">
-                @if(! empty($f['kinds']))
-                    <div class="mt-3 flex flex-wrap items-center gap-2 text-sm">
-                        <label for="{{ $name }}_new_kind" class="font-semibold">Type of the new photos</label>
-                        <select id="{{ $name }}_new_kind" name="{{ $name }}_new_kind" class="rounded-xl border border-line bg-white px-3 py-1.5 text-sm">
-                            @foreach(\App\Models\WorkPhoto::KINDS as $kindValue => $kindLabel)
-                                <option value="{{ $kindValue }}" @selected($kindValue === 'other')>{{ $kindLabel }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <p class="mt-1 text-xs text-muted">Pick the type first, then choose the files. To upload another type, save and repeat. The work page shows each type in its own section.</p>
-                @endif
-                <p class="mt-1.5 text-xs text-muted">Up to {{ $f['max'] ?? 12 }} photos at a time. They are resized automatically.</p>
-            </div>
 
+                <div class="mt-5 rounded-2xl border border-dashed border-line p-4">
+                    <p class="mb-2 text-sm font-semibold">Add photos</p>
+                    <input type="file" name="{{ $name }}_new[]" multiple accept="image/jpeg,image/png,image/webp,image/gif"
+                           class="block w-full text-sm text-muted file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-700 hover:file:bg-brand-100">
+                    @if(! empty($f['kinds']))
+                        <div class="mt-3 flex flex-wrap items-center gap-2 text-sm">
+                            <label for="{{ $name }}_new_kind" class="font-semibold">Type of the new photos</label>
+                            <select id="{{ $name }}_new_kind" name="{{ $name }}_new_kind" class="rounded-xl border border-line bg-white px-3 py-1.5 text-sm">
+                                @foreach(\App\Models\WorkPhoto::KINDS as $kindValue => $kindLabel)
+                                    <option value="{{ $kindValue }}" @selected($kindValue === 'other')>{{ $kindLabel }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <p class="mt-1 text-xs text-muted">Pick the type first, then choose the files. To upload another type, save and repeat. New photos go to the end of their group; drag them afterwards.</p>
+                    @endif
+                    <p class="mt-1.5 text-xs text-muted">Up to {{ $f['max'] ?? 12 }} photos at a time. They are resized automatically.</p>
+                </div>
+            </div>
         @else
             <div>
                 <label class="mb-2 block text-sm font-semibold">{{ $label }}</label>

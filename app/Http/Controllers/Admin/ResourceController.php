@@ -150,6 +150,11 @@ class ResourceController extends Controller
                 $rules[$f['name'] . '_new.*'] = ['image', 'mimes:jpg,jpeg,png,webp,gif', 'max:12288'];
                 $rules[$f['name'] . '_remove'] = ['nullable', 'array'];
                 $rules[$f['name'] . '_remove.*'] = ['integer'];
+                $rules[$f['name'] . '_order'] = ['nullable', 'array'];
+                $rules[$f['name'] . '_order.*'] = ['integer'];
+                $rules[$f['name'] . '_caption'] = ['nullable', 'array'];
+                $rules[$f['name'] . '_caption.*'] = ['nullable', 'string', 'max:120'];
+                $rules[$f['name'] . '_cover'] = ['nullable', 'integer'];
 
                 if (! empty($f['kinds'])) {
                     $kinds = implode(',', array_keys(\App\Models\WorkPhoto::KINDS));
@@ -254,6 +259,35 @@ class ResourceController extends Controller
             if (! empty($f['kinds'])) {
                 foreach ((array) $request->input($f['name'] . '_kind', []) as $photoId => $kind) {
                     $item->{$relation}()->whereKey($photoId)->update(['kind' => $kind]);
+                }
+            }
+
+            // Labels (the set a carousel slide belongs to)
+            foreach ((array) $request->input($f['name'] . '_caption', []) as $photoId => $caption) {
+                $item->{$relation}()->whereKey($photoId)->update(['caption' => trim((string) $caption) !== '' ? trim((string) $caption) : null]);
+            }
+
+            // The order the editor posted: the position in the list is the new sort order
+            foreach (array_values(array_unique((array) $request->input($f['name'] . '_order', []))) as $position => $photoId) {
+                $item->{$relation}()->whereKey($photoId)->update(['sort_order' => $position + 1]);
+            }
+
+            // A photo promoted to the main photo; the former main photo joins the gallery so nothing is lost
+            if (! empty($f['cover_field']) && $request->filled($f['name'] . '_cover')) {
+                $promoted = $item->{$relation}()->whereKey($request->input($f['name'] . '_cover'))->first();
+
+                if ($promoted) {
+                    $former = $item->{$f['cover_field']};
+                    $item->{$f['cover_field']} = $promoted->path;
+                    $item->save();
+                    $promoted->delete();
+
+                    if ($former) {
+                        $item->{$relation}()->create([
+                            'path' => $former,
+                            'sort_order' => ((int) $item->{$relation}()->min('sort_order')) - 1,
+                        ] + (! empty($f['kinds']) ? ['kind' => 'other'] : []));
+                    }
                 }
             }
 
