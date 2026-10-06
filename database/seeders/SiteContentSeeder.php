@@ -38,6 +38,7 @@ class SiteContentSeeder extends Seeder
         $this->once('portfolio_logos_v1', fn () => $this->portfolioLogos());
         $this->once('portfolio_photos_v2', fn () => $this->portfolioPhotos());
         $this->once('portfolio_covers_v3', fn () => $this->portfolioCovers());
+        $this->once('portfolio_batch2_v1', fn () => $this->portfolioBatch2());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -410,6 +411,91 @@ class SiteContentSeeder extends Seeder
         }
     }
 
+    /**
+     * Four more social media clients (runs once): Among Roso, Haji Widayat, SRC Toko Alif and Sektor Digital. Same
+     * recipe as portfolio(): pictures shipped under database/data/portfolio, the first one is the cover, the rest the
+     * gallery (type, carousel set and order come from manifest.json). Edit or delete them in the admin afterwards.
+     */
+    private function portfolioBatch2(): void
+    {
+        $base = database_path('data/portfolio');
+        $disk = Storage::disk('public');
+        $manifest = self::portfolioManifest();
+        $site = Setting::get('site_name', 'WMSTUDIOS');
+
+        $rows = [
+            ['among-roso', 'Among Roso',
+                'Social media content for a restaurant and coffee place: signature dishes, promos, opening hours and holiday greetings.',
+                'Konten sosial media untuk restoran dan kedai kopi: menu andalan, promo, jam buka, dan ucapan hari besar.',
+                "Social media content for Among Roso Coffee - Eatery in Magelang. Feed posts present the signature dishes and promos, carousels share facts about the food, and stories announce special menus, opening hours and holiday greetings. The project also covers the visual identity of the brand.",
+                "Konten media sosial untuk Among Roso Coffee - Eatery di Magelang. Feed menampilkan menu andalan dan promo, carousel berbagi fakta menarik tentang hidangan, dan story menyampaikan menu spesial, jam buka, serta ucapan hari besar. Proyek ini juga mencakup identitas visual brand."],
+            ['haji-widayat', 'Haji Widayat',
+                'Visual identity and social media content for an artist museum, built around the Memorabilia Haji Widayat exhibition.',
+                'Identitas visual dan konten sosial media untuk museum seniman, dengan fokus pada pameran Memorabilia Haji Widayat.',
+                "Social media content for the Haji Widayat museum, centred on the Memorabilia Haji Widayat exhibition. Carousels introduce the museum, its collection and the artist's story, along with life values worth taking home. The project also includes the brand identity of the museum and a visual identity for the exhibition.",
+                "Konten media sosial untuk Museum Haji Widayat, dengan fokus pada pameran Memorabilia Haji Widayat. Carousel memperkenalkan museum, koleksinya, dan kisah sang seniman, beserta nilai hidup yang bisa dipetik. Proyek ini juga mencakup identitas visual brand museum dan identitas visual untuk pameran."],
+            ['src-toko-alif', 'SRC Toko Alif',
+                'Social media content for a wholesale and retail shop: shopping tips, promos, digital products and a Ramadan catalogue.',
+                'Konten sosial media untuk toko grosir dan eceran: tips belanja, promo, produk digital, dan katalog Ramadhan.',
+                "Social media content for SRC Toko Alif, a wholesale and retail shop in Magelang. Carousels share money-saving shopping tips and simple recipes, feed posts show promos and digital services such as phone credit and electricity tokens, stories announce opening hours and offers, and a special Ramadan edition presents the seasonal catalogue. The visual identity is part of the project.",
+                "Konten media sosial untuk SRC Toko Alif, toko grosir dan eceran di Magelang. Carousel berisi tips belanja hemat dan resep sederhana, feed menampilkan promo dan layanan produk digital seperti pulsa dan token listrik, story menyampaikan jam buka dan penawaran, serta edisi khusus Ramadhan yang memuat katalog musiman. Identitas visual brand ikut disusun dalam proyek ini."],
+            ['sektor-digital', 'Sektor Digital',
+                'Educational carousel content about digital marketing: strategy, market research and optimisation.',
+                'Konten carousel edukasi seputar digital marketing: strategi, riset pasar, dan optimasi.',
+                "Social media content for Sektor Digital: seven educational carousel series about digital marketing. Topics include making digital marketing more effective, why market research matters, optimising channels, and how roles compare in the digital workplace. The design follows the blue and yellow identity of the brand.",
+                "Konten media sosial untuk Sektor Digital berupa tujuh seri carousel edukasi tentang digital marketing. Topiknya antara lain cara membuat pemasaran digital lebih efektif, pentingnya riset pasar, optimasi channel, dan perbandingan peran di dunia kerja digital. Desainnya mengikuti identitas biru dan kuning brand."],
+        ];
+
+        foreach ($rows as $i => [$slug, $name, $summaryEn, $summaryId, $descEn, $descId]) {
+            $logo = null;
+
+            if (is_file("{$base}/logos/{$slug}.png")) {
+                $logo = "uploads/clients/{$slug}.png";
+                $disk->put($logo, file_get_contents("{$base}/logos/{$slug}.png"));
+            }
+
+            $client = Client::firstOrNew(['name' => $name]);
+            $client->logo = $logo ?? $client->logo;
+            $client->sort_order = $client->sort_order ?: 8 + $i;
+            $client->is_active = true;
+            $client->save();
+
+            if (Work::where('slug', $slug)->exists()) {
+                continue;
+            }
+
+            $paths = [];
+
+            foreach (glob("{$base}/{$slug}/[0-9][0-9].webp") ?: [] as $file) {
+                $n = basename($file, '.webp');
+                $paths[$n] = "uploads/works/{$slug}/{$n}.webp";
+                $disk->put($paths[$n], file_get_contents($file));
+
+                if (is_file("{$base}/{$slug}/{$n}_thumb.webp")) {
+                    $disk->put("uploads/works/{$slug}/{$n}_thumb.webp", file_get_contents("{$base}/{$slug}/{$n}_thumb.webp"));
+                }
+            }
+
+            $work = Work::create([
+                'slug' => $slug, 'category' => 'social',
+                'title_en' => $name, 'title_id' => $name, 'client' => $name,
+                'is_featured' => false,
+                'summary_en' => $summaryEn, 'summary_id' => $summaryId,
+                'description_en' => $descEn, 'description_id' => $descId,
+                'cover_photo' => $paths['01'] ?? null,
+                'sort_order' => 8 + $i,
+            ]);
+
+            foreach ($paths as $n => $path) {
+                if ($n === '01') {
+                    continue;
+                }
+
+                [$kind, $caption, $order] = $manifest[$slug][$n] ?? ['other', null, (int) $n];
+                $work->photos()->create(['path' => $path, 'kind' => $kind, 'caption' => $caption, 'sort_order' => $order + 1]);
+            }
+        }
+    }
     /**
      * The Overlander is not only social media: the studio built its website too (runs once). Adds the "web" category and
      * the live link, and extends the texts, but only while they are still the ones seeded earlier and only where the
