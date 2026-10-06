@@ -9,7 +9,8 @@
     $fullTitle = $pageTitle ? $pageTitle . ' — ' . $siteName : $siteName . ' — ' . $tagline;
     $metaDescription = trim($__env->yieldContent('meta_description')) ?: $tagline;
     $metaImage = trim($__env->yieldContent('og_image')) ?: Setting::image('hero_photo_1') ?: Setting::image('logo');
-    $logo = Setting::image('logo');
+    // The studio's own wordmark ships with the site; a logo uploaded in the admin replaces it.
+    $logo = Setting::image('logo') ?: asset('images/logo.png');
     $whatsappUrl = WhatsApp::chatUrl();
     $navItems = [
         ['works.index', 'works*', 'site.nav.works', 'works'],
@@ -55,7 +56,7 @@
         <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
             <a href="{{ route('home') }}" class="group flex shrink-0 items-center" aria-label="{{ $siteName }}">
                 @if($logo)
-                    <img src="{{ $logo }}" alt="{{ $siteName }}" class="h-8 w-auto transition-transform duration-300 group-hover:scale-105">
+                    <img src="{{ $logo }}" alt="{{ $siteName }}" class="h-7 w-auto transition-all duration-300 group-hover:scale-105 group-data-[over-hero=true]/header:brightness-0 group-data-[over-hero=true]/header:invert sm:h-8">
                 @else
                     <span class="display inline-flex text-[1.7rem] transition-transform duration-200 group-active:scale-95"><span class="logo-word">{{ $siteName }}</span><span class="logo-dot">.</span></span>
                 @endif
