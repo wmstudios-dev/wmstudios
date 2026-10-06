@@ -32,8 +32,7 @@ class MegaMenu
         return [
             'works' => $works,
             'workCount' => Work::active()->count(),
-            'categories' => Work::active()->select('category')->distinct()->pluck('category')
-                ->sortBy(fn ($c) => array_search($c, Work::CATEGORIES))->values()->all(),
+            'categories' => Work::usedCategories(),
             'services' => Service::active()->ordered()->get(),
             'steps' => ProcessStep::active()->ordered()->take(5)->get(),
             'spaceTags' => SpaceItem::active()->select('tag')->distinct()->pluck('tag')

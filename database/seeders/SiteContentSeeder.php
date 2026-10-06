@@ -38,6 +38,7 @@ class SiteContentSeeder extends Seeder
         $this->once('portfolio_logos_v1', fn () => $this->portfolioLogos());
         $this->once('portfolio_photos_v2', fn () => $this->portfolioPhotos());
         $this->once('portfolio_covers_v3', fn () => $this->portfolioCovers());
+        $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
     }
 
     private function once(string $flag, \Closure $seed): void
@@ -252,6 +253,48 @@ class SiteContentSeeder extends Seeder
             }
         }
     }
+    /**
+     * The Overlander is not only social media: the studio built its website too (runs once). Adds the "web" category and
+     * the live link, and extends the texts, but only while they are still the ones seeded earlier and only where the
+     * admin has not filled the field yet.
+     */
+    private function portfolioOverlanderWeb(): void
+    {
+        $work = Work::where('slug', 'the-overlander')->first();
+
+        if (! $work) {
+            return;
+        }
+
+        $site = Setting::get('site_name', 'WMSTUDIOS');
+
+        $work->extra_categories = $work->extra_categories ?: 'web';
+        $work->project_url = $work->project_url ?: 'https://overlander-production-b73c.up.railway.app/';
+
+        $oldSummaryEn = 'Visual identity and social media content for a travel brand: colour palette, typography, destination carousels and reel covers.';
+        $oldSummaryId = 'Identitas visual dan konten media sosial untuk brand travel: palet warna, tipografi, carousel destinasi, dan cover reels.';
+        $oldDescEn = 'Visual identity and social media content for The Overlander Indonesia. The set includes the colour palette and typography, destination carousels, travel package posts and reel covers.';
+        $oldDescId = 'Identitas visual dan konten media sosial untuk The Overlander Indonesia. Set ini mencakup palet warna dan tipografi, carousel destinasi, postingan paket perjalanan, dan cover reels.';
+
+        if ($work->summary_en === $oldSummaryEn) {
+            $work->summary_en = 'Visual identity, social media content and a website for a travel brand: colour palette, typography, destination carousels, reel covers and a trip-catalogue site.';
+        }
+
+        if ($work->summary_id === $oldSummaryId) {
+            $work->summary_id = 'Identitas visual, konten media sosial, dan website untuk brand travel: palet warna, tipografi, carousel destinasi, cover reels, dan situs katalog perjalanan.';
+        }
+
+        if ($work->description_en === $oldDescEn) {
+            $work->description_en = $oldDescEn . "\n\n{$site} also built the website: a bilingual (Indonesian and English) travel site with destinations, trip packages, visitor reviews and ratings, and booking enquiries sent to WhatsApp.";
+        }
+
+        if ($work->description_id === $oldDescId) {
+            $work->description_id = $oldDescId . "\n\n{$site} juga membangun websitenya: situs travel dua bahasa (Indonesia dan Inggris) dengan destinasi, paket perjalanan, ulasan dan rating pengunjung, serta pemesanan lewat WhatsApp.";
+        }
+
+        $work->save();
+    }
+
     /**
      * Gives works the hand-picked landscape main photo (covers.json) in place of the picture they were seeded with
      * (runs once). Only a shipped cover (a numbered picture or an earlier cover file) is replaced, never one chosen in

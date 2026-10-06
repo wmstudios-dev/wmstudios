@@ -20,7 +20,11 @@
 
     <header class="mt-6 grid gap-8 lg:grid-cols-12 lg:items-end">
         <div class="lg:col-span-8">
-            <span class="chip reveal bg-brand-50 text-brand-600">{{ $work->categoryLabel() }}</span>
+            <span class="reveal flex flex-wrap gap-2">
+                @foreach($work->categoryLabels() as $label)
+                    <span class="chip bg-brand-50 text-brand-600">{{ $label }}</span>
+                @endforeach
+            </span>
             <h1 class="display reveal mt-4 text-[3.6rem] text-ink sm:text-[7rem]" style="--d: 60ms">{{ $work->t('title') }}</h1>
         </div>
         <dl class="reveal grid grid-cols-2 gap-6 border-t border-line pt-6 text-sm lg:col-span-4 lg:border-t-0 lg:pt-0" style="--d: 120ms">

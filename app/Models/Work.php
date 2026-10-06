@@ -95,6 +95,44 @@ class Work extends Model
         return VideoEmbed::parse($this->video_url);
     }
 
+    /** Main category first, then the extra ones (only known categories, no duplicates). */
+    public function allCategories(): array
+    {
+        $extra = array_filter(explode(',', (string) $this->extra_categories));
+
+        return array_values(array_unique(array_filter(
+            array_merge([$this->category], $extra),
+            fn ($c) => in_array($c, self::CATEGORIES, true)
+        )));
+    }
+
+    /** Labels of every category the work belongs to. */
+    public function categoryLabels(): array
+    {
+        return array_map(fn ($c) => __('site.categories.' . $c), $this->allCategories());
+    }
+
+    /** Works of a category, counting the extra categories too. */
+    public function scopeInCategory(Builder $query, string $category): Builder
+    {
+        return $query->where(fn ($q) => $q->where('category', $category)
+            ->orWhere('extra_categories', $category)
+            ->orWhere('extra_categories', 'like', $category . ',%')
+            ->orWhere('extra_categories', 'like', '%,' . $category . ',%')
+            ->orWhere('extra_categories', 'like', '%,' . $category));
+    }
+
+    /** Every category in use by visible works (main or extra), in the usual order. */
+    public static function usedCategories(): array
+    {
+        return collect(self::active()->get(['category', 'extra_categories']))
+            ->flatMap(fn ($work) => $work->allCategories())
+            ->unique()
+            ->sortBy(fn ($c) => array_search($c, self::CATEGORIES))
+            ->values()
+            ->all();
+    }
+
     public function categoryLabel(): string
     {
         return __('site.categories.' . $this->category);

@@ -37,6 +37,19 @@
                 {{ $f['label'] }}
             </label>
 
+        @elseif($f['type'] === 'multicheck')
+            @php $picked = (array) old($name, array_filter(explode(',', (string) ($item->{$name} ?? '')))); @endphp
+            <div>
+                <label class="mb-2 block text-sm font-semibold">{{ $label }}</label>
+                <div class="flex flex-wrap gap-3">
+                    @foreach($f['options'] as $optValue => $optLabel)
+                        <label class="flex cursor-pointer items-center gap-2 rounded-full border border-line px-4 py-1.5 text-sm font-medium">
+                            <input type="checkbox" name="{{ $name }}[]" value="{{ $optValue }}" @checked(in_array($optValue, $picked, true)) class="rounded border-line text-brand-500 focus:ring-brand-200"> {{ $optLabel }}
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+
         @elseif($f['type'] === 'image')
             <div>
                 <label class="mb-2 block text-sm font-semibold">{{ $label }}</label>

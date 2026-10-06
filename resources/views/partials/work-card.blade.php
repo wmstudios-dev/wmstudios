@@ -18,7 +18,11 @@
 
     <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100"></div>
 
-    <span class="chip absolute left-4 top-4 bg-white/90 text-ink backdrop-blur">{{ $work->categoryLabel() }}</span>
+    <span class="absolute left-4 top-4 flex flex-wrap gap-1.5">
+        @foreach($work->categoryLabels() as $label)
+            <span class="chip bg-white/90 text-ink backdrop-blur">{{ $label }}</span>
+        @endforeach
+    </span>
 
     @if($isVideo)
         <span class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-brand-600 transition-transform duration-300 group-hover:scale-110">

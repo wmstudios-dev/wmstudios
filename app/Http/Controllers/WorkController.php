@@ -12,13 +12,12 @@ class WorkController extends Controller
         $category = in_array($request->query('c'), Work::CATEGORIES, true) ? $request->query('c') : null;
 
         $works = Work::active()
-            ->when($category, fn ($q) => $q->where('category', $category))
+            ->when($category, fn ($q) => $q->inCategory($category))
             ->ordered()
             ->paginate(12)
             ->withQueryString();
 
-        $categories = Work::active()->select('category')->distinct()->pluck('category')
-            ->sortBy(fn ($c) => array_search($c, Work::CATEGORIES))->values();
+        $categories = collect(Work::usedCategories());
 
         return view('works.index', compact('works', 'category', 'categories'));
     }

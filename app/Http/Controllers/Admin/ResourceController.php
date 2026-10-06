@@ -126,6 +126,7 @@ class ResourceController extends Controller
                     'number' => ['nullable', 'integer', 'between:-100000,100000'],
                     'select', 'icon' => [$req, Rule::in(array_keys($f['options']))],
                     'checkbox' => ['nullable', 'boolean'],
+                    'multicheck' => ['nullable', 'array'],
                     'url' => ['nullable', 'url', 'max:500'],
                     'datetime' => ['nullable', 'date'],
                     'image' => [
@@ -134,6 +135,10 @@ class ResourceController extends Controller
                     ],
                     default => ['nullable'],
                 };
+            }
+
+            if ($f['type'] === 'multicheck') {
+                $rules[$f['name'] . '.*'] = [Rule::in(array_keys($f['options']))];
             }
 
             if ($f['type'] === 'image') {
@@ -189,6 +194,7 @@ class ResourceController extends Controller
 
                 $item->{$column} = match ($f['type']) {
                     'checkbox' => $request->boolean($column),
+                    'multicheck' => ($picked = array_values(array_intersect(array_keys($f['options']), (array) $request->input($column, [])))) ? implode(',', $picked) : null,
                     'number' => ($value === null || $value === '') ? ($column === 'sort_order' ? 0 : null) : (int) $value,
                     'datetime' => $value ? \Illuminate\Support\Carbon::parse($value) : null,
                     default => ($value === null || trim($value) === '') ? null : trim($value),

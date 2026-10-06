@@ -66,6 +66,7 @@ class AdminResources
                 'fields' => [
                     ['name' => 'title', 'label' => 'Title', 'type' => 'text', 'bilingual' => true, 'required' => true],
                     ['name' => 'category', 'label' => 'Category', 'type' => 'select', 'options' => self::categoryOptions(), 'required' => true],
+                    ['name' => 'extra_categories', 'label' => 'Also counts as', 'type' => 'multicheck', 'options' => self::categoryOptions(), 'hint' => 'Tick more types when the project covers them, e.g. a social media client that also got a website. They show as extra labels and in those filters.'],
                     ['name' => 'client', 'label' => 'Client', 'type' => 'text'],
                     ['name' => 'year', 'label' => 'Year', 'type' => 'number'],
                     ['name' => 'summary', 'label' => 'Short summary', 'type' => 'textarea', 'rows' => 2, 'bilingual' => true, 'hint' => 'Shown on the cards.'],
