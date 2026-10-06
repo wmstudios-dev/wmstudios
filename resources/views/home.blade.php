@@ -145,7 +145,7 @@
 
 {{-- Statement --}}
 <section class="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-28">
-    <p class="reveal max-w-5xl text-3xl font-semibold leading-[1.2] tracking-tight text-ink sm:text-5xl">{!! $statement !!}</p>
+    <p class="reveal mx-auto max-w-5xl text-balance text-center text-3xl font-semibold leading-[1.2] tracking-tight text-ink sm:text-5xl">{!! $statement !!}</p>
 </section>
 
 {{-- Why us: big running headline, then the figures the admin filled in (real claims only) --}}
