@@ -20,7 +20,7 @@ return [
         'video' => 'Video',
         'design' => 'Desain',
         'web' => 'Web',
-        'social' => 'Sosial media',
+        'social' => 'Sosial Media',
     ],
 
     'default_tagline' => 'Studio kreatif untuk sosial media, foto & video, desain, dan web.',
