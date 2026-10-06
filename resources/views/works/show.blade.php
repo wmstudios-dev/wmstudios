@@ -121,7 +121,7 @@
                     </div>
 
                     @if($kind === 'story' || $kind === 'reel')
-                        <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+                        <div class="mt-6 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3">
                             @foreach($photos as $photo)
                                 <a href="{{ $photo->url() }}" data-lightbox="gallery-{{ $kind }}" data-caption="{{ $photo->caption }}"
                                    class="reveal group block aspect-[9/16] overflow-hidden rounded-2xl bg-soft" style="--d: {{ ($loop->index % 5) * 60 }}ms">
@@ -131,7 +131,7 @@
                         </div>
                     @elseif($kind === 'feed')
                         {{-- Looks like an Instagram profile grid: three columns, hairline gaps, 4:5 tiles --}}
-                        <div class="mt-6 grid grid-cols-2 gap-1 rounded-3xl bg-ink p-1.5 sm:grid-cols-3 sm:gap-1.5 sm:p-2 lg:grid-cols-5">
+                        <div class="mt-6 grid max-w-3xl grid-cols-3 gap-1 rounded-3xl bg-ink p-1.5 sm:gap-1.5 sm:p-2">
                             @foreach($photos as $photo)
                                 <a href="{{ $photo->url() }}" data-lightbox="gallery-{{ $kind }}" data-caption="{{ $photo->caption }}"
                                    class="group block aspect-[4/5] overflow-hidden bg-white/10 first:rounded-tl-[1.25rem]">
