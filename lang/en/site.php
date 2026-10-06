@@ -82,6 +82,8 @@ return [
             'carousel' => 'Carousel',
             'reel' => 'Reels',
             'identity' => 'Brand identity',
+            'web' => 'Website',
+            'documentation' => 'Documentation',
             'other' => 'Gallery',
         ],
         'kind_hints' => [
@@ -90,6 +92,8 @@ return [
             'carousel' => 'Swipe through the slides',
             'reel' => 'Reels covers',
             'identity' => 'Visual identity and brand profile',
+            'web' => 'Screenshots of the site',
+            'documentation' => 'Photos from the event',
             'other' => '',
         ],
         'swipe' => 'Swipe',

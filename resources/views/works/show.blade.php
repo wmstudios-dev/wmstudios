@@ -172,6 +172,31 @@
                                 @endif
                             </div>
                         @endforeach
+                    @elseif($kind === 'web')
+                        {{-- Screenshots in a simple browser frame --}}
+                        <div class="mt-6 grid gap-5 sm:grid-cols-2">
+                            @foreach($photos as $photo)
+                                <a href="{{ $photo->url() }}" data-lightbox="gallery-web" data-caption="{{ $photo->caption }}"
+                                   class="reveal group block overflow-hidden rounded-2xl border border-line bg-white shadow-sm" style="--d: {{ ($loop->index % 2) * 70 }}ms">
+                                    <span class="flex items-center gap-1.5 border-b border-line bg-soft px-4 py-2.5" aria-hidden="true">
+                                        <span class="h-2.5 w-2.5 rounded-full bg-ink/15"></span>
+                                        <span class="h-2.5 w-2.5 rounded-full bg-ink/15"></span>
+                                        <span class="h-2.5 w-2.5 rounded-full bg-ink/15"></span>
+                                    </span>
+                                    <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="aspect-[16/10] w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]">
+                                </a>
+                            @endforeach
+                        </div>
+                    @elseif($kind === 'documentation')
+                        {{-- Event photos: tight masonry that keeps every picture's own proportions --}}
+                        <div class="mt-6 columns-2 gap-2 sm:columns-3 sm:gap-3">
+                            @foreach($photos as $photo)
+                                <a href="{{ $photo->url() }}" data-lightbox="gallery-documentation" data-caption="{{ $photo->caption }}"
+                                   class="reveal group mb-2 block break-inside-avoid overflow-hidden rounded-xl bg-soft sm:mb-3" style="--d: {{ ($loop->index % 3) * 60 }}ms">
+                                    <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="w-full transition-transform duration-700 group-hover:scale-105">
+                                </a>
+                            @endforeach
+                        </div>
                     @else
                         <div class="mt-6 columns-1 gap-4 sm:columns-2 lg:columns-3">
                             @foreach($photos as $photo)

@@ -82,6 +82,8 @@ return [
             'carousel' => 'Carousel',
             'reel' => 'Reels',
             'identity' => 'Identitas visual',
+            'web' => 'Website',
+            'documentation' => 'Dokumentasi',
             'other' => 'Galeri',
         ],
         'kind_hints' => [
@@ -90,6 +92,8 @@ return [
             'carousel' => 'Geser untuk melihat tiap slide',
             'reel' => 'Cover reels',
             'identity' => 'Identitas visual dan profil brand',
+            'web' => 'Tangkapan layar situs',
+            'documentation' => 'Foto dari acara',
             'other' => '',
         ],
         'swipe' => 'Geser',

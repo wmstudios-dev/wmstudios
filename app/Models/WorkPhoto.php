@@ -16,6 +16,8 @@ class WorkPhoto extends Model
         'carousel' => 'Carousel',
         'reel' => 'Reels cover',
         'identity' => 'Brand identity',
+        'web' => 'Website screenshot',
+        'documentation' => 'Documentation (event photos)',
         'other' => 'Other / general',
     ];
 
