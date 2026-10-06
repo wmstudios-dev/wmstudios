@@ -92,7 +92,7 @@
 
         {{-- Proses --}}
         <div data-panel="process" class="mega-panel" role="region" aria-label="{{ __('site.nav.process') }}">
-            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="grid gap-3 sm:grid-cols-2 {{ $mega['steps']->count() >= 5 ? 'lg:grid-cols-5' : 'lg:grid-cols-4' }}">
                 @foreach($mega['steps'] as $step)
                     <a href="{{ route('process') }}" class="group rounded-2xl bg-soft p-5 transition-all duration-200 hover:bg-brand-500 hover:text-white active:scale-[0.98]">
                         <span class="display block text-5xl text-brand-500 transition-colors duration-200 group-hover:text-white/80">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>

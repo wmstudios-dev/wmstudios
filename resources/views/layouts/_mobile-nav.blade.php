@@ -83,6 +83,7 @@
         </div>
     @endforeach
 
+    <a href="{{ route('about') }}" class="display border-b border-line py-4 text-3xl {{ request()->routeIs('about') ? 'text-brand-500' : 'text-ink' }}">{{ __('site.nav.about') }}</a>
     <a href="{{ route('contact') }}" class="display py-4 text-3xl text-brand-500">{{ __('site.nav.contact') }}</a>
 
     <div class="mt-2 flex items-center gap-2 text-sm font-semibold">

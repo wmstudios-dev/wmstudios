@@ -281,7 +281,7 @@
         <a href="{{ route('process') }}" class="btn-ghost reveal">{{ __('site.home.process_all') }} <x-icon name="arrow" class="h-4 w-4" /></a>
     </div>
 
-    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 {{ $steps->count() >= 5 ? 'lg:grid-cols-5' : 'lg:grid-cols-4' }}">
         @foreach($steps as $step)
             <div class="reveal rounded-3xl border border-line p-7 transition-colors duration-300 hover:border-brand-300" style="--d: {{ $loop->index * 70 }}ms">
                 <p class="display text-6xl text-brand-500">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</p>

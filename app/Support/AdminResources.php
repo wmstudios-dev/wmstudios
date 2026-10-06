@@ -123,10 +123,12 @@ class AdminResources
                     ['label' => 'Active', 'field' => 'is_active', 'type' => 'bool'],
                 ],
                 'fields' => [
+                    ['name' => 'group', 'label' => 'Group', 'type' => 'text', 'bilingual' => true, 'hint' => 'Packages with the same group name are shown together under one heading, e.g. Design. Leave empty for a single list.'],
                     ['name' => 'name', 'label' => 'Name', 'type' => 'text', 'bilingual' => true, 'required' => true],
                     ['name' => 'tagline', 'label' => 'Tagline', 'type' => 'text', 'bilingual' => true],
                     ['name' => 'price_label', 'label' => 'Price text', 'type' => 'text', 'bilingual' => true, 'hint' => 'Free text, e.g. "Mulai dari Rp 2,5 jt". Empty shows "Ask us".'],
                     ['name' => 'features', 'label' => 'Included', 'type' => 'lines', 'bilingual' => true, 'hint' => 'One item per line.'],
+                    ['name' => 'note', 'label' => 'Small print for the group', 'type' => 'lines', 'bilingual' => true, 'hint' => 'One note per line, shown under the group. The first package of the group that has notes is used.'],
                     ['name' => 'is_featured', 'label' => 'Highlight as most popular', 'type' => 'checkbox'],
                     ['name' => 'is_active', 'label' => 'Visible on the site', 'type' => 'checkbox', 'default' => true],
                     ['name' => 'sort_order', 'label' => 'Order (smaller = first)', 'type' => 'number', 'default' => 0],

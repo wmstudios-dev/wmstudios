@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [SiteController::class, 'home'])->name('home');
 Route::get('/works', [WorkController::class, 'index'])->name('works.index');
 Route::get('/works/{work}', [WorkController::class, 'show'])->name('works.show');
+Route::get('/about', [SiteController::class, 'about'])->name('about');
 Route::get('/services', [SiteController::class, 'services'])->name('services');
 Route::get('/process', [SiteController::class, 'process'])->name('process');
 Route::get('/space', [SiteController::class, 'space'])->name('space');

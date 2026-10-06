@@ -35,7 +35,7 @@ class MegaMenu
             'categories' => Work::active()->select('category')->distinct()->pluck('category')
                 ->sortBy(fn ($c) => array_search($c, Work::CATEGORIES))->values()->all(),
             'services' => Service::active()->ordered()->get(),
-            'steps' => ProcessStep::active()->ordered()->take(4)->get(),
+            'steps' => ProcessStep::active()->ordered()->take(5)->get(),
             'spaceTags' => SpaceItem::active()->select('tag')->distinct()->pluck('tag')
                 ->sortBy(fn ($t) => array_search($t, SpaceItem::TAGS))->values()->all(),
             'spacePhotos' => SpaceItem::active()->orderBy('sort_order')->orderByDesc('id')->take(3)->get(),

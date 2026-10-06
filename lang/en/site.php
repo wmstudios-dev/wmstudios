@@ -3,6 +3,7 @@
 return [
     'nav' => [
         'home' => 'Home',
+        'about' => 'About',
         'works' => 'Works',
         'services' => 'Services',
         'process' => 'Process',

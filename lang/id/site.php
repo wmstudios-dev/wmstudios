@@ -3,6 +3,7 @@
 return [
     'nav' => [
         'home' => 'Beranda',
+        'about' => 'Tentang',
         'works' => 'Karya',
         'services' => 'Layanan',
         'process' => 'Proses',

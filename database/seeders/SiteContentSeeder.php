@@ -25,14 +25,28 @@ class SiteContentSeeder extends Seeder
     {
         $this->settings();
         $this->studioContact();
-        $this->services();
-        $this->process();
-        $this->packages();
-        $this->faqs();
-        $this->sampleClients();
+
+        // Structural content is created ONCE (a settings flag remembers it), so whatever the admin deletes or
+        // rewrites afterwards is never brought back by a later deploy.
+        $this->once('seeded_services', fn () => $this->services());
+        $this->once('seeded_process', fn () => $this->process());
+        $this->once('seeded_packages', fn () => $this->packages());
+        $this->once('seeded_faqs', fn () => $this->faqs());
+        $this->once('seeded_clients', fn () => $this->clients());
+
         $this->sampleWorks();
+        $this->deckContent();
     }
 
+    private function once(string $flag, \Closure $seed): void
+    {
+        if (Setting::get($flag) !== null) {
+            return;
+        }
+
+        $seed();
+        Setting::put($flag, '1');
+    }
     /**
      * Six made-up portfolio pieces with abstract cover art (database/data/sample), so the Works menu, the home page
      * and the Works page can be judged before real work is added. Added ONCE (a settings flag remembers it), and
@@ -84,19 +98,36 @@ Teks contoh proyek. Ganti dengan cerita asli: brief, apa yang dikerjakan, dan ha
      * clients exist. They are added ONCE (a flag in the settings remembers it), so deleting them in the
      * admin is permanent. All names are fictional; replace them under Admin > Clients.
      */
-    private function sampleClients(): void
+    /** Brands from the studio's own portfolio deck (Figma "Portfolio" slides). */
+    private function clients(): void
     {
-        if (Setting::get('sample_clients_seeded') !== null || Client::query()->exists()) {
+        foreach (['Omah Latareombo', 'Petlett', 'Bess Coffee & Roastery', 'Semarang Ban', 'Panda Street Coffee', 'Sampoerna'] as $i => $name) {
+            Client::firstOrCreate(['name' => $name], ['sort_order' => $i + 1]);
+        }
+    }
+
+    /**
+     * Clean-up after the switch to the company-profile content (runs ONCE): removes the placeholder content that
+     * earlier deploys created, but only the untouched originals, never anything the admin wrote.
+     */
+    private function deckContent(): void
+    {
+        if (Setting::get('deck_content_v1') !== null) {
             return;
         }
 
-        foreach (['Kopi Senja', 'Dewan Kriya', 'Aksara Studio', 'Rumah Tenun', 'Fitkita', 'Langit Biru'] as $i => $name) {
-            Client::create(['name' => $name, 'sort_order' => $i + 1]);
-        }
+        // The four old process steps, replaced by the five "How we work" steps.
+        ProcessStep::whereIn('title_en', ['Brainstorming', 'Shooting', 'Editing', 'Delivery'])->delete();
 
-        Setting::put('sample_clients_seeded', '1');
+        // The three generic price-less packages, replaced by the real pricelist.
+        Package::whereNull('group_en')->whereNull('price_label_id')
+            ->whereIn('name_en', ['Essential', 'Growth', 'Signature'])->delete();
+
+        // The six made-up demo brands.
+        Client::whereIn('name', ['Kopi Senja', 'Dewan Kriya', 'Aksara Studio', 'Rumah Tenun', 'Fitkita', 'Langit Biru'])->delete();
+
+        Setting::put('deck_content_v1', '1');
     }
-
     private function settings(): void
     {
         $defaults = [
@@ -219,74 +250,130 @@ Teks contoh proyek. Ganti dengan cerita asli: brief, apa yang dikerjakan, dan ha
     private function process(): void
     {
         $steps = [
-            ['bulb', ['Brainstorming', 'Brainstorming'], [
-                'Kami duduk bareng untuk memahami tujuan, audiens, dan karakter brand-mu, lalu merumuskan ide dan arah kreatif.',
-                'We sit down together to understand your goals, audience and brand character, then shape the idea and creative direction.',
-            ]],
-            ['camera', ['Shooting', 'Shooting'], [
-                'Produksi dengan persiapan matang: moodboard, shot list, dan tim yang tahu perannya masing-masing.',
-                'Production with solid preparation: moodboards, shot lists and a team that knows its role.',
-            ]],
-            ['film', ['Editing', 'Editing'], [
-                'Editing, color grading, dan desain dipoles dengan alur revisi yang jelas dan terstruktur.',
-                'Editing, color grading and design are polished through a clear, structured revision flow.',
-            ]],
-            ['check', ['Serah terima', 'Delivery'], [
-                'Hasil akhir diserahkan dalam format yang siap pakai, lengkap dengan arahan penggunaannya.',
-                'The final result is delivered in ready-to-use formats, with guidance on how to use it.',
-            ]],
+            ['users', 'Listen & Understand',
+                'Memulai dengan mendengarkan, memahami kebutuhan, tujuan, dan karakter brand secara menyeluruh.',
+                'We start by listening, and fully understanding the needs, goals and character of the brand.'],
+            ['bulb', 'Explore Ideas',
+                'Proses diskusi dan eksplorasi ide dilakukan secara terbuka untuk menemukan pendekatan yang paling relevan.',
+                'Discussion and idea exploration happen openly, to find the approach that fits best.'],
+            ['layers', 'Create & Execute',
+                'Ide yang sudah matang dieksekusi dengan proses yang terarah, rapi, dan fleksibel.',
+                'Mature ideas are executed through a focused, tidy and flexible process.'],
+            ['chart', 'Review & Improve',
+                'Setiap proses dievaluasi untuk memastikan hasil tetap selaras dengan tujuan awal.',
+                'Every step is reviewed to make sure the result stays aligned with the original goal.'],
+            ['heart', 'Grow Together',
+                'Kami percaya kerja sama yang baik adalah tentang tumbuh bersama, bukan sekadar menyelesaikan proyek.',
+                'We believe good collaboration is about growing together, not just finishing a project.'],
         ];
 
-        foreach ($steps as $i => [$icon, $title, $desc]) {
-            ProcessStep::firstOrCreate(['title_en' => $title[1]], [
-                'icon' => in_array($icon, \App\Support\AdminResources::ICONS, true) ? $icon : 'spark',
-                'title_id' => $title[0],
-                'description_id' => $desc[0], 'description_en' => $desc[1],
+        foreach ($steps as $i => [$icon, $title, $descId, $descEn]) {
+            ProcessStep::firstOrCreate(['title_en' => $title], [
+                'icon' => $icon,
+                'title_id' => $title,
+                'description_id' => $descId, 'description_en' => $descEn,
                 'sort_order' => $i + 1,
             ]);
         }
     }
-
+    /**
+     * The pricelist from the company profile deck. Prices are shown as written there ("Mulai dari ..."), grouped
+     * by service, and every one of them can be edited in Admin > Packages.
+     */
     private function packages(): void
     {
-        $rows = [
+        $notesBrand = [
+            "Semua paket dapat disesuaikan dengan kebutuhan brand\nHarga dapat berubah sesuai kompleksitas konten & kebutuhan tambahan",
+            "All packages can be adjusted to the needs of the brand\nPrices may change with the complexity of the content and any extra requirements",
+        ];
+        $notesEvent = [
+            "Semua paket dapat disesuaikan dengan kebutuhan acara\nHarga dapat berubah sesuai kompleksitas konten & kebutuhan tambahan",
+            "All packages can be adjusted to the needs of the event\nPrices may change with the complexity of the content and any extra requirements",
+        ];
+
+        $groups = [
             [
-                'name' => ['Essential', 'Essential'], 'featured' => false,
-                'tagline' => ['Untuk bisnis yang baru mulai tampil rapi', 'For businesses getting started'],
-                'features' => [
-                    "Rencana konten bulanan\nDesain feed & story\nCaption & copywriting\nLaporan bulanan singkat",
-                    "Monthly content plan\nFeed & story design\nCaptions & copywriting\nShort monthly report",
+                'group' => ['Social Media & Content Creation', 'Social Media & Content Creation'],
+                'note' => [
+                    $notesBrand[0] . "\nPaket tidak termasuk budget iklan (jika ada)",
+                    $notesBrand[1] . "\nPackages do not include ad budget (if any)",
+                ],
+                'items' => [
+                    ['Starter', 'Rp500K / bulan', 'IDR 500K / month',
+                        "4 feed / bulan\n2 carousel / bulan\n1 reels / bulan\n6–8 story / bulan\nPerencanaan konten dasar\nCopywriting\nPenjadwalan konten",
+                        "4 feed posts / month\n2 carousels / month\n1 reel / month\n6–8 stories / month\nBasic content planning\nCopywriting\nContent scheduling"],
+                    ['Growth', 'Rp1.000K / bulan', 'IDR 1,000K / month',
+                        "6 feed post / bulan\n3 carousel / bulan\n2 reels / bulan\n10–12 story / bulan\nPerencanaan konten dasar\nCopywriting\nPenjadwalan konten\nGratis ucapan hari besar",
+                        "6 feed posts / month\n3 carousels / month\n2 reels / month\n10–12 stories / month\nBasic content planning\nCopywriting\nContent scheduling\nFree holiday greetings"],
+                    ['Advance', 'Rp1.500K / bulan', 'IDR 1,500K / month',
+                        "8 feed post / bulan\n4 carousel / bulan\n4 reels / bulan\n15–18 story / bulan\nStrategi & arahan konten\nCopywriting\nPenjadwalan konten\nEvaluasi & perbaikan performa",
+                        "8 feed posts / month\n4 carousels / month\n4 reels / month\n15–18 stories / month\nContent strategy & direction\nCopywriting\nContent scheduling\nPerformance evaluation & improvement"],
                 ],
             ],
             [
-                'name' => ['Growth', 'Growth'], 'featured' => true,
-                'tagline' => ['Untuk brand yang ingin tumbuh konsisten', 'For brands that want steady growth'],
-                'features' => [
-                    "Semua yang ada di Essential\nSesi produksi foto & video\nEditing reels & video pendek\nPengelolaan akun & komunitas\nRekomendasi optimasi",
-                    "Everything in Essential\nPhoto & video production session\nReels & short-video editing\nAccount & community management\nOptimization recommendations",
+                'group' => ['Desain', 'Design'],
+                'note' => $notesBrand,
+                'items' => [
+                    ['Simple', 'Rp50K / desain', 'IDR 50K / design',
+                        "1× revisi\n1 ukuran\nFile JPG, PNG, PDF",
+                        "1 revision\n1 size\nJPG, PNG, PDF files"],
+                    ['Standard', 'Rp100K / desain', 'IDR 100K / design',
+                        "2× revisi\n1 ukuran\nFile JPG, PNG, PDF",
+                        "2 revisions\n1 size\nJPG, PNG, PDF files"],
+                    ['Complex', 'Rp150K / desain', 'IDR 150K / design',
+                        "3× revisi\n1 ukuran\nFile JPG, PNG, PDF, EPS/AI, PSD",
+                        "3 revisions\n1 size\nJPG, PNG, PDF, EPS/AI, PSD files"],
                 ],
             ],
             [
-                'name' => ['Signature', 'Signature'], 'featured' => false,
-                'tagline' => ['Untuk campaign dan produksi penuh', 'For campaigns and full production'],
-                'features' => [
-                    "Konsep & strategi campaign\nProduksi foto & video profesional\nIdentitas brand & kit desain\nWebsite atau landing page\nDokumentasi acara",
-                    "Campaign concept & strategy\nProfessional photo & video production\nBrand identity & design kit\nWebsite or landing page\nEvent documentation",
+                'group' => ['Dokumentasi', 'Documentation'],
+                'note' => $notesEvent,
+                'items' => [
+                    ['Short', 'Rp499K / acara', 'IDR 499K / event',
+                        "Acara 2–3 jam\nFoto + editing\nVideo + editing",
+                        "2–3 hour event\nPhoto + editing\nVideo + editing"],
+                    ['Medium', 'Rp799K / acara', 'IDR 799K / event',
+                        "Acara 5–6 jam\nFoto + editing\nVideo + editing",
+                        "5–6 hour event\nPhoto + editing\nVideo + editing"],
+                    ['Long', 'Rp1.199K / acara', 'IDR 1,199K / event',
+                        "Acara hingga 10 jam\nFoto + editing\nVideo + editing",
+                        "Event of up to 10 hours\nPhoto + editing\nVideo + editing"],
+                ],
+            ],
+            [
+                'group' => ['Video Editing', 'Video Editing'],
+                'note' => $notesEvent,
+                'items' => [
+                    ['Short', 'Rp99K / acara', 'IDR 99K / event',
+                        "Video hingga 1 menit\nEditing sederhana\nAnimasi judul sederhana",
+                        "Video of up to 1 minute\nSimple editing\nSimple title animation"],
+                    ['Medium', 'Rp149K / acara', 'IDR 149K / event',
+                        "Video hingga 2 menit\nEditing sederhana\nAnimasi judul sederhana\nTransisi\nColor grading",
+                        "Video of up to 2 minutes\nSimple editing\nSimple title animation\nTransitions\nColor grading"],
+                    ['Long', 'Rp229K / acara', 'IDR 229K / event',
+                        "Video hingga 3 menit\nEditing sederhana\nAnimasi judul sederhana\nTransisi\nColor grading",
+                        "Video of up to 3 minutes\nSimple editing\nSimple title animation\nTransitions\nColor grading"],
                 ],
             ],
         ];
 
-        foreach ($rows as $i => $r) {
-            Package::firstOrCreate(['name_en' => $r['name'][1]], [
-                'name_id' => $r['name'][0],
-                'tagline_id' => $r['tagline'][0], 'tagline_en' => $r['tagline'][1],
-                'features_id' => $r['features'][0], 'features_en' => $r['features'][1],
-                'is_featured' => $r['featured'],
-                'sort_order' => $i + 1,
-            ]);
+        $order = 0;
+
+        foreach ($groups as $g) {
+            foreach ($g['items'] as $item) {
+                [$name, $priceId, $priceEn, $featId, $featEn] = $item;
+                Package::firstOrCreate(['name_en' => $name, 'group_en' => $g['group'][1]], [
+                    'name_id' => $name,
+                    'group_id' => $g['group'][0],
+                    'price_label_id' => $priceId, 'price_label_en' => $priceEn,
+                    'features_id' => $featId, 'features_en' => $featEn,
+                    'note_id' => $g['note'][0], 'note_en' => $g['note'][1],
+                    'is_featured' => false,
+                    'sort_order' => ++$order,
+                ]);
+            }
         }
     }
-
     private function faqs(): void
     {
         $rows = [
