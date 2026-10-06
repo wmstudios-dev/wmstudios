@@ -39,6 +39,7 @@ class SiteContentSeeder extends Seeder
         $this->once('portfolio_photos_v2', fn () => $this->portfolioPhotos());
         $this->once('portfolio_covers_v3', fn () => $this->portfolioCovers());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
+        $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
     }
 
     private function once(string $flag, \Closure $seed): void
@@ -253,6 +254,57 @@ class SiteContentSeeder extends Seeder
             }
         }
     }
+    /**
+     * Cupfine and Maza only ordered a few designs (feed and story), they are not social media management clients
+     * (runs once). Moves them to the design category and rewrites their texts, but only while those are still the
+     * ones seeded earlier.
+     */
+    private function portfolioDesignClients(): void
+    {
+        $rows = [
+            'cupfine' => [
+                ['Feed and story content for a coffee shop: atmosphere and menu photos, plus opening-hours stories.',
+                    'A few feed and story designs for a coffee shop, including opening-hours stories.'],
+                ['Konten feed dan story untuk coffee shop: foto suasana dan menu, serta story informasi jam buka.',
+                    'Beberapa desain feed dan story untuk coffee shop, termasuk story informasi jam buka.'],
+                ['Social media content for Cupfine coffee shop. Feed posts show the atmosphere, the bar and the drinks, and designed stories share opening hours and daily updates.',
+                    'A set of feed and story designs made on request for Cupfine coffee shop, including stories that share opening hours.'],
+                ['Konten media sosial untuk coffee shop Cupfine. Feed menampilkan suasana, bar, dan minuman, sementara story yang didesain menyampaikan jam buka dan kabar harian.',
+                    'Sekumpulan desain feed dan story yang dibuat atas pesanan untuk coffee shop Cupfine, termasuk story yang menyampaikan jam buka.'],
+            ],
+            'maza-coffee-and-resto' => [
+                ['Feed and story content for a coffee & resto: the place, the menu, and open and closed announcements.',
+                    'A few feed and story designs for a coffee & resto, including open and closed announcements.'],
+                ['Konten feed dan story untuk coffee & resto: suasana tempat, menu, serta pengumuman buka dan tutup.',
+                    'Beberapa desain feed dan story untuk coffee & resto, termasuk pengumuman buka dan tutup.'],
+                ['Social media content for Maza Coffee & Resto. Feed posts present the building, the interior and the dishes, and stories announce when the place is open or closed.',
+                    'A set of feed and story designs made on request for Maza Coffee & Resto, including stories that announce when the place is open or closed.'],
+                ['Konten media sosial untuk Maza Coffee & Resto. Feed menampilkan bangunan, interior, dan sajian, sementara story mengumumkan kapan tempat buka atau tutup.',
+                    'Sekumpulan desain feed dan story yang dibuat atas pesanan untuk Maza Coffee & Resto, termasuk story yang mengumumkan kapan tempat buka atau tutup.'],
+            ],
+        ];
+
+        foreach ($rows as $slug => [$summaryEn, $summaryId, $descEn, $descId]) {
+            $work = Work::where('slug', $slug)->first();
+
+            if (! $work) {
+                continue;
+            }
+
+            if ($work->category === 'social') {
+                $work->category = 'design';
+            }
+
+            foreach ([['summary_en', $summaryEn], ['summary_id', $summaryId], ['description_en', $descEn], ['description_id', $descId]] as [$column, [$old, $new]]) {
+                if ($work->{$column} === $old) {
+                    $work->{$column} = $new;
+                }
+            }
+
+            $work->save();
+        }
+    }
+
     /**
      * The Overlander is not only social media: the studio built its website too (runs once). Adds the "web" category and
      * the live link, and extends the texts, but only while they are still the ones seeded earlier and only where the
