@@ -24,6 +24,7 @@ class SiteContentSeeder extends Seeder
     public function run(): void
     {
         $this->settings();
+        $this->studioContact();
         $this->services();
         $this->process();
         $this->packages();
@@ -109,6 +110,34 @@ Teks contoh proyek. Ganti dengan cerita asli: brief, apa yang dikerjakan, dan ha
                 Setting::put($key, $value);
             }
         }
+    }
+
+    /**
+     * The studio's real contact details, filled in ONCE (a settings flag remembers it) and only into fields that are
+     * still empty, so anything edited in the admin afterwards is never overwritten.
+     */
+    private function studioContact(): void
+    {
+        if (Setting::get('studio_contact_seeded') !== null) {
+            return;
+        }
+
+        $contact = [
+            'whatsapp' => '085641034599',
+            'email' => 'wmstudios.cf@gmail.com',
+            'address_id' => 'Magelang',
+            'address_en' => 'Magelang, Indonesia',
+            'hours_id' => '24 jam',
+            'hours_en' => '24 hours',
+        ];
+
+        foreach ($contact as $key => $value) {
+            if (blank(Setting::get($key))) {
+                Setting::put($key, $value);
+            }
+        }
+
+        Setting::put('studio_contact_seeded', '1');
     }
 
     private function services(): void
