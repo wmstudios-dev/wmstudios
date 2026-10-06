@@ -130,11 +130,12 @@
                             @endforeach
                         </div>
                     @elseif($kind === 'feed')
-                        <div class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+                        {{-- Looks like an Instagram profile grid: three columns, hairline gaps, 4:5 tiles --}}
+                        <div class="mt-6 grid max-w-2xl grid-cols-3 gap-1 rounded-3xl bg-ink p-1.5 sm:gap-1.5 sm:p-2">
                             @foreach($photos as $photo)
                                 <a href="{{ $photo->url() }}" data-lightbox="gallery-{{ $kind }}" data-caption="{{ $photo->caption }}"
-                                   class="reveal group block aspect-[4/5] overflow-hidden rounded-2xl bg-soft" style="--d: {{ ($loop->index % 4) * 60 }}ms">
-                                    <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                   class="group block aspect-[4/5] overflow-hidden bg-white/10 first:rounded-tl-[1.25rem] [&:nth-child(3)]:rounded-tr-[1.25rem]">
+                                    <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="h-full w-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:opacity-90">
                                 </a>
                             @endforeach
                         </div>
