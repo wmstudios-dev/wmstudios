@@ -193,7 +193,7 @@
                             @foreach($photos as $photo)
                                 <a href="{{ $photo->url() }}" data-lightbox="gallery-documentation" data-caption="{{ $photo->caption }}"
                                    class="reveal group mb-2 block break-inside-avoid overflow-hidden rounded-xl bg-soft sm:mb-3" style="--d: {{ ($loop->index % 3) * 60 }}ms">
-                                    <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="w-full transition-transform duration-700 group-hover:scale-105">
+                                    <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" {!! $photo->sizeAttrs() !!} class="h-auto w-full transition-transform duration-700 group-hover:scale-105">
                                 </a>
                             @endforeach
                         </div>
@@ -202,7 +202,7 @@
                             @foreach($photos as $photo)
                                 <a href="{{ $photo->url() }}" data-lightbox="gallery-{{ $kind }}" data-caption="{{ $photo->caption }}"
                                    class="reveal group mb-4 block break-inside-avoid overflow-hidden rounded-2xl bg-soft" style="--d: {{ ($loop->index % 3) * 70 }}ms">
-                                    <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="w-full transition-transform duration-700 group-hover:scale-105">
+                                    <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" {!! $photo->sizeAttrs() !!} class="h-auto w-full transition-transform duration-700 group-hover:scale-105">
                                 </a>
                             @endforeach
                         </div>

@@ -40,6 +40,7 @@ class SiteContentSeeder extends Seeder
         $this->once('portfolio_covers_v3', fn () => $this->portfolioCovers());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
+        $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
     }
 
     private function once(string $flag, \Closure $seed): void
@@ -254,6 +255,68 @@ class SiteContentSeeder extends Seeder
             }
         }
     }
+    /**
+     * Two clearly labelled sample works (runs once) that show how the "Website" and "Dokumentasi" gallery kinds
+     * look, until real material exists. The pictures are generated placeholders under database/data/portfolio. Delete
+     * the works in Admin > Works whenever you like; they are not created again.
+     */
+    private function sampleKinds(): void
+    {
+        $base = database_path('data/portfolio');
+        $disk = Storage::disk('public');
+
+        $works = [
+            [
+                'slug' => 'contoh-website', 'category' => 'web', 'kind' => 'web', 'order' => 90,
+                'title_id' => 'Contoh Proyek Website', 'title_en' => 'Sample Website Project',
+                'summary_id' => 'Contoh untuk melihat bagaimana karya website tampil. Ganti atau hapus di Admin > Works.',
+                'summary_en' => 'A sample to see how a website project looks. Replace or delete it in Admin > Works.',
+                'description_id' => "Ini data contoh (dummy). Tangkapan layar di bawah hanya ilustrasi supaya bagian Website terlihat bentuknya.\n\nGanti dengan proyek website sungguhan: link situs live, screenshot desktop dan HP, fitur utama, dan peran.",
+                'description_en' => "This is sample (dummy) data. The screenshots below are only illustrations so the Website section can be judged.\n\nReplace it with a real website project: the live link, desktop and phone screenshots, key features and your role.",
+            ],
+            [
+                'slug' => 'contoh-dokumentasi', 'category' => 'photo', 'kind' => 'documentation', 'order' => 91,
+                'title_id' => 'Contoh Dokumentasi Acara', 'title_en' => 'Sample Event Documentation',
+                'summary_id' => 'Contoh untuk melihat bagaimana dokumentasi acara tampil. Ganti atau hapus di Admin > Works.',
+                'summary_en' => 'A sample to see how event documentation looks. Replace or delete it in Admin > Works.',
+                'description_id' => "Ini data contoh (dummy). Foto di bawah hanya ilustrasi dengan berbagai proporsi supaya bagian Dokumentasi terlihat bentuknya.\n\nGanti dengan dokumentasi sungguhan: foto terbaik dari acara, video highlight, nama dan tanggal acara, serta paket yang dipakai.",
+                'description_en' => "This is sample (dummy) data. The photos below are only illustrations in mixed proportions so the Documentation section can be judged.\n\nReplace it with real documentation: the best event photos, a highlight video, the event name and date, and the package used.",
+            ],
+        ];
+
+        foreach ($works as $w) {
+            if (Work::where('slug', $w['slug'])->exists()) {
+                continue;
+            }
+
+            $paths = [];
+
+            foreach (glob("{$base}/{$w['slug']}/[0-9][0-9].webp") ?: [] as $file) {
+                $n = basename($file, '.webp');
+                $paths[] = "uploads/works/{$w['slug']}/{$n}.webp";
+                $disk->put("uploads/works/{$w['slug']}/{$n}.webp", file_get_contents($file));
+
+                if (is_file("{$base}/{$w['slug']}/{$n}_thumb.webp")) {
+                    $disk->put("uploads/works/{$w['slug']}/{$n}_thumb.webp", file_get_contents("{$base}/{$w['slug']}/{$n}_thumb.webp"));
+                }
+            }
+
+            $work = Work::create([
+                'slug' => $w['slug'], 'category' => $w['category'],
+                'title_id' => $w['title_id'], 'title_en' => $w['title_en'],
+                'client' => 'Klien contoh', 'is_featured' => false,
+                'summary_id' => $w['summary_id'], 'summary_en' => $w['summary_en'],
+                'description_id' => $w['description_id'], 'description_en' => $w['description_en'],
+                'cover_photo' => $paths[0] ?? null,
+                'sort_order' => $w['order'],
+            ]);
+
+            foreach (array_slice($paths, 1) as $i => $path) {
+                $work->photos()->create(['path' => $path, 'kind' => $w['kind'], 'caption' => 'Contoh', 'sort_order' => $i + 1]);
+            }
+        }
+    }
+
     /**
      * Cupfine and Maza only ordered a few designs (feed and story), they are not social media management clients
      * (runs once). Moves them to the design category and rewrites their texts, but only while those are still the
