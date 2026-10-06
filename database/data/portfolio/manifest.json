@@ -1,97 +1,941 @@
 {
     "omah-latareombo": {
-        "01": "story",
-        "02": "story",
-        "03": "story",
-        "04": "story",
-        "05": "story",
-        "06": "story",
-        "07": "story",
-        "08": "story",
-        "09": "story",
-        "10": "story",
-        "11": "story",
-        "12": "story",
-        "13": "story"
+        "01": [
+            "feed",
+            null,
+            0
+        ],
+        "02": [
+            "feed",
+            null,
+            3
+        ],
+        "03": [
+            "feed",
+            null,
+            4
+        ],
+        "04": [
+            "feed",
+            null,
+            10
+        ],
+        "05": [
+            "feed",
+            null,
+            11
+        ],
+        "06": [
+            "feed",
+            null,
+            12
+        ],
+        "07": [
+            "story",
+            null,
+            14
+        ],
+        "08": [
+            "story",
+            null,
+            16
+        ],
+        "09": [
+            "story",
+            null,
+            17
+        ],
+        "10": [
+            "story",
+            null,
+            23
+        ],
+        "11": [
+            "story",
+            null,
+            24
+        ],
+        "12": [
+            "story",
+            null,
+            25
+        ],
+        "13": [
+            "story",
+            null,
+            26
+        ],
+        "14": [
+            "feed",
+            null,
+            1
+        ],
+        "15": [
+            "feed",
+            null,
+            2
+        ],
+        "16": [
+            "feed",
+            null,
+            5
+        ],
+        "17": [
+            "feed",
+            null,
+            6
+        ],
+        "18": [
+            "feed",
+            null,
+            7
+        ],
+        "19": [
+            "feed",
+            null,
+            8
+        ],
+        "20": [
+            "feed",
+            null,
+            9
+        ],
+        "21": [
+            "story",
+            null,
+            13
+        ],
+        "22": [
+            "story",
+            null,
+            15
+        ],
+        "23": [
+            "story",
+            null,
+            18
+        ],
+        "24": [
+            "story",
+            null,
+            19
+        ],
+        "25": [
+            "story",
+            null,
+            20
+        ],
+        "26": [
+            "story",
+            null,
+            21
+        ],
+        "27": [
+            "story",
+            null,
+            22
+        ],
+        "28": [
+            "story",
+            null,
+            27
+        ],
+        "29": [
+            "story",
+            null,
+            28
+        ]
     },
     "cupfine": {
-        "01": "feed",
-        "02": "feed",
-        "03": "feed",
-        "04": "feed",
-        "05": "feed",
-        "06": "feed",
-        "07": "story",
-        "08": "story",
-        "09": "story",
-        "10": "story"
+        "01": [
+            "feed",
+            null,
+            6
+        ],
+        "02": [
+            "feed",
+            null,
+            1
+        ],
+        "03": [
+            "feed",
+            null,
+            2
+        ],
+        "04": [
+            "feed",
+            null,
+            3
+        ],
+        "05": [
+            "feed",
+            null,
+            8
+        ],
+        "06": [
+            "feed",
+            null,
+            5
+        ],
+        "07": [
+            "story",
+            null,
+            11
+        ],
+        "08": [
+            "story",
+            null,
+            12
+        ],
+        "09": [
+            "story",
+            null,
+            16
+        ],
+        "10": [
+            "story",
+            null,
+            9
+        ],
+        "11": [
+            "feed",
+            null,
+            0
+        ],
+        "12": [
+            "feed",
+            null,
+            4
+        ],
+        "13": [
+            "feed",
+            null,
+            7
+        ],
+        "14": [
+            "story",
+            null,
+            10
+        ],
+        "15": [
+            "story",
+            null,
+            13
+        ],
+        "16": [
+            "story",
+            null,
+            14
+        ],
+        "17": [
+            "story",
+            null,
+            15
+        ],
+        "18": [
+            "story",
+            null,
+            17
+        ],
+        "19": [
+            "story",
+            null,
+            18
+        ],
+        "20": [
+            "story",
+            null,
+            19
+        ]
     },
     "kandang-kopi": {
-        "01": "feed",
-        "02": "feed",
-        "03": "feed",
-        "04": "feed",
-        "05": "feed",
-        "06": "feed",
-        "07": "feed",
-        "08": "feed",
-        "09": "story",
-        "10": "story",
-        "11": "story",
-        "12": "story"
+        "01": [
+            "feed",
+            null,
+            21
+        ],
+        "02": [
+            "feed",
+            null,
+            19
+        ],
+        "03": [
+            "feed",
+            null,
+            32
+        ],
+        "04": [
+            "feed",
+            null,
+            33
+        ],
+        "05": [
+            "feed",
+            null,
+            25
+        ],
+        "06": [
+            "feed",
+            null,
+            30
+        ],
+        "07": [
+            "feed",
+            null,
+            27
+        ],
+        "08": [
+            "feed",
+            null,
+            34
+        ],
+        "09": [
+            "story",
+            null,
+            1
+        ],
+        "10": [
+            "story",
+            null,
+            2
+        ],
+        "11": [
+            "story",
+            null,
+            6
+        ],
+        "12": [
+            "story",
+            null,
+            12
+        ],
+        "13": [
+            "story",
+            null,
+            3
+        ],
+        "14": [
+            "story",
+            null,
+            4
+        ],
+        "15": [
+            "story",
+            null,
+            5
+        ],
+        "16": [
+            "story",
+            null,
+            7
+        ],
+        "17": [
+            "story",
+            null,
+            8
+        ],
+        "18": [
+            "story",
+            null,
+            9
+        ],
+        "19": [
+            "story",
+            null,
+            10
+        ],
+        "20": [
+            "story",
+            null,
+            11
+        ],
+        "21": [
+            "story",
+            null,
+            13
+        ],
+        "22": [
+            "story",
+            null,
+            14
+        ],
+        "23": [
+            "story",
+            null,
+            15
+        ],
+        "24": [
+            "story",
+            null,
+            16
+        ],
+        "25": [
+            "story",
+            null,
+            17
+        ],
+        "26": [
+            "story",
+            null,
+            18
+        ],
+        "27": [
+            "feed",
+            null,
+            20
+        ],
+        "28": [
+            "feed",
+            null,
+            22
+        ],
+        "29": [
+            "feed",
+            null,
+            23
+        ],
+        "30": [
+            "feed",
+            null,
+            24
+        ],
+        "31": [
+            "feed",
+            null,
+            26
+        ],
+        "32": [
+            "feed",
+            null,
+            28
+        ],
+        "33": [
+            "feed",
+            null,
+            29
+        ],
+        "34": [
+            "feed",
+            null,
+            31
+        ],
+        "35": [
+            "feed",
+            null,
+            35
+        ],
+        "36": [
+            "feed",
+            null,
+            36
+        ]
     },
     "maza-coffee-and-resto": {
-        "01": "feed",
-        "02": "feed",
-        "03": "feed",
-        "04": "feed",
-        "05": "feed",
-        "06": "feed",
-        "07": "story",
-        "08": "story",
-        "09": "story",
-        "10": "story",
-        "11": "story",
-        "12": "story"
+        "01": [
+            "feed",
+            null,
+            12
+        ],
+        "02": [
+            "feed",
+            null,
+            7
+        ],
+        "03": [
+            "feed",
+            null,
+            8
+        ],
+        "04": [
+            "feed",
+            null,
+            10
+        ],
+        "05": [
+            "feed",
+            null,
+            14
+        ],
+        "06": [
+            "feed",
+            null,
+            15
+        ],
+        "07": [
+            "story",
+            null,
+            1
+        ],
+        "08": [
+            "story",
+            null,
+            2
+        ],
+        "09": [
+            "story",
+            null,
+            4
+        ],
+        "10": [
+            "story",
+            null,
+            5
+        ],
+        "11": [
+            "story",
+            null,
+            17
+        ],
+        "12": [
+            "story",
+            null,
+            18
+        ],
+        "13": [
+            "story",
+            null,
+            3
+        ],
+        "14": [
+            "story",
+            null,
+            6
+        ],
+        "15": [
+            "feed",
+            null,
+            9
+        ],
+        "16": [
+            "story",
+            null,
+            16
+        ]
     },
     "reamor": {
-        "01": "carousel",
-        "02": "carousel",
-        "03": "carousel",
-        "04": "carousel",
-        "05": "carousel",
-        "06": "carousel",
-        "07": "carousel",
-        "08": "carousel",
-        "09": "carousel"
+        "01": [
+            "carousel",
+            "Carousel 2",
+            8
+        ],
+        "02": [
+            "carousel",
+            "Carousel 1",
+            0
+        ],
+        "03": [
+            "carousel",
+            "Carousel 2",
+            6
+        ],
+        "04": [
+            "carousel",
+            "Carousel 1",
+            5
+        ],
+        "05": [
+            "carousel",
+            "Carousel 3",
+            18
+        ],
+        "06": [
+            "carousel",
+            "Carousel 5",
+            24
+        ],
+        "07": [
+            "carousel",
+            "Carousel 5",
+            25
+        ],
+        "08": [
+            "carousel",
+            "Carousel 5",
+            27
+        ],
+        "09": [
+            "carousel",
+            "Carousel 2",
+            9
+        ],
+        "10": [
+            "carousel",
+            "Carousel 1",
+            1
+        ],
+        "11": [
+            "carousel",
+            "Carousel 1",
+            2
+        ],
+        "12": [
+            "carousel",
+            "Carousel 1",
+            3
+        ],
+        "13": [
+            "carousel",
+            "Carousel 1",
+            4
+        ],
+        "14": [
+            "carousel",
+            "Carousel 2",
+            7
+        ],
+        "15": [
+            "carousel",
+            "Carousel 2",
+            10
+        ],
+        "16": [
+            "carousel",
+            "Carousel 2",
+            11
+        ],
+        "17": [
+            "carousel",
+            "Carousel 3",
+            12
+        ],
+        "18": [
+            "carousel",
+            "Carousel 3",
+            13
+        ],
+        "19": [
+            "carousel",
+            "Carousel 3",
+            14
+        ],
+        "20": [
+            "carousel",
+            "Carousel 3",
+            15
+        ],
+        "21": [
+            "carousel",
+            "Carousel 3",
+            16
+        ],
+        "22": [
+            "carousel",
+            "Carousel 3",
+            17
+        ],
+        "23": [
+            "carousel",
+            "Carousel 4",
+            19
+        ],
+        "24": [
+            "carousel",
+            "Carousel 4",
+            20
+        ],
+        "25": [
+            "carousel",
+            "Carousel 4",
+            21
+        ],
+        "26": [
+            "carousel",
+            "Carousel 4",
+            22
+        ],
+        "27": [
+            "carousel",
+            "Carousel 4",
+            23
+        ],
+        "28": [
+            "carousel",
+            "Carousel 5",
+            26
+        ],
+        "29": [
+            "carousel",
+            "Carousel 5",
+            28
+        ],
+        "30": [
+            "carousel",
+            "Carousel 5",
+            29
+        ]
     },
     "semarang-ban": {
-        "01": "carousel",
-        "02": "identity",
-        "03": "carousel",
-        "04": "feed",
-        "05": "feed",
-        "06": "feed",
-        "07": "feed",
-        "08": "feed",
-        "09": "story",
-        "10": "story",
-        "11": "identity",
-        "12": "carousel",
-        "13": "carousel",
-        "14": "carousel"
+        "01": [
+            "carousel",
+            "Carousel 1",
+            2
+        ],
+        "02": [
+            "identity",
+            null,
+            1
+        ],
+        "03": [
+            "carousel",
+            "Carousel 2",
+            6
+        ],
+        "04": [
+            "feed",
+            null,
+            13
+        ],
+        "05": [
+            "feed",
+            null,
+            14
+        ],
+        "06": [
+            "feed",
+            null,
+            16
+        ],
+        "07": [
+            "feed",
+            null,
+            18
+        ],
+        "08": [
+            "feed",
+            null,
+            20
+        ],
+        "09": [
+            "story",
+            null,
+            23
+        ],
+        "10": [
+            "story",
+            null,
+            24
+        ],
+        "11": [
+            "identity",
+            null,
+            12
+        ],
+        "12": [
+            "carousel",
+            "Carousel 2",
+            7
+        ],
+        "13": [
+            "carousel",
+            "Carousel 2",
+            8
+        ],
+        "14": [
+            "carousel",
+            "Carousel 2",
+            9
+        ],
+        "15": [
+            "identity",
+            null,
+            0
+        ],
+        "16": [
+            "carousel",
+            "Carousel 1",
+            3
+        ],
+        "17": [
+            "carousel",
+            "Carousel 1",
+            4
+        ],
+        "18": [
+            "carousel",
+            "Carousel 1",
+            5
+        ],
+        "19": [
+            "identity",
+            null,
+            10
+        ],
+        "20": [
+            "identity",
+            null,
+            11
+        ],
+        "21": [
+            "feed",
+            null,
+            15
+        ],
+        "22": [
+            "feed",
+            null,
+            17
+        ],
+        "23": [
+            "feed",
+            null,
+            19
+        ],
+        "24": [
+            "identity",
+            null,
+            21
+        ],
+        "25": [
+            "story",
+            null,
+            22
+        ],
+        "26": [
+            "story",
+            null,
+            25
+        ],
+        "27": [
+            "story",
+            null,
+            26
+        ]
     },
     "the-overlander": {
-        "01": "carousel",
-        "02": "carousel",
-        "03": "carousel",
-        "04": "carousel",
-        "05": "reel",
-        "06": "carousel",
-        "07": "carousel",
-        "08": "identity",
-        "09": "identity",
-        "10": "identity",
-        "11": "identity"
+        "01": [
+            "carousel",
+            "Carousel 2",
+            11
+        ],
+        "02": [
+            "carousel",
+            "Carousel 1",
+            1
+        ],
+        "03": [
+            "carousel",
+            "Carousel 1",
+            2
+        ],
+        "04": [
+            "carousel",
+            "Carousel 1",
+            5
+        ],
+        "05": [
+            "reel",
+            null,
+            14
+        ],
+        "06": [
+            "carousel",
+            "Carousel 2",
+            10
+        ],
+        "07": [
+            "carousel",
+            "Carousel 2",
+            13
+        ],
+        "08": [
+            "identity",
+            null,
+            21
+        ],
+        "09": [
+            "identity",
+            null,
+            22
+        ],
+        "10": [
+            "identity",
+            null,
+            26
+        ],
+        "11": [
+            "identity",
+            null,
+            27
+        ],
+        "12": [
+            "carousel",
+            "Carousel 1",
+            3
+        ],
+        "13": [
+            "carousel",
+            "Carousel 1",
+            4
+        ],
+        "14": [
+            "carousel",
+            "Carousel 1",
+            6
+        ],
+        "15": [
+            "carousel",
+            "Carousel 1",
+            7
+        ],
+        "16": [
+            "carousel",
+            "Carousel 2",
+            8
+        ],
+        "17": [
+            "carousel",
+            "Carousel 2",
+            9
+        ],
+        "18": [
+            "carousel",
+            "Carousel 2",
+            12
+        ],
+        "19": [
+            "reel",
+            null,
+            15
+        ],
+        "20": [
+            "reel",
+            null,
+            16
+        ],
+        "21": [
+            "reel",
+            null,
+            17
+        ],
+        "22": [
+            "reel",
+            null,
+            18
+        ],
+        "23": [
+            "feed",
+            null,
+            19
+        ],
+        "24": [
+            "identity",
+            null,
+            20
+        ],
+        "25": [
+            "identity",
+            null,
+            23
+        ],
+        "26": [
+            "identity",
+            null,
+            24
+        ],
+        "27": [
+            "identity",
+            null,
+            25
+        ]
     }
 }

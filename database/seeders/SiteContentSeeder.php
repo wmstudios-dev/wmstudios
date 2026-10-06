@@ -36,7 +36,7 @@ class SiteContentSeeder extends Seeder
         $this->deckContent();
         $this->portfolio();
         $this->once('portfolio_logos_v1', fn () => $this->portfolioLogos());
-        $this->once('portfolio_kinds_v1', fn () => $this->portfolioKinds());
+        $this->once('portfolio_photos_v2', fn () => $this->portfolioPhotos());
     }
 
     private function once(string $flag, \Closure $seed): void
@@ -189,14 +189,15 @@ class SiteContentSeeder extends Seeder
                 $work->photos()->create([
                     'path' => $path,
                     'sort_order' => $order + 1,
-                    'kind' => self::portfolioManifest()[$slug][basename($path, '.webp')] ?? 'other',
+                    'kind' => self::portfolioManifest()[$slug][basename($path, '.webp')][0] ?? 'other',
+                    'caption' => self::portfolioManifest()[$slug][basename($path, '.webp')][1] ?? null,
                 ]);
             }
         }
 
         Setting::put('portfolio_v1', '1');
     }
-    /** kind (feed / story / carousel / reel / identity) of every shipped portfolio picture: slug => file number => kind. */
+    /** Every shipped portfolio picture: slug => file number => [kind (feed / story / carousel / reel / identity), carousel set label, order]. */
     private static function portfolioManifest(): array
     {
         $file = database_path('data/portfolio/manifest.json');
@@ -205,16 +206,16 @@ class SiteContentSeeder extends Seeder
     }
 
     /**
-     * Brings the portfolio pictures seeded earlier up to date (runs once): tells each one what it is (feed, story,
-     * carousel, ...) while it is still marked "other", and adds pictures that were shipped later (e.g. the other
-     * slides of a carousel). Pictures the admin added or re-typed are left alone.
+     * Brings the portfolio pictures seeded earlier up to date (runs once): sets what each one is (feed, story,
+     * carousel set, ...) and its place in the gallery, and adds the pictures that were shipped later so that every
+     * usable picture of the client folders is on the site. Nothing is removed.
      */
-    private function portfolioKinds(): void
+    private function portfolioPhotos(): void
     {
         $base = database_path('data/portfolio');
         $disk = Storage::disk('public');
 
-        foreach (self::portfolioManifest() as $slug => $kinds) {
+        foreach (self::portfolioManifest() as $slug => $pictures) {
             $work = Work::where('slug', $slug)->first();
 
             if (! $work) {
@@ -222,22 +223,21 @@ class SiteContentSeeder extends Seeder
             }
 
             $prefix = "uploads/works/{$slug}/";
+            $byPath = $work->photos->keyBy('path');
 
-            foreach ($work->photos as $photo) {
-                $kind = $kinds[basename($photo->path, '.webp')] ?? null;
-
-                if ($kind && $photo->kind === 'other' && str_starts_with($photo->path, $prefix)) {
-                    $photo->update(['kind' => $kind]);
-                }
-            }
-
-            $known = $work->photos->pluck('path')->push($work->cover_photo)->all();
-            $order = (int) $work->photos()->max('sort_order');
-
-            foreach ($kinds as $number => $kind) {
+            foreach ($pictures as $number => [$kind, $caption, $order]) {
                 $path = "{$prefix}{$number}.webp";
 
-                if (in_array($path, $known, true) || ! is_file("{$base}/{$slug}/{$number}.webp")) {
+                if ($path === $work->cover_photo) {
+                    continue;
+                }
+
+                if ($photo = $byPath->get($path)) {
+                    $photo->update(['kind' => $kind, 'caption' => $photo->caption ?? $caption, 'sort_order' => $order + 1]);
+                    continue;
+                }
+
+                if (! is_file("{$base}/{$slug}/{$number}.webp")) {
                     continue;
                 }
 
@@ -247,7 +247,7 @@ class SiteContentSeeder extends Seeder
                     $disk->put("{$prefix}{$number}_thumb.webp", file_get_contents("{$base}/{$slug}/{$number}_thumb.webp"));
                 }
 
-                $work->photos()->create(['path' => $path, 'sort_order' => ++$order, 'kind' => $kind]);
+                $work->photos()->create(['path' => $path, 'kind' => $kind, 'caption' => $caption, 'sort_order' => $order + 1]);
             }
         }
     }
