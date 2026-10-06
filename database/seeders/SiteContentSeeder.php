@@ -37,7 +37,7 @@ class SiteContentSeeder extends Seeder
         $this->portfolio();
         $this->once('portfolio_logos_v1', fn () => $this->portfolioLogos());
         $this->once('portfolio_photos_v2', fn () => $this->portfolioPhotos());
-        $this->once('portfolio_covers_v2', fn () => $this->portfolioCovers());
+        $this->once('portfolio_covers_v3', fn () => $this->portfolioCovers());
     }
 
     private function once(string $flag, \Closure $seed): void
@@ -253,9 +253,9 @@ class SiteContentSeeder extends Seeder
         }
     }
     /**
-     * Gives works the hand-picked landscape main photo (covers.json) in place of the first picture they were seeded
-     * with (runs once). A cover chosen in the admin is never replaced, and the former cover stays on the work page
-     * as a gallery picture.
+     * Gives works the hand-picked landscape main photo (covers.json) in place of the picture they were seeded with
+     * (runs once). Only a shipped cover (a numbered picture or an earlier cover file) is replaced, never one chosen in
+     * the admin, and a replaced numbered picture stays on the work page as a gallery picture.
      */
     private function portfolioCovers(): void
     {
@@ -279,7 +279,7 @@ class SiteContentSeeder extends Seeder
                 $work->update(['cover_focus' => $spec['focus']]);
             }
 
-            if (! $work || $old === $new || ! preg_match('#/\d\d\.webp$#', $old) || ! is_file("{$base}/{$slug}/{$name}.webp")) {
+            if (! $work || $old === $new || ! preg_match('#/(?:\d\d|cover[a-z0-9-]*)\.webp$#', $old) || ! is_file("{$base}/{$slug}/{$name}.webp")) {
                 continue;
             }
 
