@@ -121,7 +121,7 @@
                     </div>
 
                     @if($kind === 'story' || $kind === 'reel')
-                        <div class="mt-6 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3">
+                        <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
                             {{-- at most six stories / reels shown --}}
                             @foreach($photos->take(6) as $photo)
                                 <a href="{{ $photo->url() }}" data-lightbox="gallery-{{ $kind }}" data-caption="{{ $photo->caption }}"
@@ -132,7 +132,7 @@
                         </div>
                     @elseif($kind === 'feed')
                         {{-- Looks like an Instagram profile grid: three columns, hairline gaps, 4:5 tiles --}}
-                        <div class="mt-6 grid max-w-3xl grid-cols-3 gap-1 rounded-3xl bg-ink p-1.5 sm:gap-1.5 sm:p-2">
+                        <div class="mt-6 grid grid-cols-3 gap-1 rounded-3xl bg-ink p-1.5 sm:gap-2 sm:p-2.5">
                             {{-- at most nine feed posts shown: a 3 x 3 profile grid --}}
                             @foreach($photos->take(9) as $photo)
                                 <a href="{{ $photo->url() }}" data-lightbox="gallery-{{ $kind }}" data-caption="{{ $photo->caption }}"
