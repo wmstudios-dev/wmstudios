@@ -18,7 +18,7 @@
                     @php $cover = $work->coverUrl(true); @endphp
                     <a href="{{ route('works.show', $work) }}" class="{{ $cardBase }}">
                         @if($cover)
-                            <img src="{{ $cover }}" alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
+                            <img src="{{ $cover }}" alt="" loading="lazy" style="object-position: {{ $work->coverPosition() }}" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
                         @else
                             <span class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-brand-100 via-brand-50 to-white text-brand-300"><x-icon :name="$workIcons[$work->category] ?? 'spark'" class="h-14 w-14" stroke="1.2" /></span>
                         @endif

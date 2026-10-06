@@ -37,7 +37,7 @@ class SiteContentSeeder extends Seeder
         $this->portfolio();
         $this->once('portfolio_logos_v1', fn () => $this->portfolioLogos());
         $this->once('portfolio_photos_v2', fn () => $this->portfolioPhotos());
-        $this->once('portfolio_covers_v1', fn () => $this->portfolioCovers());
+        $this->once('portfolio_covers_v2', fn () => $this->portfolioCovers());
     }
 
     private function once(string $flag, \Closure $seed): void
@@ -269,10 +269,15 @@ class SiteContentSeeder extends Seeder
         $disk = Storage::disk('public');
         $manifest = self::portfolioManifest();
 
-        foreach (json_decode(file_get_contents($file), true) ?: [] as $slug => $name) {
+        foreach (json_decode(file_get_contents($file), true) ?: [] as $slug => $spec) {
+            $name = $spec['file'] ?? 'cover';
             $work = Work::where('slug', $slug)->first();
             $new = "uploads/works/{$slug}/{$name}.webp";
             $old = (string) $work?->cover_photo;
+
+            if ($work && $work->cover_photo === $new && ! $work->cover_focus && ! empty($spec['focus'])) {
+                $work->update(['cover_focus' => $spec['focus']]);
+            }
 
             if (! $work || $old === $new || ! preg_match('#/\d\d\.webp$#', $old) || ! is_file("{$base}/{$slug}/{$name}.webp")) {
                 continue;
@@ -284,7 +289,7 @@ class SiteContentSeeder extends Seeder
                 }
             }
 
-            $work->update(['cover_photo' => $new]);
+            $work->update(['cover_photo' => $new, 'cover_focus' => $work->cover_focus ?: ($spec['focus'] ?? null)]);
 
             $number = basename($old, '.webp');
 

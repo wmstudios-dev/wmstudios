@@ -76,7 +76,7 @@
                     <a href="{{ route('works.show', $feature) }}" class="group block w-44 overflow-hidden rounded-3xl bg-white shadow-xl shadow-ink/20 transition-all duration-300 hover:-translate-y-1.5 hover:rotate-2 active:scale-95">
                         <span class="block aspect-[4/5] overflow-hidden bg-brand-100">
                             @if($feature->coverUrl(true))
-                                <img src="{{ $feature->coverUrl(true) }}" alt="" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                <img src="{{ $feature->coverUrl(true) }}" alt="" style="object-position: {{ $feature->coverPosition() }}" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
                             @else
                                 <span class="flex h-full w-full items-center justify-center text-brand-300"><x-icon name="image" class="h-12 w-12" stroke="1.2" /></span>
                             @endif

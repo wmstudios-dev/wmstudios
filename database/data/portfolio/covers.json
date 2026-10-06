@@ -1,3 +1,24 @@
 {
-    "omah-latareombo": "cover"
+    "omah-latareombo": {
+        "file": "cover"
+    },
+    "cupfine": {
+        "file": "cover"
+    },
+    "kandang-kopi": {
+        "file": "cover"
+    },
+    "maza-coffee-and-resto": {
+        "file": "cover",
+        "focus": "right"
+    },
+    "reamor": {
+        "file": "cover"
+    },
+    "semarang-ban": {
+        "file": "cover"
+    },
+    "the-overlander": {
+        "file": "cover"
+    }
 }

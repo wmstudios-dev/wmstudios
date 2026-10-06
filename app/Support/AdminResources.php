@@ -70,6 +70,7 @@ class AdminResources
                     ['name' => 'year', 'label' => 'Year', 'type' => 'number'],
                     ['name' => 'summary', 'label' => 'Short summary', 'type' => 'textarea', 'rows' => 2, 'bilingual' => true, 'hint' => 'Shown on the cards.'],
                     ['name' => 'description', 'label' => 'Full description', 'type' => 'textarea', 'rows' => 6, 'bilingual' => true, 'hint' => 'Shown on the work page. Blank lines make new paragraphs.'],
+                    ['name' => 'cover_focus', 'label' => 'Cover focus on cards', 'type' => 'select', 'options' => array_map(fn ($f) => $f[0], \App\Models\Work::COVER_FOCUS), 'hint' => 'A wide photo is cropped to a tall card. Pick the side where the important part is (e.g. a sign on the right).'],
                     ['name' => 'metric_value', 'label' => 'Result number (optional)', 'type' => 'text', 'hint' => 'A real headline result, e.g. 250K. Shown as a green badge on the work card. Leave empty to hide.'],
                     ['name' => 'metric_label', 'label' => 'Result caption (optional)', 'type' => 'text', 'bilingual' => true, 'hint' => 'e.g. views in 30 days'],
                     ['name' => 'cover_photo', 'label' => 'Cover photo', 'type' => 'image', 'folder' => 'works', 'hint' => 'Photos are resized and converted to WebP automatically.'],

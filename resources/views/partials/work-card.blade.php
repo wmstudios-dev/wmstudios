@@ -8,6 +8,7 @@
    class="reveal group relative block overflow-hidden rounded-3xl bg-soft transition-transform duration-200 active:scale-[0.98] {{ $ratio ?? 'aspect-[4/5]' }}" style="--d: {{ $delay ?? 0 }}ms">
     @if($cover)
         <img src="{{ $cover }}" alt="{{ $work->t('title') }}" loading="lazy"
+             style="object-position: {{ $work->coverPosition() }}"
              class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
     @else
         <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-brand-100 via-brand-50 to-white text-brand-300">

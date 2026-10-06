@@ -16,6 +16,15 @@ class Work extends Model
 
     public const CATEGORIES = ['photo', 'video', 'design', 'web', 'social'];
 
+    /** Where a wide cover stays in view when it is cropped (cards, menu): name => [admin label, CSS object-position]. */
+    public const COVER_FOCUS = [
+        'left' => ['Left', '15% 50%'],
+        'center-left' => ['Centre-left', '35% 50%'],
+        'center' => ['Centre (default)', '50% 50%'],
+        'center-right' => ['Centre-right', '65% 50%'],
+        'right' => ['Right', '85% 50%'],
+    ];
+
     protected function casts(): array
     {
         return [
@@ -49,6 +58,12 @@ class Work extends Model
     {
         // A video work without its own cover borrows the YouTube thumbnail when there is one.
         return ImageUploader::url($this->cover_photo, $thumb) ?? $this->video()['thumb'] ?? null;
+    }
+
+    /** CSS object-position for the cover when it is cropped to fit a card. */
+    public function coverPosition(): string
+    {
+        return self::COVER_FOCUS[$this->cover_focus][1] ?? '50% 50%';
     }
 
     /** Is the main photo wider than tall? (A landscape one can run full width; a poster must be shown whole.) */

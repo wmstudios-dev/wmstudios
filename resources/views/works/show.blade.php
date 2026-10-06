@@ -52,7 +52,7 @@
         @elseif($cover)
             @if($work->coverIsLandscape())
                 <a href="{{ $cover }}" data-lightbox="main" data-caption="{{ $work->t('title') }}" class="block overflow-hidden rounded-[2rem] bg-soft">
-                    <img src="{{ $cover }}" alt="{{ $work->t('title') }}" class="aspect-[16/10] max-h-[80vh] w-full object-cover">
+                    <img src="{{ $cover }}" alt="{{ $work->t('title') }}" style="object-position: {{ $work->coverPosition() }}" class="aspect-[16/10] max-h-[80vh] w-full object-cover">
                 </a>
             @else
                 <a href="{{ $cover }}" data-lightbox="main" data-caption="{{ $work->t('title') }}" class="flex justify-center overflow-hidden rounded-[2rem] bg-soft">
