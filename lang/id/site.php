@@ -4,11 +4,11 @@ return [
     'nav' => [
         'home' => 'Beranda',
         'about' => 'Tentang',
-        'works' => 'Karya',
+        'works' => 'Proyek',
         'services' => 'Layanan',
         'process' => 'Proses',
-        'space' => 'Space',
-        'thoughts' => 'Thoughts',
+        'space' => 'Ruang',
+        'thoughts' => 'Catatan',
         'contact' => 'Kontak',
         'lets_talk' => 'Ayo ngobrol',
         'menu' => 'Menu',
@@ -30,7 +30,7 @@ return [
         'title' => 'Konten yang bikin brand-mu diingat',
         'subtitle' => 'Kami membantu bisnis tampil lewat sosial media, dokumentasi, desain, produksi foto & video, serta website yang rapi dan cepat.',
         'cta_primary' => 'Mulai proyek',
-        'cta_secondary' => 'Lihat karya',
+        'cta_secondary' => 'Lihat proyek',
         'trusted' => 'Dipercaya brand lokal & nasional',
         'free_note' => 'Konsultasi awal gratis, tanpa kewajiban.',
         'rating_aria' => 'Rating :n dari 5',
@@ -46,18 +46,18 @@ return [
         'services_title' => 'Semua kebutuhan visual & digital',
         'services_all' => 'Semua layanan',
         'service_more' => 'Pelajari lebih lanjut',
-        'works_eyebrow' => 'Karya pilihan',
+        'works_eyebrow' => 'Proyek pilihan',
         'works_title' => 'Proyek yang kami banggakan',
-        'works_all' => 'Lihat semua karya',
+        'works_all' => 'Lihat semua proyek',
         'process_eyebrow' => 'Cara kerja',
         'process_title' => 'Dari ide sampai tayang',
         'process_all' => 'Pelajari prosesnya',
         'space_eyebrow' => 'Di balik layar',
         'space_title' => 'Ruang & keseharian kami',
-        'space_all' => 'Intip space kami',
+        'space_all' => 'Intip ruang kami',
         'testimonials_eyebrow' => 'Kata mereka',
         'testimonials_title' => 'Cerita dari klien',
-        'thoughts_eyebrow' => 'Thoughts',
+        'thoughts_eyebrow' => 'Tulisan',
         'thoughts_title' => 'Catatan & sudut pandang',
         'thoughts_all' => 'Semua tulisan',
         'cta_title' => 'Punya ide? Ayo wujudkan bareng.',
@@ -65,9 +65,9 @@ return [
     ],
 
     'works' => [
-        'title' => 'Karya',
+        'title' => 'Proyek',
         'subtitle' => 'Foto, video, desain, dan web yang pernah kami kerjakan.',
-        'empty' => 'Belum ada karya di kategori ini.',
+        'empty' => 'Belum ada proyek di kategori ini.',
         'client' => 'Klien',
         'year' => 'Tahun',
         'category' => 'Kategori',
@@ -98,9 +98,9 @@ return [
         ],
         'swipe' => 'Geser',
         'gallery' => 'Galeri',
-        'related' => 'Karya lainnya',
-        'back' => 'Semua karya',
-        'cta_title' => 'Suka dengan karya ini?',
+        'related' => 'Proyek lainnya',
+        'back' => 'Semua proyek',
+        'cta_title' => 'Suka dengan proyek ini?',
     ],
 
     'services' => [
@@ -129,7 +129,7 @@ return [
     ],
 
     'space' => [
-        'title' => 'Space',
+        'title' => 'Ruang',
         'subtitle' => 'Keseharian, ruang kerja, budaya kreatif, dan proses belajar kami.',
         'empty' => 'Belum ada foto.',
         'tags' => [
@@ -142,7 +142,7 @@ return [
     ],
 
     'thoughts' => [
-        'title' => 'Thoughts',
+        'title' => 'Catatan',
         'subtitle' => 'Perspektif, refleksi, dan cara berpikir kreatif kami.',
         'empty' => 'Belum ada tulisan.',
         'read' => 'Baca',
@@ -204,8 +204,8 @@ return [
     ],
 
     'mega' => [
-        'works_all' => 'Lihat semua karya',
-        'works_count' => ':n karya',
+        'works_all' => 'Lihat semua proyek',
+        'works_count' => ':n proyek',
         'cta_title' => 'Konsultasi gratis',
         'cta_text' => 'Ceritakan idemu, kami bantu carikan layanan yang paling pas.',
         'browse' => 'Jelajahi',

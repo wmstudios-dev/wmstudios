@@ -62,7 +62,7 @@
                 @endif
             </a>
 
-            <nav class="hidden items-center gap-1 md:flex" aria-label="Main">
+            <nav class="hidden items-center gap-1 md:flex" aria-label="{{ __('site.nav.menu') }}">
                 @foreach($navItems as [$route, $pattern, $label, $key])
                     <a href="{{ route($route) }}" data-mega="{{ $key }}" aria-haspopup="true" aria-expanded="false"
                        class="group/trigger inline-flex items-center gap-1 rounded-full px-3 py-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-200 lg:px-4 text-sm font-medium transition-all duration-200 active:scale-95 aria-expanded:bg-brand-500 aria-expanded:text-white group-data-[over-hero=true]/header:text-white/90 group-data-[over-hero=true]/header:hover:bg-white/15 group-data-[over-hero=true]/header:hover:text-white group-data-[over-hero=true]/header:aria-expanded:bg-white group-data-[over-hero=true]/header:aria-expanded:text-brand-600 {{ request()->routeIs($pattern) ? 'bg-brand-50 text-brand-600 group-data-[over-hero=true]/header:bg-white/15' : 'text-ink/70 hover:bg-soft hover:text-ink' }}">{{ __($label) }}<x-icon name="chevron" class="h-3.5 w-3.5 opacity-60 transition-transform duration-200 group-aria-expanded/trigger:rotate-180 group-aria-expanded/trigger:opacity-100" stroke="2.4" /></a>

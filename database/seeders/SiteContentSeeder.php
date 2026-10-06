@@ -41,6 +41,7 @@ class SiteContentSeeder extends Seeder
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
+        $this->once('indonesian_titles_v1', fn () => $this->indonesianTitles());
     }
 
     private function once(string $flag, \Closure $seed): void
@@ -258,7 +259,7 @@ class SiteContentSeeder extends Seeder
     /**
      * Two clearly labelled sample works (runs once) that show how the "Website" and "Dokumentasi" gallery kinds
      * look, until real material exists. The pictures are generated placeholders under database/data/portfolio. Delete
-     * the works in Admin > Works whenever you like; they are not created again.
+     * the works in Admin > Projects whenever you like; they are not created again.
      */
     private function sampleKinds(): void
     {
@@ -269,16 +270,16 @@ class SiteContentSeeder extends Seeder
             [
                 'slug' => 'contoh-website', 'category' => 'web', 'kind' => 'web', 'order' => 90,
                 'title_id' => 'Contoh Proyek Website', 'title_en' => 'Sample Website Project',
-                'summary_id' => 'Contoh untuk melihat bagaimana karya website tampil. Ganti atau hapus di Admin > Works.',
-                'summary_en' => 'A sample to see how a website project looks. Replace or delete it in Admin > Works.',
+                'summary_id' => 'Contoh untuk melihat bagaimana proyek website tampil. Ganti atau hapus di Admin > Projects.',
+                'summary_en' => 'A sample to see how a website project looks. Replace or delete it in Admin > Projects.',
                 'description_id' => "Ini data contoh (dummy). Tangkapan layar di bawah hanya ilustrasi supaya bagian Website terlihat bentuknya.\n\nGanti dengan proyek website sungguhan: link situs live, screenshot desktop dan HP, fitur utama, dan peran.",
                 'description_en' => "This is sample (dummy) data. The screenshots below are only illustrations so the Website section can be judged.\n\nReplace it with a real website project: the live link, desktop and phone screenshots, key features and your role.",
             ],
             [
                 'slug' => 'contoh-dokumentasi', 'category' => 'photo', 'kind' => 'documentation', 'order' => 91,
                 'title_id' => 'Contoh Dokumentasi Acara', 'title_en' => 'Sample Event Documentation',
-                'summary_id' => 'Contoh untuk melihat bagaimana dokumentasi acara tampil. Ganti atau hapus di Admin > Works.',
-                'summary_en' => 'A sample to see how event documentation looks. Replace or delete it in Admin > Works.',
+                'summary_id' => 'Contoh untuk melihat bagaimana dokumentasi acara tampil. Ganti atau hapus di Admin > Projects.',
+                'summary_en' => 'A sample to see how event documentation looks. Replace or delete it in Admin > Projects.',
                 'description_id' => "Ini data contoh (dummy). Foto di bawah hanya ilustrasi dengan berbagai proporsi supaya bagian Dokumentasi terlihat bentuknya.\n\nGanti dengan dokumentasi sungguhan: foto terbaik dari acara, video highlight, nama dan tanggal acara, serta paket yang dipakai.",
                 'description_en' => "This is sample (dummy) data. The photos below are only illustrations in mixed proportions so the Documentation section can be judged.\n\nReplace it with real documentation: the best event photos, a highlight video, the event name and date, and the package used.",
             ],
@@ -317,6 +318,47 @@ class SiteContentSeeder extends Seeder
         }
     }
 
+    /**
+     * The Indonesian column of some seeded rows still held the English title (runs once). Rewrites those to Indonesian,
+     * but only where the Indonesian text is still exactly the seeded English one, so nothing edited in the admin changes.
+     */
+    private function indonesianTitles(): void
+    {
+        $steps = [
+            'Listen & Understand' => 'Dengarkan & Pahami', 'Explore Ideas' => 'Gali Ide', 'Create & Execute' => 'Buat & Eksekusi',
+            'Review & Improve' => 'Evaluasi & Perbaiki', 'Grow Together' => 'Tumbuh Bersama',
+        ];
+
+        foreach ($steps as $en => $id) {
+            ProcessStep::where('title_en', $en)->where('title_id', $en)->update(['title_id' => $id]);
+        }
+
+        foreach (['Social Media Specialist' => 'Spesialis Sosial Media', 'Web Design & Development' => 'Desain & Pengembangan Web'] as $en => $id) {
+            Service::where('title_en', $en)->where('title_id', $en)->update(['title_id' => $id]);
+        }
+
+        $names = [
+            'Starter' => 'Pemula', 'Growth' => 'Tumbuh', 'Advance' => 'Lanjutan', 'Simple' => 'Sederhana', 'Standard' => 'Standar',
+            'Complex' => 'Kompleks', 'Short' => 'Singkat', 'Medium' => 'Menengah', 'Long' => 'Panjang',
+        ];
+
+        foreach ($names as $en => $id) {
+            Package::where('name_en', $en)->where('name_id', $en)->update(['name_id' => $id]);
+        }
+
+        foreach (['Social Media & Content Creation' => 'Sosial Media & Pembuatan Konten', 'Video Editing' => 'Editing Video'] as $en => $id) {
+            Package::where('group_en', $en)->where('group_id', $en)->update(['group_id' => $id]);
+        }
+
+        // the two sample works pointed to "Admin > Works"
+        foreach (Work::whereIn('slug', ['contoh-website', 'contoh-dokumentasi'])->get() as $work) {
+            foreach (['summary_id', 'summary_en', 'description_id', 'description_en'] as $column) {
+                $work->{$column} = str_replace(['Admin > Works', 'bagaimana karya website tampil'], ['Admin > Projects', 'bagaimana proyek website tampil'], (string) $work->{$column});
+            }
+
+            $work->save();
+        }
+    }
     /**
      * Cupfine and Maza only ordered a few designs (feed and story), they are not social media management clients
      * (runs once). Moves them to the design category and rewrites their texts, but only while those are still the
@@ -532,7 +574,7 @@ class SiteContentSeeder extends Seeder
         $rows = [
             [
                 'slug' => 'social-media', 'icon' => 'megaphone', 'order' => 1,
-                'title' => ['Social Media Specialist', 'Social Media Specialist'],
+                'title' => ['Spesialis Sosial Media', 'Social Media Specialist'],
                 'summary' => [
                     'Strategi, konten, dan pengelolaan akun supaya audiens tumbuh, terlibat, dan akhirnya jadi pelanggan.',
                     'Strategy, content and account management so your audience grows, engages and becomes customers.',
@@ -580,7 +622,7 @@ class SiteContentSeeder extends Seeder
             ],
             [
                 'slug' => 'web-design-development', 'icon' => 'code', 'order' => 5,
-                'title' => ['Web Design & Development', 'Web Design & Development'],
+                'title' => ['Desain & Pengembangan Web', 'Web Design & Development'],
                 'summary' => [
                     'Website yang rapi, cepat, dan mudah dikelola, dirancang selaras dengan identitas brand-mu.',
                     'Clean, fast websites that are easy to manage, designed to match your brand identity.',
@@ -623,10 +665,15 @@ class SiteContentSeeder extends Seeder
                 'We believe good collaboration is about growing together, not just finishing a project.'],
         ];
 
+        $idTitles = [
+            'Listen & Understand' => 'Dengarkan & Pahami', 'Explore Ideas' => 'Gali Ide', 'Create & Execute' => 'Buat & Eksekusi',
+            'Review & Improve' => 'Evaluasi & Perbaiki', 'Grow Together' => 'Tumbuh Bersama',
+        ];
+
         foreach ($steps as $i => [$icon, $title, $descId, $descEn]) {
             ProcessStep::firstOrCreate(['title_en' => $title], [
                 'icon' => $icon,
-                'title_id' => $title,
+                'title_id' => $idTitles[$title] ?? $title,
                 'description_id' => $descId, 'description_en' => $descEn,
                 'sort_order' => $i + 1,
             ]);
@@ -649,7 +696,7 @@ class SiteContentSeeder extends Seeder
 
         $groups = [
             [
-                'group' => ['Social Media & Content Creation', 'Social Media & Content Creation'],
+                'group' => ['Sosial Media & Pembuatan Konten', 'Social Media & Content Creation'],
                 'note' => [
                     $notesBrand[0] . "\nPaket tidak termasuk budget iklan (jika ada)",
                     $notesBrand[1] . "\nPackages do not include ad budget (if any)",
@@ -697,7 +744,7 @@ class SiteContentSeeder extends Seeder
                 ],
             ],
             [
-                'group' => ['Video Editing', 'Video Editing'],
+                'group' => ['Editing Video', 'Video Editing'],
                 'note' => $notesEvent,
                 'items' => [
                     ['Short', 'Rp99K / acara', 'IDR 99K / event',
@@ -713,13 +760,19 @@ class SiteContentSeeder extends Seeder
             ],
         ];
 
+        $idNames = [
+            'Starter' => 'Pemula', 'Growth' => 'Tumbuh', 'Advance' => 'Lanjutan',
+            'Simple' => 'Sederhana', 'Standard' => 'Standar', 'Complex' => 'Kompleks',
+            'Short' => 'Singkat', 'Medium' => 'Menengah', 'Long' => 'Panjang',
+        ];
+
         $order = 0;
 
         foreach ($groups as $g) {
             foreach ($g['items'] as $item) {
                 [$name, $priceId, $priceEn, $featId, $featEn] = $item;
                 Package::firstOrCreate(['name_en' => $name, 'group_en' => $g['group'][1]], [
-                    'name_id' => $name,
+                    'name_id' => $idNames[$name] ?? $name,
                     'group_id' => $g['group'][0],
                     'price_label_id' => $priceId, 'price_label_en' => $priceEn,
                     'features_id' => $featId, 'features_en' => $featEn,

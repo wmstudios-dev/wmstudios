@@ -4,7 +4,7 @@ return [
     'nav' => [
         'home' => 'Home',
         'about' => 'About',
-        'works' => 'Works',
+        'works' => 'Projects',
         'services' => 'Services',
         'process' => 'Process',
         'space' => 'Space',
@@ -30,7 +30,7 @@ return [
         'title' => 'Content that makes your brand remembered',
         'subtitle' => 'We help businesses show up through social media, documentation, design, photo & video production, and clean, fast websites.',
         'cta_primary' => 'Start a project',
-        'cta_secondary' => 'See our work',
+        'cta_secondary' => 'See our projects',
         'trusted' => 'Trusted by local & national brands',
         'free_note' => 'Free first consultation. No obligation.',
         'card_label' => 'Creative services',
@@ -46,9 +46,9 @@ return [
         'services_title' => 'Every visual & digital need',
         'services_all' => 'All services',
         'service_more' => 'Learn more',
-        'works_eyebrow' => 'Selected work',
+        'works_eyebrow' => 'Selected projects',
         'works_title' => 'Projects we are proud of',
-        'works_all' => 'See all work',
+        'works_all' => 'See all projects',
         'process_eyebrow' => 'How we work',
         'process_title' => 'From idea to launch',
         'process_all' => 'Learn about the process',
@@ -65,9 +65,9 @@ return [
     ],
 
     'works' => [
-        'title' => 'Works',
+        'title' => 'Projects',
         'subtitle' => 'Photo, video, design and web projects we have worked on.',
-        'empty' => 'No work in this category yet.',
+        'empty' => 'No projects in this category yet.',
         'client' => 'Client',
         'year' => 'Year',
         'category' => 'Category',
@@ -98,8 +98,8 @@ return [
         ],
         'swipe' => 'Swipe',
         'gallery' => 'Gallery',
-        'related' => 'More work',
-        'back' => 'All works',
+        'related' => 'More projects',
+        'back' => 'All projects',
         'cta_title' => 'Like what you see?',
     ],
 
@@ -204,7 +204,7 @@ return [
     ],
 
     'mega' => [
-        'works_all' => 'See all work',
+        'works_all' => 'See all projects',
         'works_count' => ':n projects',
         'cta_title' => 'Free consultation',
         'cta_text' => 'Tell us your idea and we will help find the service that fits.',

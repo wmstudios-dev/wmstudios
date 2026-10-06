@@ -24,7 +24,7 @@
     @foreach([
         ['New messages', $stats['new_messages'], route('admin.messages.index', ['status' => 'new']), $stats['new_messages'] > 0],
         ['All messages', $stats['messages'], route('admin.messages.index'), false],
-        ['Works', $stats['works'], route('admin.resource.index', 'works'), false],
+        ['Projects', $stats['works'], route('admin.resource.index', 'works'), false],
         ['Articles', $stats['thoughts'], route('admin.resource.index', 'thoughts'), false],
     ] as [$label, $value, $href, $hot])
         <a href="{{ $href }}" class="rounded-3xl border p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md {{ $hot ? 'border-brand-500 bg-brand-500 text-white' : 'border-line bg-white' }}">

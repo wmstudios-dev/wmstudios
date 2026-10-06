@@ -5,6 +5,11 @@ if (document.querySelector('[data-gallery]')) {
     import('./admin-gallery.js');
 }
 
+// Screen-reader labels for the scripted widgets follow the page language.
+const uiText = document.documentElement.lang === 'id'
+    ? { close: 'Tutup', prev: 'Sebelumnya', next: 'Berikutnya' }
+    : { close: 'Close', prev: 'Previous', next: 'Next' };
+
 document.documentElement.classList.add('js');
 
 // Scroll reveal
@@ -92,9 +97,9 @@ document.documentElement.classList.add('js');
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
     overlay.innerHTML = `
-        <button type="button" data-close aria-label="Close" class="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white hover:bg-white/20">&times;</button>
-        <button type="button" data-prev aria-label="Previous" class="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-2xl text-white hover:bg-white/20">&#8249;</button>
-        <button type="button" data-next aria-label="Next" class="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-2xl text-white hover:bg-white/20">&#8250;</button>
+        <button type="button" data-close aria-label="${uiText.close}" class="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white hover:bg-white/20">&times;</button>
+        <button type="button" data-prev aria-label="${uiText.prev}" class="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-2xl text-white hover:bg-white/20">&#8249;</button>
+        <button type="button" data-next aria-label="${uiText.next}" class="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-2xl text-white hover:bg-white/20">&#8250;</button>
         <figure class="flex max-h-full max-w-6xl flex-col items-center gap-3">
             <img alt="" class="max-h-[82vh] max-w-full rounded-2xl object-contain">
             <figcaption class="text-center text-sm text-white/80"></figcaption>
@@ -153,7 +158,7 @@ document.documentElement.classList.add('js');
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
     overlay.innerHTML = `
-        <button type="button" data-close aria-label="Close" class="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white hover:bg-white/20">&times;</button>
+        <button type="button" data-close aria-label="${uiText.close}" class="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl text-white hover:bg-white/20">&times;</button>
         <div data-stage class="w-full max-w-5xl"></div>`;
     document.body.appendChild(overlay);
     const stage = overlay.querySelector('[data-stage]');

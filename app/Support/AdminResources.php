@@ -48,9 +48,9 @@ class AdminResources
         return [
             'works' => [
                 'model' => Work::class,
-                'label' => 'Works',
-                'singular' => 'work',
-                'nav' => 'Works',
+                'label' => 'Projects',
+                'singular' => 'project',
+                'nav' => 'Projects',
                 'search' => ['title_en', 'title_id', 'client'],
                 'order' => [['sort_order', 'asc'], ['id', 'desc']],
                 'slug_from' => 'title_en',
