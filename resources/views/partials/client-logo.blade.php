@@ -5,7 +5,7 @@
    title="{{ $client->name }}"
    class="flex shrink-0 items-center transition-all duration-200 {{ $client->url ? 'cursor-pointer hover:-translate-y-0.5 active:scale-95' : 'cursor-default' }}">
     @if($logo)
-        <img src="{{ $logo }}" alt="{{ $client->name }}" loading="lazy" class="h-8 w-auto opacity-70 brightness-0 invert transition-opacity duration-200 hover:opacity-100">
+        <img src="{{ $logo }}" alt="{{ $client->name }}" loading="lazy" class="h-10 max-w-[9.5rem] w-auto object-contain opacity-70 brightness-0 invert transition-opacity duration-200 hover:opacity-100">
     @else
         <span class="display whitespace-nowrap text-xl text-white/70 lg:text-2xl transition-colors duration-200 hover:text-white">{{ $client->name }}</span>
     @endif

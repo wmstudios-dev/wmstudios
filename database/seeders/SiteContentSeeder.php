@@ -10,9 +10,8 @@ use App\Models\Service;
 use App\Models\Setting;
 use App\Models\Work;
 use App\Support\ImageUploader;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Starter copy for the structural parts of the site (services, process, packages, FAQ, settings).
@@ -34,8 +33,8 @@ class SiteContentSeeder extends Seeder
         $this->once('seeded_faqs', fn () => $this->faqs());
         $this->once('seeded_clients', fn () => $this->clients());
 
-        $this->sampleWorks();
         $this->deckContent();
+        $this->portfolio();
     }
 
     private function once(string $flag, \Closure $seed): void
@@ -47,57 +46,6 @@ class SiteContentSeeder extends Seeder
         $seed();
         Setting::put($flag, '1');
     }
-    /**
-     * Six made-up portfolio pieces with abstract cover art (database/data/sample), so the Works menu, the home page
-     * and the Works page can be judged before real work is added. Added ONCE (a settings flag remembers it), and
-     * only while there are no works at all. Every title and client is fictional; delete or edit them in Admin > Works.
-     */
-    private function sampleWorks(): void
-    {
-        if (Setting::get('sample_works_seeded') !== null || Work::query()->exists()) {
-            return;
-        }
-
-        $rows = [
-            ['photo', 'Kopi Senja Campaign', 'Kampanye Kopi Senja', 'Kopi Senja', 2025, true, 'Product photography for a new seasonal menu.', 'Foto produk untuk menu musiman yang baru.'],
-            ['video', 'Aftermovie Pameran Kriya', 'Aftermovie Pameran Kriya', 'Dewan Kriya', 2025, true, 'A two-minute highlight film of a three-day craft expo.', 'Film highlight dua menit dari pameran kriya tiga hari.'],
-            ['design', 'Brand Identity Aksara Studio', 'Identitas Brand Aksara Studio', 'Aksara Studio', 2024, true, 'Logo, colour system and social templates for a design studio.', 'Logo, sistem warna, dan template sosial media untuk studio desain.'],
-            ['web', 'Rumah Tenun Website', 'Website Rumah Tenun', 'Rumah Tenun', 2025, true, 'A fast storefront and catalogue with an admin panel.', 'Etalase dan katalog yang cepat, lengkap dengan panel admin.'],
-            ['social', 'Fitkita Instagram Revamp', 'Revamp Instagram Fitkita', 'Fitkita', 2025, true, 'Feed redesign and a three-month content plan.', 'Desain ulang feed dan rencana konten tiga bulan.'],
-            ['photo', 'Wedding Documentation', 'Dokumentasi Pernikahan', 'Private client', 2024, false, 'A full-day documentary-style wedding set.', 'Satu set dokumentasi pernikahan sehari penuh bergaya dokumenter.'],
-        ];
-
-        foreach ($rows as $i => [$category, $titleEn, $titleId, $client, $year, $featured, $summaryEn, $summaryId]) {
-            $art = database_path('data/sample/work-' . ($i + 1) . '.jpg');
-            $cover = is_file($art)
-                ? ImageUploader::store(new UploadedFile($art, basename($art), 'image/jpeg', null, true), 'works')
-                : null;
-
-            Work::create([
-                'slug' => Str::slug($titleEn),
-                'category' => $category,
-                'title_en' => $titleEn, 'title_id' => $titleId,
-                'client' => $client, 'year' => $year, 'is_featured' => $featured,
-                'summary_en' => $summaryEn, 'summary_id' => $summaryId,
-                'description_en' => $summaryEn . "
-
-Sample project text. Replace it with the real story: the brief, what you did, and the result.",
-                'description_id' => $summaryId . "
-
-Teks contoh proyek. Ganti dengan cerita asli: brief, apa yang dikerjakan, dan hasilnya.",
-                'cover_photo' => $cover,
-                'sort_order' => $i + 1,
-            ]);
-        }
-
-        Setting::put('sample_works_seeded', '1');
-    }
-
-    /**
-     * A handful of made-up brands so the "Trusted by" row on the home page can be judged before real
-     * clients exist. They are added ONCE (a flag in the settings remembers it), so deleting them in the
-     * admin is permanent. All names are fictional; replace them under Admin > Clients.
-     */
     /** Brands from the studio's own portfolio deck (Figma "Portfolio" slides). */
     private function clients(): void
     {
@@ -127,6 +75,120 @@ Teks contoh proyek. Ganti dengan cerita asli: brief, apa yang dikerjakan, dan ha
         Client::whereIn('name', ['Kopi Senja', 'Dewan Kriya', 'Aksara Studio', 'Rumah Tenun', 'Fitkita', 'Langit Biru'])->delete();
 
         Setting::put('deck_content_v1', '1');
+    }
+    /**
+     * The studio's real client work (Figma portfolio folders): one work per client with a cover and a gallery, and the
+     * client's logo for the "Trusted by" row. The pictures are already shrunk to WebP (+ thumbnails) under
+     * database/data/portfolio, so no image library is needed on the server. Runs ONCE; after that everything is
+     * editable in the admin and never touched again.
+     */
+    private function portfolio(): void
+    {
+        if (Setting::get('portfolio_v1') !== null) {
+            return;
+        }
+
+        $base = database_path('data/portfolio');
+        $disk = Storage::disk('public');
+        $site = Setting::get('site_name', 'WMSTUDIOS');
+
+        // The made-up demo works from the first previews.
+        foreach (Work::whereIn('slug', [
+            'kopi-senja-campaign', 'aftermovie-pameran-kriya', 'brand-identity-aksara-studio',
+            'rumah-tenun-website', 'fitkita-instagram-revamp', 'wedding-documentation',
+        ])->get() as $demo) {
+            ImageUploader::delete($demo->cover_photo);
+            $demo->delete();
+        }
+
+        // Cases that were only named in the company-profile deck and have no material yet stay in the admin, hidden.
+        Client::whereIn('name', ['Petlett', 'Bess Coffee & Roastery', 'Panda Street Coffee', 'Sampoerna'])->update(['is_active' => false]);
+
+        $rows = [
+            ['omah-latareombo', 'Omah Latareombo', true,
+                'Content strategy, visual production and social media management for a Javanese-modern coffee & restaurant.',
+                'Strategi konten, produksi visual, dan pengelolaan media sosial untuk coffee & restaurant berkarakter Jawa-modern.',
+                "Omah Latareombo is a coffee & restaurant with a calm, warm Javanese-modern character. This project focuses on building a consistent, easily recognised social media look, with a tone of voice that is calm, elegant and still warm.\n\n{$site} handled content strategy, visual production and social media management. The output covers feeds, reels, stories and various design needs that support the brand's communication and promotion.",
+                "Omah Latareombo adalah coffee & restaurant dengan karakter Jawa-modern yang tenang dan hangat. Proyek ini berfokus pada membangun tampilan media sosial yang konsisten dan mudah dikenali, dengan tone of voice yang kalem, elegan, dan tetap terasa hangat.\n\n{$site} berperan dalam penyusunan strategi konten, produksi visual, serta pengelolaan akun media sosial. Output meliputi feed, reels, story, dan berbagai kebutuhan desain untuk mendukung komunikasi dan promosi brand."],
+            ['cupfine', 'Cupfine', true,
+                'Feed and story content for a coffee shop: atmosphere and menu photos, plus opening-hours stories.',
+                'Konten feed dan story untuk coffee shop: foto suasana dan menu, serta story informasi jam buka.',
+                "Social media content for Cupfine coffee shop. Feed posts show the atmosphere, the bar and the drinks, and designed stories share opening hours and daily updates.",
+                "Konten media sosial untuk coffee shop Cupfine. Feed menampilkan suasana, bar, dan minuman, sementara story yang didesain menyampaikan jam buka dan kabar harian."],
+            ['kandang-kopi', 'Kandang Kopi', true,
+                'Feed and story content for a nature-inspired coffee place: atmosphere, food and drinks, and holiday greetings.',
+                'Konten feed dan story untuk kedai kopi bernuansa alam: suasana, makanan dan minuman, serta ucapan hari besar.',
+                "Social media content for Kandang Kopi. Feed and story designs show the green, wooden atmosphere of the place, the food and drink menu, and greetings for national and religious days.",
+                "Konten media sosial untuk Kandang Kopi. Desain feed dan story menampilkan suasana tempat yang hijau dan penuh kayu, menu makanan dan minuman, serta ucapan hari nasional dan hari besar."],
+            ['maza-coffee-and-resto', 'Maza Coffee & Resto', true,
+                'Feed and story content for a coffee & resto: the place, the menu, and open and closed announcements.',
+                'Konten feed dan story untuk coffee & resto: suasana tempat, menu, serta pengumuman buka dan tutup.',
+                "Social media content for Maza Coffee & Resto. Feed posts present the building, the interior and the dishes, and stories announce when the place is open or closed.",
+                "Konten media sosial untuk Maza Coffee & Resto. Feed menampilkan bangunan, interior, dan sajian, sementara story mengumumkan kapan tempat buka atau tutup."],
+            ['reamor', 'Reamor', true,
+                'Carousel content for a perfume brand: brand messages, products and a soft visual style.',
+                'Konten carousel untuk brand parfum: pesan brand, produk, dan gaya visual yang lembut.',
+                "Carousel content for the perfume brand Reamor. Each carousel carries a brand message about love, closeness and everyday moments, paired with the products in a soft, warm visual style. Client review carousels are part of the set.",
+                "Konten carousel untuk brand parfum Reamor. Tiap carousel membawa pesan brand tentang cinta, kedekatan, dan momen sehari-hari, dipadukan dengan produk dalam gaya visual yang lembut dan hangat. Carousel ulasan klien juga termasuk dalam set ini."],
+            ['semarang-ban', 'Semarang Ban', true,
+                'Social media branding and content for a tyre and wheel alignment shop: feed, educational carousels and promo stories.',
+                'Branding media sosial dan konten untuk toko ban dan spooring: feed, carousel edukasi, dan story promo.',
+                "Social media branding and content for Semarang Ban. The work covers the Instagram look (logo use, typography, highlights and bio), educational carousels about wheel alignment, product and promo posts, and stories.",
+                "Branding media sosial dan konten untuk Semarang Ban. Pekerjaannya mencakup tampilan Instagram (penggunaan logo, tipografi, highlight, dan bio), carousel edukasi tentang spooring, postingan produk dan promo, serta story."],
+            ['the-overlander', 'The Overlander', false,
+                'Visual identity and social media content for a travel brand: colour palette, typography, destination carousels and reel covers.',
+                'Identitas visual dan konten media sosial untuk brand travel: palet warna, tipografi, carousel destinasi, dan cover reels.',
+                "Visual identity and social media content for The Overlander Indonesia. The set includes the colour palette and typography, destination carousels, travel package posts and reel covers.",
+                "Identitas visual dan konten media sosial untuk The Overlander Indonesia. Set ini mencakup palet warna dan tipografi, carousel destinasi, postingan paket perjalanan, dan cover reels."],
+        ];
+
+        foreach ($rows as $i => [$slug, $name, $featured, $summaryEn, $summaryId, $descEn, $descId]) {
+            // client + white-ready logo
+            $logo = null;
+            if (is_file("{$base}/logos/{$slug}.png")) {
+                $logo = "uploads/clients/{$slug}.png";
+                $disk->put($logo, file_get_contents("{$base}/logos/{$slug}.png"));
+            }
+
+            $client = Client::firstOrNew(['name' => $name]);
+            $client->logo = $logo ?? $client->logo;
+            $client->sort_order = $i + 1;
+            $client->is_active = true;
+            $client->save();
+
+            // pictures: 01 is the cover, the rest is the gallery
+            $paths = [];
+            foreach (glob("{$base}/{$slug}/[0-9][0-9].webp") ?: [] as $file) {
+                $n = basename($file, '.webp');
+                $paths[] = "uploads/works/{$slug}/{$n}.webp";
+                $disk->put("uploads/works/{$slug}/{$n}.webp", file_get_contents($file));
+                if (is_file("{$base}/{$slug}/{$n}_thumb.webp")) {
+                    $disk->put("uploads/works/{$slug}/{$n}_thumb.webp", file_get_contents("{$base}/{$slug}/{$n}_thumb.webp"));
+                }
+            }
+
+            if (Work::where('slug', $slug)->exists()) {
+                continue;
+            }
+
+            $work = Work::create([
+                'slug' => $slug,
+                'category' => 'social',
+                'title_en' => $name, 'title_id' => $name,
+                'client' => $name,
+                'is_featured' => $featured,
+                'summary_en' => $summaryEn, 'summary_id' => $summaryId,
+                'description_en' => $descEn, 'description_id' => $descId,
+                'cover_photo' => $paths[0] ?? null,
+                'sort_order' => $i + 1,
+            ]);
+
+            foreach (array_slice($paths, 1) as $order => $path) {
+                $work->photos()->create(['path' => $path, 'sort_order' => $order + 1]);
+            }
+        }
+
+        Setting::put('portfolio_v1', '1');
     }
     private function settings(): void
     {
