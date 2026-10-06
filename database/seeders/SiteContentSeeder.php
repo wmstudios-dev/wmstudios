@@ -35,6 +35,7 @@ class SiteContentSeeder extends Seeder
 
         $this->deckContent();
         $this->portfolio();
+        $this->once('portfolio_logos_v1', fn () => $this->portfolioLogos());
     }
 
     private function once(string $flag, \Closure $seed): void
@@ -190,6 +191,32 @@ class SiteContentSeeder extends Seeder
 
         Setting::put('portfolio_v1', '1');
     }
+    /**
+     * Gives a client its white-ready logo from database/data/portfolio/logos, but only where the client has none yet
+     * (the portfolio seed above ran before every logo existed). Runs once; a logo set in the admin is never replaced.
+     */
+    private function portfolioLogos(): void
+    {
+        $names = [
+            'omah-latareombo' => 'Omah Latareombo', 'cupfine' => 'Cupfine', 'kandang-kopi' => 'Kandang Kopi',
+            'maza-coffee-and-resto' => 'Maza Coffee & Resto', 'reamor' => 'Reamor', 'semarang-ban' => 'Semarang Ban',
+            'the-overlander' => 'The Overlander',
+        ];
+
+        foreach ($names as $slug => $name) {
+            $file = database_path("data/portfolio/logos/{$slug}.png");
+            $client = Client::where('name', $name)->first();
+
+            if (! is_file($file) || ! $client || filled($client->logo)) {
+                continue;
+            }
+
+            $path = "uploads/clients/{$slug}.png";
+            Storage::disk('public')->put($path, file_get_contents($file));
+            $client->update(['logo' => $path]);
+        }
+    }
+
     private function settings(): void
     {
         $defaults = [
