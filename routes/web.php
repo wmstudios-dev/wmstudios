@@ -31,9 +31,10 @@ Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('local
 // Fallback for hosts where public/storage cannot be linked: serves uploaded pictures straight from the public disk.
 // (When the symlink exists the web server answers first and this is never reached.)
 Route::get('/storage/{path}', function (string $path) {
-    abort_unless(str_starts_with($path, 'uploads/') && ! str_contains($path, '..') && Storage::disk('public')->exists($path), 404);
+    $file = \App\Support\StorageSetup::locate($path);
+    abort_unless($file, 404);
 
-    return Storage::disk('public')->response($path, null, ['Cache-Control' => 'public, max-age=31536000, immutable']);
+    return response()->file($file, ['Cache-Control' => 'public, max-age=31536000, immutable']);
 })->where('path', '.*');
 
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');

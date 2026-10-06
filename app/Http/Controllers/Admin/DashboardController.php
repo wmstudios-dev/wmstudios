@@ -23,7 +23,8 @@ class DashboardController extends Controller
 
         // Without PHP's GD extension uploaded photos are stored untouched (big and slow), so the dashboard says so.
         $imageOptimization = function_exists('imagewebp');
+        $uploadsWritable = \App\Support\StorageSetup::uploadsWritable();
 
-        return view('admin.dashboard', compact('stats', 'recentMessages', 'recentWorks', 'imageOptimization'));
+        return view('admin.dashboard', compact('stats', 'recentMessages', 'recentWorks', 'imageOptimization', 'uploadsWritable'));
     }
 }

@@ -6,6 +6,13 @@
 <h1 class="display text-5xl">Overview</h1>
 <p class="mt-1 text-sm text-muted">Welcome back, {{ auth()->user()->name }}.</p>
 
+@unless($uploadsWritable)
+    <div class="mt-6 rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900">
+        <p class="font-semibold">Uploads folder is not writable</p>
+        <p class="mt-0.5">The server cannot save new pictures right now, so photos you upload in the admin would not be stored. This usually means the storage volume is owned by another user. Tell your developer.</p>
+    </div>
+@endunless
+
 @unless($imageOptimization)
     <div class="mt-6 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
         <p class="font-semibold">Photo optimisation is off</p>
