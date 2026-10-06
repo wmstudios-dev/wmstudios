@@ -10,6 +10,7 @@ use App\Http\Controllers\ThoughtController;
 use App\Http\Controllers\WorkController;
 use App\Support\AdminResources;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 // Public site
 Route::get('/', [SiteController::class, 'home'])->name('home');
@@ -27,6 +28,14 @@ Route::get('/terms', [LegalController::class, 'terms'])->name('terms');
 Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,1,contact')->name('contact.store');
 
 Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');
+// Fallback for hosts where public/storage cannot be linked: serves uploaded pictures straight from the public disk.
+// (When the symlink exists the web server answers first and this is never reached.)
+Route::get('/storage/{path}', function (string $path) {
+    abort_unless(str_starts_with($path, 'uploads/') && ! str_contains($path, '..') && Storage::disk('public')->exists($path), 404);
+
+    return Storage::disk('public')->response($path, null, ['Cache-Control' => 'public, max-age=31536000, immutable']);
+})->where('path', '.*');
+
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 

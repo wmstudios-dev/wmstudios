@@ -19,6 +19,12 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::defaultView('pagination.site');
 
+        // Uploaded and seeded pictures must be reachable on a host that never ran `storage:link`.
+        if (! $this->app->runningInConsole()) {
+            \App\Support\StorageSetup::ensureLink();
+            \App\Support\StorageSetup::ensurePortfolioFiles();
+        }
+
         // Content of the menu panels that open under the header.
         View::composer('layouts.app', fn ($view) => $view->with('mega', \App\Support\MegaMenu::data()));
 
