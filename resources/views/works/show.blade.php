@@ -93,18 +93,78 @@
         </section>
     @endif
 
-    {{-- Gallery --}}
+    {{-- Gallery, one section per kind of piece (feed, story, carousel, ...) --}}
     @if($work->photos->isNotEmpty())
+        @php
+            $groups = collect(\App\Models\WorkPhoto::KINDS)
+                ->map(fn ($label, $kind) => $work->photos->where('kind', $kind)->values())
+                ->filter(fn ($photos) => $photos->isNotEmpty());
+        @endphp
         <section class="mt-16">
-            <h2 class="display text-4xl text-ink sm:text-5xl">{{ __('site.works.gallery') }}</h2>
-            <div class="mt-6 columns-1 gap-4 sm:columns-2 lg:columns-3">
-                @foreach($work->photos as $photo)
-                    <a href="{{ $photo->url() }}" data-lightbox="gallery" data-caption="{{ $photo->caption }}"
-                       class="reveal group mb-4 block break-inside-avoid overflow-hidden rounded-2xl bg-soft" style="--d: {{ ($loop->index % 3) * 70 }}ms">
-                        <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="w-full transition-transform duration-700 group-hover:scale-105">
-                    </a>
-                @endforeach
-            </div>
+            @if($groups->count() > 1)
+                <div class="flex flex-wrap gap-2">
+                    @foreach($groups as $kind => $photos)
+                        <a href="#kind-{{ $kind }}" class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-1.5 text-sm font-semibold text-ink transition-all duration-200 hover:border-brand-500 hover:bg-brand-500 hover:text-white active:scale-95">
+                            {{ __('site.works.kinds.' . $kind) }} <span class="text-xs opacity-60">{{ $photos->count() }}</span>
+                        </a>
+                    @endforeach
+                </div>
+            @endif
+
+            @foreach($groups as $kind => $photos)
+                <div id="kind-{{ $kind }}" class="mt-12 scroll-mt-28 first:mt-8">
+                    <div class="flex flex-wrap items-end justify-between gap-2">
+                        <h2 class="display text-4xl text-ink sm:text-5xl">{{ __('site.works.kinds.' . $kind) }}</h2>
+                        @if(__('site.works.kind_hints.' . $kind) !== '')
+                            <p class="text-sm text-muted">{{ __('site.works.kind_hints.' . $kind) }}</p>
+                        @endif
+                    </div>
+
+                    @if($kind === 'story' || $kind === 'reel')
+                        <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+                            @foreach($photos as $photo)
+                                <a href="{{ $photo->url() }}" data-lightbox="gallery-{{ $kind }}" data-caption="{{ $photo->caption }}"
+                                   class="reveal group block aspect-[9/16] overflow-hidden rounded-2xl bg-soft" style="--d: {{ ($loop->index % 5) * 60 }}ms">
+                                    <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                </a>
+                            @endforeach
+                        </div>
+                    @elseif($kind === 'feed')
+                        <div class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+                            @foreach($photos as $photo)
+                                <a href="{{ $photo->url() }}" data-lightbox="gallery-{{ $kind }}" data-caption="{{ $photo->caption }}"
+                                   class="reveal group block aspect-[4/5] overflow-hidden rounded-2xl bg-soft" style="--d: {{ ($loop->index % 4) * 60 }}ms">
+                                    <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                </a>
+                            @endforeach
+                        </div>
+                    @elseif($kind === 'carousel')
+                        <div class="relative mt-6">
+                            <div class="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-3 sm:-mx-8 sm:px-8 [scrollbar-width:thin]">
+                                @foreach($photos as $photo)
+                                    <a href="{{ $photo->url() }}" data-lightbox="gallery-{{ $kind }}" data-caption="{{ $photo->caption }}"
+                                       class="group relative block aspect-[4/5] w-56 shrink-0 snap-start overflow-hidden rounded-2xl bg-soft sm:w-64">
+                                        <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                        <span class="absolute bottom-3 right-3 rounded-full bg-ink/70 px-2.5 py-1 text-[11px] font-semibold text-white">{{ $loop->iteration }}/{{ $loop->count }}</span>
+                                    </a>
+                                @endforeach
+                            </div>
+                            @if($photos->count() > 2)
+                                <p class="mt-1 flex items-center gap-1.5 text-xs font-medium text-muted"><x-icon name="arrow" class="h-3.5 w-3.5" /> {{ __('site.works.swipe') }}</p>
+                            @endif
+                        </div>
+                    @else
+                        <div class="mt-6 columns-1 gap-4 sm:columns-2 lg:columns-3">
+                            @foreach($photos as $photo)
+                                <a href="{{ $photo->url() }}" data-lightbox="gallery-{{ $kind }}" data-caption="{{ $photo->caption }}"
+                                   class="reveal group mb-4 block break-inside-avoid overflow-hidden rounded-2xl bg-soft" style="--d: {{ ($loop->index % 3) * 70 }}ms">
+                                    <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="w-full transition-transform duration-700 group-hover:scale-105">
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            @endforeach
         </section>
     @endif
 </article>

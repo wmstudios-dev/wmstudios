@@ -63,11 +63,29 @@
                                     <input type="checkbox" name="{{ $name }}_remove[]" value="{{ $photo->id }}" class="rounded border-white/50"> Remove
                                 </span>
                             </label>
+                            @if(! empty($f['kinds']))
+                                <select name="{{ $name }}_kind[{{ $photo->id }}]" aria-label="Type" class="-mt-1 w-full rounded-xl border border-line bg-white px-2 py-1.5 text-xs">
+                                    @foreach(\App\Models\WorkPhoto::KINDS as $kindValue => $kindLabel)
+                                        <option value="{{ $kindValue }}" @selected(($photo->kind ?? 'other') === $kindValue)>{{ $kindLabel }}</option>
+                                    @endforeach
+                                </select>
+                            @endif
                         @endforeach
                     </div>
                 @endif
                 <input type="file" name="{{ $name }}_new[]" multiple accept="image/jpeg,image/png,image/webp,image/gif"
                        class="block w-full text-sm text-muted file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-700 hover:file:bg-brand-100">
+                @if(! empty($f['kinds']))
+                    <div class="mt-3 flex flex-wrap items-center gap-2 text-sm">
+                        <label for="{{ $name }}_new_kind" class="font-semibold">Type of the new photos</label>
+                        <select id="{{ $name }}_new_kind" name="{{ $name }}_new_kind" class="rounded-xl border border-line bg-white px-3 py-1.5 text-sm">
+                            @foreach(\App\Models\WorkPhoto::KINDS as $kindValue => $kindLabel)
+                                <option value="{{ $kindValue }}" @selected($kindValue === 'other')>{{ $kindLabel }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <p class="mt-1 text-xs text-muted">Pick the type first, then choose the files. To upload another type, save and repeat. The work page shows each type in its own section.</p>
+                @endif
                 <p class="mt-1.5 text-xs text-muted">Up to {{ $f['max'] ?? 12 }} photos at a time. They are resized automatically.</p>
             </div>
 

@@ -77,7 +77,7 @@ class AdminResources
                     ['name' => 'project_url', 'label' => 'Live project link', 'type' => 'url', 'hint' => 'For websites: link to the live site.'],
                     ['name' => 'before_photo', 'label' => 'Before photo', 'type' => 'image', 'folder' => 'works', 'hint' => 'Fill both before and after to show a comparison slider.'],
                     ['name' => 'after_photo', 'label' => 'After photo', 'type' => 'image', 'folder' => 'works'],
-                    ['name' => 'photos', 'label' => 'Gallery photos', 'type' => 'gallery', 'folder' => 'works', 'relation' => 'photos', 'model' => \App\Models\WorkPhoto::class, 'fk' => 'work_id', 'max' => 12],
+                    ['name' => 'photos', 'label' => 'Gallery photos', 'type' => 'gallery', 'kinds' => true, 'folder' => 'works', 'relation' => 'photos', 'model' => \App\Models\WorkPhoto::class, 'fk' => 'work_id', 'max' => 12],
                     ['name' => 'is_featured', 'label' => 'Show on the home page', 'type' => 'checkbox'],
                     ['name' => 'is_active', 'label' => 'Visible on the site', 'type' => 'checkbox', 'default' => true],
                     ['name' => 'sort_order', 'label' => 'Order (smaller = first)', 'type' => 'number', 'default' => 0],

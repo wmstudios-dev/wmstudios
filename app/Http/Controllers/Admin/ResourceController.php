@@ -145,6 +145,13 @@ class ResourceController extends Controller
                 $rules[$f['name'] . '_new.*'] = ['image', 'mimes:jpg,jpeg,png,webp,gif', 'max:12288'];
                 $rules[$f['name'] . '_remove'] = ['nullable', 'array'];
                 $rules[$f['name'] . '_remove.*'] = ['integer'];
+
+                if (! empty($f['kinds'])) {
+                    $kinds = implode(',', array_keys(\App\Models\WorkPhoto::KINDS));
+                    $rules[$f['name'] . '_kind'] = ['nullable', 'array'];
+                    $rules[$f['name'] . '_kind.*'] = ['in:' . $kinds];
+                    $rules[$f['name'] . '_new_kind'] = ['nullable', 'in:' . $kinds];
+                }
             }
         }
 
@@ -237,13 +244,21 @@ class ResourceController extends Controller
                 }
             }
 
+            // New kind chosen for photos that are already there
+            if (! empty($f['kinds'])) {
+                foreach ((array) $request->input($f['name'] . '_kind', []) as $photoId => $kind) {
+                    $item->{$relation}()->whereKey($photoId)->update(['kind' => $kind]);
+                }
+            }
+
             $next = (int) $item->{$relation}()->max('sort_order');
+            $newKind = ! empty($f['kinds']) ? ($request->input($f['name'] . '_new_kind') ?: 'other') : null;
 
             foreach ((array) $request->file($f['name'] . '_new', []) as $file) {
                 $item->{$relation}()->create([
                     'path' => ImageUploader::store($file, $f['folder'] ?? 'misc'),
                     'sort_order' => ++$next,
-                ]);
+                ] + ($newKind ? ['kind' => $newKind] : []));
             }
         }
     }

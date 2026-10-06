@@ -36,6 +36,7 @@ class SiteContentSeeder extends Seeder
         $this->deckContent();
         $this->portfolio();
         $this->once('portfolio_logos_v1', fn () => $this->portfolioLogos());
+        $this->once('portfolio_kinds_v1', fn () => $this->portfolioKinds());
     }
 
     private function once(string $flag, \Closure $seed): void
@@ -185,11 +186,70 @@ class SiteContentSeeder extends Seeder
             ]);
 
             foreach (array_slice($paths, 1) as $order => $path) {
-                $work->photos()->create(['path' => $path, 'sort_order' => $order + 1]);
+                $work->photos()->create([
+                    'path' => $path,
+                    'sort_order' => $order + 1,
+                    'kind' => self::portfolioManifest()[$slug][basename($path, '.webp')] ?? 'other',
+                ]);
             }
         }
 
         Setting::put('portfolio_v1', '1');
+    }
+    /** kind (feed / story / carousel / reel / identity) of every shipped portfolio picture: slug => file number => kind. */
+    private static function portfolioManifest(): array
+    {
+        $file = database_path('data/portfolio/manifest.json');
+
+        return is_file($file) ? (json_decode(file_get_contents($file), true) ?: []) : [];
+    }
+
+    /**
+     * Brings the portfolio pictures seeded earlier up to date (runs once): tells each one what it is (feed, story,
+     * carousel, ...) while it is still marked "other", and adds pictures that were shipped later (e.g. the other
+     * slides of a carousel). Pictures the admin added or re-typed are left alone.
+     */
+    private function portfolioKinds(): void
+    {
+        $base = database_path('data/portfolio');
+        $disk = Storage::disk('public');
+
+        foreach (self::portfolioManifest() as $slug => $kinds) {
+            $work = Work::where('slug', $slug)->first();
+
+            if (! $work) {
+                continue;
+            }
+
+            $prefix = "uploads/works/{$slug}/";
+
+            foreach ($work->photos as $photo) {
+                $kind = $kinds[basename($photo->path, '.webp')] ?? null;
+
+                if ($kind && $photo->kind === 'other' && str_starts_with($photo->path, $prefix)) {
+                    $photo->update(['kind' => $kind]);
+                }
+            }
+
+            $known = $work->photos->pluck('path')->push($work->cover_photo)->all();
+            $order = (int) $work->photos()->max('sort_order');
+
+            foreach ($kinds as $number => $kind) {
+                $path = "{$prefix}{$number}.webp";
+
+                if (in_array($path, $known, true) || ! is_file("{$base}/{$slug}/{$number}.webp")) {
+                    continue;
+                }
+
+                $disk->put($path, file_get_contents("{$base}/{$slug}/{$number}.webp"));
+
+                if (is_file("{$base}/{$slug}/{$number}_thumb.webp")) {
+                    $disk->put("{$prefix}{$number}_thumb.webp", file_get_contents("{$base}/{$slug}/{$number}_thumb.webp"));
+                }
+
+                $work->photos()->create(['path' => $path, 'sort_order' => ++$order, 'kind' => $kind]);
+            }
+        }
     }
     /**
      * Gives a client its white-ready logo from database/data/portfolio/logos, but only where the client has none yet
