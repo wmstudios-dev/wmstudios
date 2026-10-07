@@ -42,6 +42,7 @@ class SiteContentSeeder extends Seeder
         $this->once('portfolio_batch3_v1', fn () => $this->portfolioBatch3());
         $this->once('portfolio_batch4_v1', fn () => $this->portfolioBatch4());
         $this->once('semarang_feed_v1', fn () => $this->portfolioTopUp(['semarang-ban']));
+        $this->once('design_only_v1', fn () => $this->designOnlyClients());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -705,6 +706,75 @@ class SiteContentSeeder extends Seeder
 
                 $work->photos()->create(['path' => $path, 'kind' => $kind, 'caption' => $caption, 'sort_order' => $position + 1]);
             }
+        }
+    }
+    /**
+     * Reamor, Haji Widayat, Sektor Digital and Karya Satria were design jobs, not social media management (runs once).
+     * Moves them to the design category and rewrites their texts, but only while the texts are still the seeded ones.
+     */
+    private function designOnlyClients(): void
+    {
+        $rows = [
+            'reamor' => [
+                ['Carousel content for a perfume brand: brand messages, products and a soft visual style.',
+                    'Carousel designs for a perfume brand: brand messages, products and a soft visual style.'],
+                ['Konten carousel untuk brand parfum: pesan brand, produk, dan gaya visual yang lembut.',
+                    'Desain carousel untuk brand parfum: pesan brand, produk, dan gaya visual yang lembut.'],
+                ['Carousel content for the perfume brand Reamor. Each carousel carries a brand message about love, closeness and everyday moments, paired with the products in a soft, warm visual style. Client review carousels are part of the set.',
+                    'Carousel designs for the perfume brand Reamor. Each carousel carries a brand message about love, closeness and everyday moments, paired with the products in a soft, warm visual style. Client review carousels are part of the set.'],
+                ['Konten carousel untuk brand parfum Reamor. Tiap carousel membawa pesan brand tentang cinta, kedekatan, dan momen sehari-hari, dipadukan dengan produk dalam gaya visual yang lembut dan hangat. Carousel ulasan klien juga termasuk dalam set ini.',
+                    'Desain carousel untuk brand parfum Reamor. Tiap carousel membawa pesan brand tentang cinta, kedekatan, dan momen sehari-hari, dipadukan dengan produk dalam gaya visual yang lembut dan hangat. Carousel ulasan klien juga termasuk dalam set ini.'],
+            ],
+            'haji-widayat' => [
+                ['Visual identity and social media content for an artist museum, built around the Memorabilia Haji Widayat exhibition.',
+                    'Brand identity and carousel designs for an artist museum, built around the Memorabilia Haji Widayat exhibition.'],
+                ['Identitas visual dan konten sosial media untuk museum seniman, dengan fokus pada pameran Memorabilia Haji Widayat.',
+                    'Identitas brand dan desain carousel untuk museum seniman, dengan fokus pada pameran Memorabilia Haji Widayat.'],
+                ["Social media content for the Haji Widayat museum, centred on the Memorabilia Haji Widayat exhibition. Carousels introduce the museum, its collection and the artist's story, along with life values worth taking home. The project also includes the brand identity of the museum and a visual identity for the exhibition.",
+                    "Designs for the Haji Widayat museum, centred on the Memorabilia Haji Widayat exhibition. Carousel designs introduce the museum, its collection and the artist's story, along with life values worth taking home. The project also includes the brand identity of the museum and a visual identity for the exhibition."],
+                ['Konten media sosial untuk Museum Haji Widayat, dengan fokus pada pameran Memorabilia Haji Widayat. Carousel memperkenalkan museum, koleksinya, dan kisah sang seniman, beserta nilai hidup yang bisa dipetik. Proyek ini juga mencakup identitas visual brand museum dan identitas visual untuk pameran.',
+                    'Desain untuk Museum Haji Widayat, dengan fokus pada pameran Memorabilia Haji Widayat. Desain carousel memperkenalkan museum, koleksinya, dan kisah sang seniman, beserta nilai hidup yang bisa dipetik. Proyek ini juga mencakup identitas brand museum dan identitas visual untuk pameran.'],
+            ],
+            'sektor-digital' => [
+                ['Educational carousel content about digital marketing: strategy, market research and optimisation.',
+                    'Educational carousel designs about digital marketing: strategy, market research and optimisation.'],
+                ['Konten carousel edukasi seputar digital marketing: strategi, riset pasar, dan optimasi.',
+                    'Desain carousel edukasi seputar digital marketing: strategi, riset pasar, dan optimasi.'],
+                ['Social media content for Sektor Digital: seven educational carousel series about digital marketing. Topics include making digital marketing more effective, why market research matters, optimising channels, and how roles compare in the digital workplace. The design follows the blue and yellow identity of the brand.',
+                    'Designs for Sektor Digital: seven educational carousel series about digital marketing. Topics include making digital marketing more effective, why market research matters, optimising channels, and how roles compare in the digital workplace. The design follows the blue and yellow identity of the brand.'],
+                ['Konten media sosial untuk Sektor Digital berupa tujuh seri carousel edukasi tentang digital marketing. Topiknya antara lain cara membuat pemasaran digital lebih efektif, pentingnya riset pasar, optimasi channel, dan perbandingan peran di dunia kerja digital. Desainnya mengikuti identitas biru dan kuning brand.',
+                    'Desain untuk Sektor Digital berupa tujuh seri carousel edukasi tentang digital marketing. Topiknya antara lain cara membuat pemasaran digital lebih efektif, pentingnya riset pasar, optimasi channel, dan perbandingan peran di dunia kerja digital. Desainnya mengikuti identitas biru dan kuning brand.'],
+            ],
+            'karya-satria' => [
+                ['Social media management for an outdoor advertising company: bold feed posts about billboards, wall branding and brand activation.',
+                    'Feed post designs for an outdoor advertising company: bold layouts about billboards, wall branding and brand activation.'],
+                ['Pengelolaan sosial media untuk perusahaan periklanan luar ruang: feed yang tegas tentang billboard, wall branding, dan brand activation.',
+                    'Desain postingan feed untuk perusahaan periklanan luar ruang: tata letak tegas tentang billboard, wall branding, dan brand activation.'],
+                ["Social media management for Karya Satria, an outdoor advertising company. Nine feed posts in the brand's red explain what outdoor media can do: billboards in busy traffic, wall branding, brand activation and the safety standards behind installation.",
+                    "Feed post designs for Karya Satria, an outdoor advertising company. Nine posts in the brand's red explain what outdoor media can do: billboards in busy traffic, wall branding, brand activation and the safety standards behind installation."],
+                ['Pengelolaan media sosial untuk Karya Satria, perusahaan periklanan luar ruang. Sembilan postingan feed berwarna merah khas brand menjelaskan apa yang bisa dilakukan media luar ruang: billboard di jalan padat, wall branding, brand activation, dan standar keselamatan di balik pemasangannya.',
+                    'Desain postingan feed untuk Karya Satria, perusahaan periklanan luar ruang. Sembilan postingan berwarna merah khas brand menjelaskan apa yang bisa dilakukan media luar ruang: billboard di jalan padat, wall branding, brand activation, dan standar keselamatan di balik pemasangannya.'],
+            ],
+        ];
+
+        foreach ($rows as $slug => [$summaryEn, $summaryId, $descEn, $descId]) {
+            $work = Work::where('slug', $slug)->first();
+
+            if (! $work) {
+                continue;
+            }
+
+            if ($work->category === 'social') {
+                $work->category = 'design';
+            }
+
+            foreach ([['summary_en', $summaryEn], ['summary_id', $summaryId], ['description_en', $descEn], ['description_id', $descId]] as [$column, [$old, $new]]) {
+                if ($work->{$column} === $old) {
+                    $work->{$column} = $new;
+                }
+            }
+
+            $work->save();
         }
     }
     /**
