@@ -4,7 +4,7 @@
     $mega comes from App\Support\MegaMenu.
 --}}
 @php
-    $workIcons = ['photo' => 'camera', 'video' => 'film', 'design' => 'palette', 'web' => 'code', 'social' => 'megaphone'];
+    $workIcons = ['photo' => 'camera', 'video' => 'film', 'documentation' => 'film', 'design' => 'palette', 'web' => 'code', 'social' => 'megaphone'];
     $cardBase = 'group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-soft';
 @endphp
 

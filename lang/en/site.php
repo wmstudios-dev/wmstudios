@@ -18,6 +18,7 @@ return [
         'all' => 'All',
         'photo' => 'Photo',
         'video' => 'Video',
+        'documentation' => 'Documentation',
         'design' => 'Design',
         'web' => 'Web',
         'social' => 'Social media',

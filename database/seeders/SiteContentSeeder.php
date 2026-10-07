@@ -44,6 +44,7 @@ class SiteContentSeeder extends Seeder
         $this->once('semarang_feed_v1', fn () => $this->portfolioTopUp(['semarang-ban']));
         $this->once('design_only_v1', fn () => $this->designOnlyClients());
         $this->once('instagram_links_v1', fn () => $this->instagramLinks());
+        $this->once('remove_photo_doc_sample_v1', fn () => $this->removePhotoDocumentationSample());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -799,6 +800,25 @@ class SiteContentSeeder extends Seeder
         foreach ($links as $slug => $account) {
             Work::where('slug', $slug)->whereNull('instagram_url')->update(['instagram_url' => "https://www.instagram.com/{$account}/"]);
         }
+    }
+    /**
+     * Documentation became a simple video project (video link plus a short text), so the made-up photo gallery sample
+     * is removed (runs once). Its pictures go with it.
+     */
+    private function removePhotoDocumentationSample(): void
+    {
+        $work = Work::where('slug', 'contoh-dokumentasi')->first();
+
+        if (! $work) {
+            return;
+        }
+
+        foreach ($work->photos as $photo) {
+            ImageUploader::delete($photo->path);
+        }
+
+        ImageUploader::delete($work->cover_photo);
+        $work->delete();
     }
     /**
      * The Overlander is not only social media: the studio built its website too (runs once). Adds the "web" category and

@@ -18,6 +18,7 @@ return [
         'all' => 'Semua',
         'photo' => 'Foto',
         'video' => 'Video',
+        'documentation' => 'Dokumentasi',
         'design' => 'Desain',
         'web' => 'Web',
         'social' => 'Sosial Media',

@@ -4,6 +4,8 @@
     $video = $work->video();
     $cover = $work->coverUrl();
     $description = $work->t('description');
+    // Documentation projects are kept simple: the video and a short text, no gallery or extras.
+    $simple = $work->category === 'documentation';
 @endphp
 
 @section('title', $work->t('title'))
@@ -90,7 +92,7 @@
     </div>
 
     {{-- Before / after --}}
-    @if($work->hasBeforeAfter())
+    @if(! $simple && $work->hasBeforeAfter())
         <section class="mt-16">
             <h2 class="display text-4xl text-ink sm:text-5xl">{{ __('site.works.before_after') }}</h2>
             <div class="ba reveal relative mt-6 aspect-[4/3] overflow-hidden rounded-[2rem] bg-soft select-none sm:aspect-video">
@@ -107,7 +109,7 @@
     @endif
 
     {{-- Gallery, one section per kind of piece (feed, story, carousel, ...) --}}
-    @if($work->photos->isNotEmpty())
+    @if(! $simple && $work->photos->isNotEmpty())
         @php
             $groups = collect(\App\Models\WorkPhoto::KINDS)
                 ->map(fn ($label, $kind) => $work->photos->where('kind', $kind)->values())

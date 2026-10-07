@@ -14,7 +14,7 @@ class Work extends Model
 
     protected $guarded = ['id'];
 
-    public const CATEGORIES = ['photo', 'video', 'design', 'web', 'social'];
+    public const CATEGORIES = ['photo', 'video', 'documentation', 'design', 'web', 'social'];
 
     /** Where a wide cover stays in view when it is cropped (cards, menu): name => [admin label, CSS object-position]. */
     public const COVER_FOCUS = [

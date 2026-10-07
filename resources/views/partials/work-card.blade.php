@@ -1,6 +1,6 @@
 {{-- Portfolio card. $work, optional $ratio (aspect class) and $delay (reveal delay in ms). --}}
 @php
-    $icon = ['photo' => 'camera', 'video' => 'film', 'design' => 'palette', 'web' => 'code', 'social' => 'megaphone'][$work->category] ?? 'spark';
+    $icon = ['photo' => 'camera', 'video' => 'film', 'documentation' => 'film', 'design' => 'palette', 'web' => 'code', 'social' => 'megaphone'][$work->category] ?? 'spark';
     $cover = $work->coverUrl(true);
     $isVideo = (bool) $work->video();
 @endphp
