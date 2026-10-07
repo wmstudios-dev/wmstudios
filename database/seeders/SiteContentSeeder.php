@@ -45,6 +45,7 @@ class SiteContentSeeder extends Seeder
         $this->once('design_only_v1', fn () => $this->designOnlyClients());
         $this->once('instagram_links_v1', fn () => $this->instagramLinks());
         $this->once('remove_photo_doc_sample_v1', fn () => $this->removePhotoDocumentationSample());
+        $this->once('doc_videos_v1', fn () => $this->documentationVideos());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -819,6 +820,52 @@ class SiteContentSeeder extends Seeder
 
         ImageUploader::delete($work->cover_photo);
         $work->delete();
+    }
+    /**
+     * The first three video documentation projects (runs once). Each is just a title, a Google Drive video and a short
+     * text; the cover is a frame Drive generated for the video (database/data/portfolio/<slug>/cover.webp). The texts
+     * only restate the project title: edit them in Admin > Projects with the real details.
+     */
+    private function documentationVideos(): void
+    {
+        $base = database_path('data/portfolio');
+        $disk = Storage::disk('public');
+
+        $rows = [
+            ['karya-satria-tubing-trip', 'Tubing Trip', 'Karya Satria', 'https://drive.google.com/file/d/1F_KL64sCmIgFWn2pQwGwDsQbhhbIM7o8/view?usp=sharing', true, 19,
+                'Video documentation of the Karya Satria tubing trip.', 'Dokumentasi video kegiatan tubing trip Karya Satria.'],
+            ['vw-trip-borobudur', 'VW Trip Borobudur', null, 'https://drive.google.com/file/d/1TdXckEFy3qoPVoYA5Lj-zz1ELIxIlWHS/view?usp=sharing', true, 20,
+                'Video documentation of a VW trip around Borobudur.', 'Dokumentasi video perjalanan VW Trip di kawasan Borobudur.'],
+            ['rewarding-sios-balen-magelang', 'Rewarding SIOS Balen Magelang', null, 'https://drive.google.com/file/d/19wXKEwDvxKoca0X0Jj1UFwTpz5g5HYwj/view?usp=sharing', false, 21,
+                'Video documentation of Rewarding SIOS Balen in Magelang.', 'Dokumentasi video Rewarding SIOS Balen di Magelang.'],
+        ];
+
+        foreach ($rows as [$slug, $title, $client, $video, $vertical, $order, $descEn, $descId]) {
+            if (Work::where('slug', $slug)->exists()) {
+                continue;
+            }
+
+            $cover = null;
+
+            if (is_file("{$base}/{$slug}/cover.webp")) {
+                $cover = "uploads/works/{$slug}/cover.webp";
+                $disk->put($cover, file_get_contents("{$base}/{$slug}/cover.webp"));
+
+                if (is_file("{$base}/{$slug}/cover_thumb.webp")) {
+                    $disk->put("uploads/works/{$slug}/cover_thumb.webp", file_get_contents("{$base}/{$slug}/cover_thumb.webp"));
+                }
+            }
+
+            Work::create([
+                'slug' => $slug, 'category' => 'documentation',
+                'title_en' => $title, 'title_id' => $title, 'client' => $client,
+                'is_featured' => false,
+                'summary_en' => $descEn, 'summary_id' => $descId,
+                'description_en' => $descEn, 'description_id' => $descId,
+                'video_url' => $video, 'video_vertical' => $vertical,
+                'cover_photo' => $cover, 'sort_order' => $order,
+            ]);
+        }
     }
     /**
      * The Overlander is not only social media: the studio built its website too (runs once). Adds the "web" category and

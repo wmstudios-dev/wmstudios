@@ -6,6 +6,7 @@
     $description = $work->t('description');
     // Documentation projects are kept simple: the video and a short text, no gallery or extras.
     $simple = $work->category === 'documentation';
+    $tall = $video && ($video['vertical'] || $work->video_vertical);
 @endphp
 
 @section('title', $work->t('title'))
@@ -44,8 +45,8 @@
         @if($video && $video['type'] === 'link')
             {{-- unknown video host: just link out --}}
         @elseif($video)
-            <button type="button" data-video="{{ $video['embed'] }}" data-type="{{ $video['type'] }}" data-vertical="{{ $video['vertical'] ? 1 : 0 }}"
-                    class="group relative block aspect-video w-full overflow-hidden rounded-[2rem] bg-ink" aria-label="{{ __('site.works.watch_video') }}">
+            <button type="button" data-video="{{ $video['embed'] }}" data-type="{{ $video['type'] }}" data-vertical="{{ $tall ? 1 : 0 }}"
+                    class="group relative block overflow-hidden rounded-[2rem] bg-ink {{ $tall ? 'mx-auto aspect-[9/16] max-h-[80vh]' : 'aspect-video w-full' }}" aria-label="{{ __('site.works.watch_video') }}">
                 @if($cover)
                     <img src="{{ $cover }}" alt="{{ $work->t('title') }}" class="h-full w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100">
                 @endif
