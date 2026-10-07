@@ -1635,5 +1635,508 @@
             "Carousel 7",
             39
         ]
+    },
+    "bess-coffee": {
+        "01": [
+            "story",
+            null,
+            0
+        ],
+        "02": [
+            "story",
+            null,
+            1
+        ],
+        "03": [
+            "story",
+            null,
+            2
+        ],
+        "04": [
+            "feed",
+            null,
+            3
+        ],
+        "05": [
+            "feed",
+            null,
+            4
+        ],
+        "06": [
+            "feed",
+            null,
+            5
+        ],
+        "07": [
+            "feed",
+            null,
+            6
+        ],
+        "08": [
+            "feed",
+            null,
+            7
+        ],
+        "09": [
+            "feed",
+            null,
+            8
+        ],
+        "10": [
+            "feed",
+            null,
+            9
+        ],
+        "11": [
+            "feed",
+            null,
+            10
+        ],
+        "12": [
+            "feed",
+            null,
+            11
+        ],
+        "13": [
+            "story",
+            null,
+            12
+        ],
+        "14": [
+            "story",
+            null,
+            13
+        ],
+        "15": [
+            "story",
+            null,
+            14
+        ],
+        "16": [
+            "story",
+            null,
+            15
+        ],
+        "17": [
+            "story",
+            null,
+            16
+        ],
+        "18": [
+            "story",
+            null,
+            17
+        ]
+    },
+    "lucky-adventure": {
+        "01": [
+            "carousel",
+            "Carousel 1",
+            0
+        ],
+        "02": [
+            "carousel",
+            "Carousel 1",
+            1
+        ],
+        "03": [
+            "carousel",
+            "Carousel 1",
+            2
+        ],
+        "04": [
+            "carousel",
+            "Carousel 1",
+            3
+        ],
+        "05": [
+            "carousel",
+            "Carousel 1",
+            4
+        ],
+        "06": [
+            "carousel",
+            "Carousel 1",
+            5
+        ],
+        "07": [
+            "carousel",
+            "Carousel 1",
+            6
+        ],
+        "08": [
+            "carousel",
+            "Carousel 1",
+            7
+        ],
+        "09": [
+            "carousel",
+            "Carousel 2",
+            8
+        ],
+        "10": [
+            "carousel",
+            "Carousel 2",
+            9
+        ],
+        "11": [
+            "carousel",
+            "Carousel 2",
+            10
+        ],
+        "12": [
+            "carousel",
+            "Carousel 2",
+            11
+        ],
+        "13": [
+            "carousel",
+            "Carousel 3",
+            12
+        ],
+        "14": [
+            "carousel",
+            "Carousel 3",
+            13
+        ],
+        "15": [
+            "carousel",
+            "Carousel 3",
+            14
+        ],
+        "16": [
+            "carousel",
+            "Carousel 3",
+            15
+        ],
+        "17": [
+            "carousel",
+            "Carousel 3",
+            16
+        ],
+        "18": [
+            "carousel",
+            "Carousel 3",
+            17
+        ],
+        "19": [
+            "carousel",
+            "Carousel 4",
+            18
+        ],
+        "20": [
+            "carousel",
+            "Carousel 4",
+            19
+        ],
+        "21": [
+            "carousel",
+            "Carousel 4",
+            20
+        ],
+        "22": [
+            "carousel",
+            "Carousel 4",
+            21
+        ],
+        "23": [
+            "carousel",
+            "Carousel 4",
+            22
+        ],
+        "24": [
+            "carousel",
+            "Carousel 4",
+            23
+        ],
+        "25": [
+            "carousel",
+            "Carousel 4",
+            24
+        ],
+        "26": [
+            "carousel",
+            "Carousel 4",
+            25
+        ],
+        "27": [
+            "feed",
+            null,
+            26
+        ],
+        "28": [
+            "feed",
+            null,
+            27
+        ],
+        "29": [
+            "feed",
+            null,
+            28
+        ],
+        "30": [
+            "feed",
+            null,
+            29
+        ],
+        "31": [
+            "feed",
+            null,
+            30
+        ],
+        "32": [
+            "feed",
+            null,
+            31
+        ],
+        "33": [
+            "identity",
+            null,
+            32
+        ],
+        "34": [
+            "identity",
+            null,
+            33
+        ],
+        "35": [
+            "story",
+            null,
+            34
+        ],
+        "36": [
+            "story",
+            null,
+            35
+        ],
+        "37": [
+            "story",
+            null,
+            36
+        ],
+        "38": [
+            "story",
+            null,
+            37
+        ],
+        "39": [
+            "story",
+            null,
+            38
+        ],
+        "40": [
+            "story",
+            null,
+            39
+        ],
+        "41": [
+            "story",
+            null,
+            40
+        ],
+        "42": [
+            "story",
+            null,
+            41
+        ],
+        "43": [
+            "story",
+            null,
+            42
+        ]
+    },
+    "warkop-13": {
+        "01": [
+            "feed",
+            null,
+            0
+        ],
+        "02": [
+            "feed",
+            null,
+            1
+        ],
+        "03": [
+            "feed",
+            null,
+            2
+        ],
+        "04": [
+            "feed",
+            null,
+            3
+        ],
+        "05": [
+            "feed",
+            null,
+            4
+        ],
+        "06": [
+            "feed",
+            null,
+            5
+        ],
+        "07": [
+            "feed",
+            null,
+            6
+        ],
+        "08": [
+            "feed",
+            null,
+            7
+        ],
+        "09": [
+            "feed",
+            null,
+            8
+        ],
+        "10": [
+            "identity",
+            null,
+            9
+        ],
+        "11": [
+            "story",
+            null,
+            10
+        ],
+        "12": [
+            "story",
+            null,
+            11
+        ],
+        "13": [
+            "story",
+            null,
+            12
+        ],
+        "14": [
+            "story",
+            null,
+            13
+        ],
+        "15": [
+            "story",
+            null,
+            14
+        ],
+        "16": [
+            "story",
+            null,
+            15
+        ],
+        "17": [
+            "identity",
+            null,
+            16
+        ]
+    },
+    "waroeng-koetjingan": {
+        "01": [
+            "carousel",
+            "Carousel 1",
+            0
+        ],
+        "02": [
+            "carousel",
+            "Carousel 1",
+            1
+        ],
+        "03": [
+            "carousel",
+            "Carousel 1",
+            2
+        ],
+        "04": [
+            "carousel",
+            "Carousel 1",
+            3
+        ],
+        "05": [
+            "carousel",
+            "Carousel 1",
+            4
+        ],
+        "06": [
+            "feed",
+            null,
+            5
+        ],
+        "07": [
+            "feed",
+            null,
+            6
+        ],
+        "08": [
+            "feed",
+            null,
+            7
+        ],
+        "09": [
+            "feed",
+            null,
+            8
+        ],
+        "10": [
+            "feed",
+            null,
+            9
+        ],
+        "11": [
+            "feed",
+            null,
+            10
+        ],
+        "12": [
+            "feed",
+            null,
+            11
+        ],
+        "13": [
+            "feed",
+            null,
+            12
+        ],
+        "14": [
+            "story",
+            null,
+            13
+        ],
+        "15": [
+            "story",
+            null,
+            14
+        ],
+        "16": [
+            "story",
+            null,
+            15
+        ],
+        "17": [
+            "story",
+            null,
+            16
+        ],
+        "18": [
+            "story",
+            null,
+            17
+        ],
+        "19": [
+            "story",
+            null,
+            18
+        ],
+        "20": [
+            "story",
+            null,
+            19
+        ],
+        "21": [
+            "identity",
+            null,
+            20
+        ]
     }
 }

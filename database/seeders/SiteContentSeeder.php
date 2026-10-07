@@ -39,6 +39,7 @@ class SiteContentSeeder extends Seeder
         $this->once('portfolio_photos_v2', fn () => $this->portfolioPhotos());
         $this->once('portfolio_covers_v3', fn () => $this->portfolioCovers());
         $this->once('portfolio_batch2_v1', fn () => $this->portfolioBatch2());
+        $this->once('portfolio_batch3_v1', fn () => $this->portfolioBatch3());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -493,6 +494,91 @@ class SiteContentSeeder extends Seeder
 
                 [$kind, $caption, $order] = $manifest[$slug][$n] ?? ['other', null, (int) $n];
                 $work->photos()->create(['path' => $path, 'kind' => $kind, 'caption' => $caption, 'sort_order' => $order + 1]);
+            }
+        }
+    }
+    /**
+     * Four more social media management clients (runs once): Bess Coffee, Lucky Adventure, Warkop 13 and Waroeng
+     * Koetjingan. Each has a hand-picked cover (cover.webp) and a gallery described in manifest.json. Bess already
+     * existed as a hidden client from the company profile deck; it is switched on and given its logo.
+     */
+    private function portfolioBatch3(): void
+    {
+        $base = database_path('data/portfolio');
+        $disk = Storage::disk('public');
+        $manifest = self::portfolioManifest();
+
+        $rows = [
+            ['bess-coffee', 'Bess Coffee & Roastery', 'Bess Coffee', 12,
+                'Social media management for a coffee and roastery: moody photography of the place, open and close announcements, and menu stories.',
+                'Pengelolaan sosial media untuk coffee & roastery: foto suasana tempat yang hangat, pengumuman buka dan tutup, serta story menu.',
+                "Social media management for Bess Coffee & Roastery. The feed shows the place, the bar and the people who gather there in warm, low-light photography. Stories announce the opening day, closing days and daily hours, and present the menu in three colour versions.",
+                "Pengelolaan media sosial untuk Bess Coffee & Roastery. Feed menampilkan tempat, bar, dan orang-orang yang berkumpul di sana lewat fotografi bernuansa hangat. Story mengumumkan hari pembukaan, hari tutup, dan jam harian, serta menampilkan menu dalam tiga versi warna."],
+            ['lucky-adventure', 'Lucky Adventure', 'Lucky Adventure', 13,
+                'Social media management for an outdoor gear rental: relatable carousels, mountain photography and rental announcements.',
+                'Pengelolaan sosial media untuk penyewaan alat outdoor: carousel yang dekat dengan audiens, foto gunung, dan pengumuman penyewaan.',
+                "Social media management for Lucky Adventure, an outdoor equipment rental. Four carousel series explain why renting beats buying, with a light and relatable tone. The feed pairs mountain photography with short reflections, stories announce rental hours and offers, and the visual identity ties it together.",
+                "Pengelolaan media sosial untuk Lucky Adventure, penyewaan peralatan outdoor. Empat seri carousel menjelaskan kenapa menyewa lebih masuk akal daripada membeli, dengan gaya yang santai dan dekat dengan audiens. Feed memadukan foto pegunungan dengan renungan singkat, story menyampaikan jam sewa dan penawaran, dan identitas visual menyatukan semuanya."],
+            ['warkop-13', 'Warkop 13', 'Warkop 13', 14,
+                'Social media management for a neighbourhood coffee shop: photography-led feed, daily stories and an Instagram profile look.',
+                'Pengelolaan sosial media untuk warung kopi: feed berbasis fotografi, story harian, dan tampilan profil Instagram.',
+                "Social media management for Warkop 13. The feed is built around honest photography of the drinks, the corners of the place and the people who sit there. Stories announce opening hours and when the coffee is ready, and the Instagram profile look and visual identity keep everything consistent.",
+                "Pengelolaan media sosial untuk Warkop 13. Feed dibangun dari fotografi yang jujur tentang minuman, sudut-sudut tempat, dan orang-orang yang duduk di sana. Story menyampaikan jam buka dan kabar kopi siap, sementara tampilan profil Instagram dan identitas visual menjaga semuanya tetap konsisten."],
+            ['waroeng-koetjingan', 'Waroeng Koetjingan', 'Waroeng Koetjingan', 15,
+                'Social media management for a food and beverage spot by the rice fields: menu carousels, food and place photography, seasonal stories.',
+                'Pengelolaan sosial media untuk tempat makan dan minum di tepi sawah: carousel menu, foto makanan dan suasana, serta story musiman.',
+                "Social media management for Waroeng Koetjingan. A menu carousel lists the food and drinks with prices, feed posts show the dishes and the open-air setting, and stories cover Ramadan hours, weekend greetings and holiday messages such as Nyepi. The visual identity sets the teal look of the brand.",
+                "Pengelolaan media sosial untuk Waroeng Koetjingan. Carousel menu mendaftar makanan dan minuman beserta harganya, feed menampilkan hidangan dan suasana terbuka, dan story mencakup jam Ramadhan, ucapan akhir pekan, serta ucapan hari besar seperti Nyepi. Identitas visual menentukan tampilan teal brand."],
+        ];
+
+        foreach ($rows as [$slug, $clientName, $title, $order, $summaryEn, $summaryId, $descEn, $descId]) {
+            $logo = null;
+
+            if (is_file("{$base}/logos/{$slug}.png")) {
+                $logo = "uploads/clients/{$slug}.png";
+                $disk->put($logo, file_get_contents("{$base}/logos/{$slug}.png"));
+            }
+
+            $client = Client::firstOrNew(['name' => $clientName]);
+            $client->logo = $logo ?? $client->logo;
+            $client->sort_order = $client->sort_order ?: $order;
+            $client->is_active = true;
+            $client->save();
+
+            if (Work::where('slug', $slug)->exists()) {
+                continue;
+            }
+
+            $files = [];
+
+            foreach (array_merge(['cover'], array_map(fn ($n) => sprintf('%02d', $n), range(1, 99))) as $n) {
+                if (is_file("{$base}/{$slug}/{$n}.webp")) {
+                    $files[$n] = "uploads/works/{$slug}/{$n}.webp";
+                    $disk->put($files[$n], file_get_contents("{$base}/{$slug}/{$n}.webp"));
+
+                    if (is_file("{$base}/{$slug}/{$n}_thumb.webp")) {
+                        $disk->put("uploads/works/{$slug}/{$n}_thumb.webp", file_get_contents("{$base}/{$slug}/{$n}_thumb.webp"));
+                    }
+                }
+            }
+
+            $work = Work::create([
+                'slug' => $slug, 'category' => 'social',
+                'title_en' => $title, 'title_id' => $title, 'client' => $clientName,
+                'is_featured' => false,
+                'summary_en' => $summaryEn, 'summary_id' => $summaryId,
+                'description_en' => $descEn, 'description_id' => $descId,
+                'cover_photo' => $files['cover'] ?? null,
+                'sort_order' => $order,
+            ]);
+
+            foreach ($files as $n => $path) {
+                if ($n === 'cover') {
+                    continue;
+                }
+
+                [$kind, $caption, $position] = $manifest[$slug][$n] ?? ['other', null, (int) $n];
+                $work->photos()->create(['path' => $path, 'kind' => $kind, 'caption' => $caption, 'sort_order' => $position + 1]);
             }
         }
     }
