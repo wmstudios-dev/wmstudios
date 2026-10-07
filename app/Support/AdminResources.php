@@ -76,6 +76,7 @@ class AdminResources
                     ['name' => 'metric_label', 'label' => 'Result caption (optional)', 'type' => 'text', 'bilingual' => true, 'hint' => 'e.g. views in 30 days'],
                     ['name' => 'cover_photo', 'label' => 'Cover photo', 'type' => 'image', 'folder' => 'works', 'hint' => 'Photos are resized and converted to WebP automatically.'],
                     ['name' => 'video_url', 'label' => 'Video link', 'type' => 'url', 'hint' => 'YouTube, Vimeo, Instagram reel, or a direct .mp4 link. For a video work, the YouTube thumbnail is used when there is no cover.'],
+                    ['name' => 'instagram_url', 'label' => 'Instagram account', 'type' => 'url', 'hint' => 'For social media projects: the client\'s Instagram profile, e.g. https://www.instagram.com/name/. Shows a "View on Instagram" button.'],
                     ['name' => 'project_url', 'label' => 'Live project link', 'type' => 'url', 'hint' => 'For websites: link to the live site.'],
                     ['name' => 'before_photo', 'label' => 'Before photo', 'type' => 'image', 'folder' => 'works', 'hint' => 'Fill both before and after to show a comparison slider.'],
                     ['name' => 'after_photo', 'label' => 'After photo', 'type' => 'image', 'folder' => 'works'],

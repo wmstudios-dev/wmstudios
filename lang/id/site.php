@@ -72,6 +72,7 @@ return [
         'year' => 'Tahun',
         'category' => 'Kategori',
         'visit_project' => 'Kunjungi proyek',
+        'view_instagram' => 'Lihat di Instagram',
         'watch_video' => 'Putar video',
         'before' => 'Sebelum',
         'after' => 'Sesudah',

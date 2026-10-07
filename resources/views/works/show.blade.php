@@ -80,6 +80,9 @@
             @if($work->project_url)
                 <a href="{{ $work->project_url }}" target="_blank" rel="noopener" class="btn-primary">{{ __('site.works.visit_project') }} <x-icon name="arrow-up-right" class="h-4 w-4" /></a>
             @endif
+            @if($work->instagram_url)
+                <a href="{{ $work->instagram_url }}" target="_blank" rel="noopener" class="{{ $work->project_url ? 'btn-ghost' : 'btn-primary' }}"><x-icon name="instagram" class="h-4 w-4" /> {{ __('site.works.view_instagram') }}</a>
+            @endif
             @if($video && $video['type'] === 'link')
                 <a href="{{ $video['url'] }}" target="_blank" rel="noopener" class="btn-primary">{{ __('site.works.watch_video') }} <x-icon name="arrow-up-right" class="h-4 w-4" /></a>
             @endif

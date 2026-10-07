@@ -72,6 +72,7 @@ return [
         'year' => 'Year',
         'category' => 'Category',
         'visit_project' => 'Visit project',
+        'view_instagram' => 'View on Instagram',
         'watch_video' => 'Play video',
         'before' => 'Before',
         'after' => 'After',

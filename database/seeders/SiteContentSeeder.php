@@ -43,6 +43,7 @@ class SiteContentSeeder extends Seeder
         $this->once('portfolio_batch4_v1', fn () => $this->portfolioBatch4());
         $this->once('semarang_feed_v1', fn () => $this->portfolioTopUp(['semarang-ban']));
         $this->once('design_only_v1', fn () => $this->designOnlyClients());
+        $this->once('instagram_links_v1', fn () => $this->instagramLinks());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -775,6 +776,28 @@ class SiteContentSeeder extends Seeder
             }
 
             $work->save();
+        }
+    }
+    /** Instagram accounts of the social media clients (runs once; only fills projects that have no link yet). */
+    private function instagramLinks(): void
+    {
+        $links = [
+            'kopi-panda' => 'panda.streetcoffee',
+            'omah-latareombo' => 'omah_latareombo',
+            'waroeng-koetjingan' => 'waroeng_koetjingan',
+            'warkop-13' => 'warungkopi.13',
+            'lucky-adventure' => 'lucky.adventure88',
+            'bess-coffee' => 'besscoffee_',
+            'semarang-ban' => 'semarangban_id',
+            'kandang-kopi' => 'kandangkopi_mgl',
+            'the-overlander' => 'theoverlander.id',
+            'among-roso' => 'amongroso_magelang',
+            'src-toko-alif' => 'tokoalif.magelang',
+            'merah-putih' => 'merahputih_coffeeandeatery',
+        ];
+
+        foreach ($links as $slug => $account) {
+            Work::where('slug', $slug)->whereNull('instagram_url')->update(['instagram_url' => "https://www.instagram.com/{$account}/"]);
         }
     }
     /**
