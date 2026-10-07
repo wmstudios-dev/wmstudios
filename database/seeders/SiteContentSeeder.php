@@ -47,6 +47,7 @@ class SiteContentSeeder extends Seeder
         $this->once('remove_photo_doc_sample_v1', fn () => $this->removePhotoDocumentationSample());
         $this->once('doc_videos_v1', fn () => $this->documentationVideos());
         $this->once('doc_video_clients_v1', fn () => $this->documentationVideoClients());
+        $this->once('overlander_split_v1', fn () => $this->splitOverlander());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -900,6 +901,76 @@ class SiteContentSeeder extends Seeder
 
             $work->save();
         }
+    }
+    /**
+     * The Overlander is two projects: the social media work and the website (runs once). The social project loses the
+     * "web" category and the site link and goes back to its social-only text; a separate Web project, with the site
+     * link and a placeholder cover, is created for the website. The text is only rewritten while it is still the text
+     * seeded earlier. Real screenshots of the site go into the Web project's gallery (type "Website screenshot").
+     */
+    private function splitOverlander(): void
+    {
+        $site = Setting::get('site_name', 'WMSTUDIOS');
+        $url = 'https://overlander-production-b73c.up.railway.app/';
+
+        $social = Work::where('slug', 'the-overlander')->first();
+
+        if ($social) {
+            if ($social->extra_categories === 'web') {
+                $social->extra_categories = null;
+            }
+
+            if ($social->project_url === $url) {
+                $social->project_url = null;
+            }
+
+            $oldSummary = ['en' => 'Visual identity, social media content and a website for a travel brand: colour palette, typography, destination carousels, reel covers and a trip-catalogue site.',
+                'id' => 'Identitas visual, konten media sosial, dan website untuk brand travel: palet warna, tipografi, carousel destinasi, cover reels, dan situs katalog perjalanan.'];
+            $newSummary = ['en' => 'Visual identity and social media content for a travel brand: colour palette, typography, destination carousels and reel covers.',
+                'id' => 'Identitas visual dan konten media sosial untuk brand travel: palet warna, tipografi, carousel destinasi, dan cover reels.'];
+
+            foreach (['en', 'id'] as $lang) {
+                if ($social->{"summary_{$lang}"} === $oldSummary[$lang]) {
+                    $social->{"summary_{$lang}"} = $newSummary[$lang];
+                }
+
+                // drop the paragraph that told about the website
+                $paragraphs = preg_split("/\n\n/", (string) $social->{"description_{$lang}"});
+                $kept = array_filter($paragraphs, fn ($p) => ! (str_contains($p, 'also built the website') || str_contains($p, 'juga membangun websitenya')));
+                $social->{"description_{$lang}"} = implode("\n\n", $kept);
+            }
+
+            $social->save();
+        }
+
+        if (Work::where('slug', 'the-overlander-web')->exists()) {
+            return;
+        }
+
+        $base = database_path('data/portfolio/the-overlander-web');
+        $disk = Storage::disk('public');
+        $cover = null;
+
+        if (is_file("{$base}/cover.webp")) {
+            $cover = 'uploads/works/the-overlander-web/cover.webp';
+            $disk->put($cover, file_get_contents("{$base}/cover.webp"));
+
+            if (is_file("{$base}/cover_thumb.webp")) {
+                $disk->put('uploads/works/the-overlander-web/cover_thumb.webp', file_get_contents("{$base}/cover_thumb.webp"));
+            }
+        }
+
+        Work::create([
+            'slug' => 'the-overlander-web', 'category' => 'web',
+            'title_en' => 'The Overlander Website', 'title_id' => 'Website The Overlander',
+            'client' => 'The Overlander', 'is_featured' => false,
+            'project_url' => 'https://overlander-production-b73c.up.railway.app/',
+            'summary_en' => 'A bilingual travel website: destinations, trip packages, visitor reviews and booking enquiries sent to WhatsApp.',
+            'summary_id' => 'Website travel dua bahasa: destinasi, paket perjalanan, ulasan pengunjung, dan pemesanan lewat WhatsApp.',
+            'description_en' => "{$site} designed and built the website for The Overlander Indonesia: a bilingual (Indonesian and English) travel site with destinations, trip packages, visitor reviews and ratings, and booking enquiries sent to WhatsApp. It has an admin panel to manage the content, and visitors can sign in with Google or email.",
+            'description_id' => "{$site} merancang dan membangun website The Overlander Indonesia: situs travel dua bahasa (Indonesia dan Inggris) dengan destinasi, paket perjalanan, ulasan dan rating pengunjung, serta pemesanan lewat WhatsApp. Ada panel admin untuk mengelola isinya, dan pengunjung bisa masuk lewat Google atau email.",
+            'cover_photo' => $cover, 'sort_order' => 22,
+        ]);
     }
     /**
      * The Overlander is not only social media: the studio built its website too (runs once). Adds the "web" category and
