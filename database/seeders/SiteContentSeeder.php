@@ -46,6 +46,7 @@ class SiteContentSeeder extends Seeder
         $this->once('instagram_links_v1', fn () => $this->instagramLinks());
         $this->once('remove_photo_doc_sample_v1', fn () => $this->removePhotoDocumentationSample());
         $this->once('doc_videos_v1', fn () => $this->documentationVideos());
+        $this->once('doc_video_clients_v1', fn () => $this->documentationVideoClients());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -865,6 +866,39 @@ class SiteContentSeeder extends Seeder
                 'video_url' => $video, 'video_vertical' => $vertical,
                 'cover_photo' => $cover, 'sort_order' => $order,
             ]);
+        }
+    }
+    /**
+     * Names the clients of two video documentation projects (runs once). Fills the client only while it is empty and
+     * extends the text only while it is still the seeded one.
+     */
+    private function documentationVideoClients(): void
+    {
+        $rows = [
+            'vw-trip-borobudur' => ['Kelompok Lansia Bugar',
+                ['Video documentation of a VW trip around Borobudur.', 'Video documentation of a VW trip around Borobudur for the Lansia Bugar group.'],
+                ['Dokumentasi video perjalanan VW Trip di kawasan Borobudur.', 'Dokumentasi video perjalanan VW Trip di kawasan Borobudur bersama Kelompok Lansia Bugar.']],
+            'rewarding-sios-balen-magelang' => ['SRC',
+                ['Video documentation of Rewarding SIOS Balen in Magelang.', 'Video documentation of Rewarding SIOS Balen in Magelang, for SRC.'],
+                ['Dokumentasi video Rewarding SIOS Balen di Magelang.', 'Dokumentasi video Rewarding SIOS Balen di Magelang untuk SRC.']],
+        ];
+
+        foreach ($rows as $slug => [$client, [$oldEn, $newEn], [$oldId, $newId]]) {
+            $work = Work::where('slug', $slug)->first();
+
+            if (! $work) {
+                continue;
+            }
+
+            $work->client = $work->client ?: $client;
+
+            foreach (['summary_en' => [$oldEn, $newEn], 'description_en' => [$oldEn, $newEn], 'summary_id' => [$oldId, $newId], 'description_id' => [$oldId, $newId]] as $column => [$old, $new]) {
+                if ($work->{$column} === $old) {
+                    $work->{$column} = $new;
+                }
+            }
+
+            $work->save();
         }
     }
     /**
