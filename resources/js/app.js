@@ -148,7 +148,7 @@ document.documentElement.classList.add('js');
     });
 })();
 
-// Video modal: <button data-video="https://embed..." data-type="youtube|vimeo|instagram|file" data-vertical="1">
+// Video modal: <button data-video="https://embed..." data-type="youtube|vimeo|instagram|drive|file" data-vertical="1">
 (() => {
     const buttons = document.querySelectorAll('[data-video]');
     if (!buttons.length) return;

@@ -4,7 +4,7 @@ namespace App\Support;
 
 /**
  * Turns a pasted video link into something the page can show.
- * type: youtube | vimeo | instagram | file | link
+ * type: youtube | vimeo | instagram | drive | file | link
  */
 class VideoEmbed
 {
@@ -32,6 +32,11 @@ class VideoEmbed
 
         if (preg_match('~instagram\.com/(reel|p|tv)/([A-Za-z0-9_-]+)~', $url, $m)) {
             return ['type' => 'instagram', 'embed' => "https://www.instagram.com/{$m[1]}/{$m[2]}/embed", 'thumb' => null, 'vertical' => true, 'url' => $url];
+        }
+
+        // Google Drive: /file/d/<id>/view, /open?id=<id> or /uc?id=<id>. The file must be shared as "anyone with the link".
+        if (preg_match('~(?:drive|docs)\.google\.com/(?:file/d/|(?:open|uc)\?(?:[^#]*&)?id=)([A-Za-z0-9_-]{10,})~', $url, $m)) {
+            return ['type' => 'drive', 'embed' => "https://drive.google.com/file/d/{$m[1]}/preview", 'thumb' => null, 'vertical' => false, 'url' => $url];
         }
 
         if (preg_match('~\.(mp4|webm|mov)(\?.*)?$~i', $url)) {
