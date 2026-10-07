@@ -25,11 +25,34 @@
             </div>
             <div>
                 <label for="password" class="mb-1.5 block text-sm font-semibold">Password</label>
-                <input id="password" type="password" name="password" required autocomplete="current-password" class="field">
+                <div class="relative">
+                    <input id="password" type="password" name="password" required autocomplete="current-password" class="field pr-12">
+                    <button type="button" id="toggle-password" aria-label="Show password" aria-pressed="false" aria-controls="password"
+                            class="absolute inset-y-0 right-0 flex w-12 items-center justify-center rounded-r-xl text-muted transition-colors hover:text-brand-600 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-200">
+                        <svg data-eye class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg data-eye-off class="hidden h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.7 10.7 0 0112 5c6.5 0 10 7 10 7a17 17 0 01-3.2 4.2M6.6 6.6A17 17 0 002 12s3.5 7 10 7a10 10 0 004.3-.9"/><path d="M9.9 9.9a3 3 0 004.2 4.2"/></svg>
+                    </button>
+                </div>
             </div>
             <label class="flex items-center gap-2 text-sm text-muted"><input type="checkbox" name="remember" class="rounded border-line text-brand-500"> Keep me signed in</label>
             <button type="submit" class="btn-primary w-full">Sign in</button>
         </form>
     </div>
+    <script>
+        (() => {
+            const input = document.getElementById('password');
+            const btn = document.getElementById('toggle-password');
+            if (!input || !btn) return;
+            btn.addEventListener('click', () => {
+                const show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                btn.setAttribute('aria-pressed', show ? 'true' : 'false');
+                btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+                btn.querySelector('[data-eye]').classList.toggle('hidden', show);
+                btn.querySelector('[data-eye-off]').classList.toggle('hidden', !show);
+                input.focus();
+            });
+        })();
+    </script>
 </body>
 </html>
