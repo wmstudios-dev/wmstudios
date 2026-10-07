@@ -48,6 +48,7 @@ class SiteContentSeeder extends Seeder
         $this->once('doc_videos_v1', fn () => $this->documentationVideos());
         $this->once('doc_video_clients_v1', fn () => $this->documentationVideoClients());
         $this->once('overlander_split_v1', fn () => $this->splitOverlander());
+        $this->once('overlander_web_screens_v1', fn () => $this->overlanderWebScreens());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -972,6 +973,42 @@ class SiteContentSeeder extends Seeder
             'cover_photo' => $cover, 'sort_order' => 22,
         ]);
     }
+    /**
+     * Real screenshots for the Overlander website project (runs once): five desktop pages and the same five on a phone,
+     * and a new cover (the old one was a placeholder crop). The cover is only replaced while it is still the placeholder.
+     */
+    private function overlanderWebScreens(): void
+    {
+        $work = Work::where('slug', 'the-overlander-web')->first();
+
+        if (! $work) {
+            return;
+        }
+
+        $slug = 'the-overlander-web';
+        $base = database_path("data/portfolio/{$slug}");
+        $disk = Storage::disk('public');
+        $manifest = self::portfolioManifest();
+
+        if (is_file("{$base}/cover-2.webp") && (! $work->cover_photo || str_ends_with($work->cover_photo, '/cover.webp'))) {
+            $disk->put("uploads/works/{$slug}/cover-2.webp", file_get_contents("{$base}/cover-2.webp"));
+            $disk->put("uploads/works/{$slug}/cover-2_thumb.webp", file_get_contents("{$base}/cover-2_thumb.webp"));
+            $work->cover_photo = "uploads/works/{$slug}/cover-2.webp";
+            $work->save();
+        }
+
+        foreach ($manifest[$slug] ?? [] as $n => [$kind, $caption, $position]) {
+            if (! is_file("{$base}/{$n}.webp")) {
+                continue;
+            }
+
+            $path = "uploads/works/{$slug}/{$n}.webp";
+            $disk->put($path, file_get_contents("{$base}/{$n}.webp"));
+            $disk->put("uploads/works/{$slug}/{$n}_thumb.webp", file_get_contents("{$base}/{$n}_thumb.webp"));
+            $work->photos()->firstOrCreate(['path' => $path], ['kind' => $kind, 'caption' => $caption, 'sort_order' => $position + 1]);
+        }
+    }
+
     /**
      * The Overlander is not only social media: the studio built its website too (runs once). Adds the "web" category and
      * the live link, and extends the texts, but only while they are still the ones seeded earlier and only where the

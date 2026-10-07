@@ -17,6 +17,7 @@ class WorkPhoto extends Model
         'reel' => 'Reels cover',
         'identity' => 'Brand identity',
         'web' => 'Website screenshot',
+        'mobile' => 'Website screenshot (phone)',
         'documentation' => 'Documentation (event photos)',
         'other' => 'Other / general',
     ];

@@ -205,6 +205,21 @@
                                 </a>
                             @endforeach
                         </div>
+                    @elseif($kind === 'mobile')
+                        {{-- Phone screenshots in a phone-shaped frame --}}
+                        <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+                            @foreach($photos as $photo)
+                                <a href="{{ $photo->url() }}" data-lightbox="gallery-mobile" data-caption="{{ $photo->caption }}"
+                                   class="reveal group block" style="--d: {{ ($loop->index % 5) * 60 }}ms">
+                                    <span class="block overflow-hidden rounded-[1.75rem] border-[5px] border-ink bg-ink shadow-md">
+                                        <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="aspect-[739/1600] w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]">
+                                    </span>
+                                    @if($photo->caption)
+                                        <span class="mt-2 block text-center text-xs font-semibold text-muted">{{ $photo->caption }}</span>
+                                    @endif
+                                </a>
+                            @endforeach
+                        </div>
                     @elseif($kind === 'documentation')
                         {{-- Event photos: tight masonry that keeps every picture's own proportions --}}
                         <div class="mt-6 columns-2 gap-2 sm:columns-3 sm:gap-3">
