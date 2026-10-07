@@ -72,7 +72,8 @@ class Work extends Model
         $file = $this->cover_photo ? \App\Support\StorageSetup::locate($this->cover_photo) : null;
         $size = $file ? @getimagesize($file) : false;
 
-        return $size ? $size[0] > $size[1] : false;
+        // wider than tall, and big enough to run full width without turning blurry
+        return $size ? $size[0] > $size[1] && $size[0] >= 900 : false;
     }
 
     public function beforeUrl(): ?string

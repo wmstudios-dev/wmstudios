@@ -40,6 +40,8 @@ class SiteContentSeeder extends Seeder
         $this->once('portfolio_covers_v3', fn () => $this->portfolioCovers());
         $this->once('portfolio_batch2_v1', fn () => $this->portfolioBatch2());
         $this->once('portfolio_batch3_v1', fn () => $this->portfolioBatch3());
+        $this->once('portfolio_batch4_v1', fn () => $this->portfolioBatch4());
+        $this->once('semarang_feed_v1', fn () => $this->portfolioTopUp(['semarang-ban']));
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -578,6 +580,129 @@ class SiteContentSeeder extends Seeder
                 }
 
                 [$kind, $caption, $position] = $manifest[$slug][$n] ?? ['other', null, (int) $n];
+                $work->photos()->create(['path' => $path, 'kind' => $kind, 'caption' => $caption, 'sort_order' => $position + 1]);
+            }
+        }
+    }
+    /**
+     * Three more social media management clients (runs once): Karya Satria, Kopi Panda and Merah Putih. Same recipe as
+     * the earlier batches: a hand-picked cover (cover.webp) plus a gallery described in manifest.json.
+     */
+    private function portfolioBatch4(): void
+    {
+        $base = database_path('data/portfolio');
+        $disk = Storage::disk('public');
+        $manifest = self::portfolioManifest();
+
+        $rows = [
+            ['karya-satria', 'Karya Satria', 16,
+                'Social media management for an outdoor advertising company: bold feed posts about billboards, wall branding and brand activation.',
+                'Pengelolaan sosial media untuk perusahaan periklanan luar ruang: feed yang tegas tentang billboard, wall branding, dan brand activation.',
+                "Social media management for Karya Satria, an outdoor advertising company. Nine feed posts in the brand's red explain what outdoor media can do: billboards in busy traffic, wall branding, brand activation and the safety standards behind installation.",
+                "Pengelolaan media sosial untuk Karya Satria, perusahaan periklanan luar ruang. Sembilan postingan feed berwarna merah khas brand menjelaskan apa yang bisa dilakukan media luar ruang: billboard di jalan padat, wall branding, brand activation, dan standar keselamatan di balik pemasangannya."],
+            ['kopi-panda', 'Kopi Panda', 17,
+                'Social media management and digital positioning for a coffee brand: stories for hours and holidays, and a positioning deck.',
+                'Pengelolaan sosial media dan digital positioning untuk brand kopi: story jadwal dan hari besar, serta dokumen positioning.',
+                "Social media management for Kopi Panda. The project starts from a digital positioning document that sets the brand essence, purpose, target audience, personality and key differentiation. Seven stories then put it to work: weekly schedule, opening hours, days off, holiday greetings for Idul Fitri and Nyepi, and short notices.",
+                "Pengelolaan media sosial untuk Kopi Panda. Proyek ini berawal dari dokumen digital positioning yang menetapkan esensi brand, tujuan, target audiens, kepribadian, dan pembeda utama. Tujuh story lalu menerapkannya: jadwal mingguan, jam buka, hari libur, ucapan Idul Fitri dan Nyepi, serta pengumuman singkat."],
+            ['merah-putih', 'Merah Putih', 18,
+                'Social media management and digital positioning for a coffee and eatery: community event coverage, daily open stories and a full brand strategy.',
+                'Pengelolaan sosial media dan digital positioning untuk coffee & eatery: liputan acara komunitas, story buka harian, dan strategi brand lengkap.',
+                "Social media management for Merah Putih Coffee & Eatery. The work starts with a digital positioning deck covering brand essence, purpose, target audience, personality, content pillars and differentiation. Two long carousel series cover a literacy and community event, the feed shows the place and the drinks, and daily stories announce opening hours and holiday messages.",
+                "Pengelolaan media sosial untuk Merah Putih Coffee & Eatery. Pekerjaan diawali dengan dokumen digital positioning yang mencakup esensi brand, tujuan, target audiens, kepribadian, content pillar, dan pembeda. Dua seri carousel panjang meliput acara literasi dan komunitas, feed menampilkan tempat dan minuman, dan story harian menyampaikan jam buka serta ucapan hari besar."],
+        ];
+
+        foreach ($rows as [$slug, $name, $order, $summaryEn, $summaryId, $descEn, $descId]) {
+            $logo = null;
+
+            if (is_file("{$base}/logos/{$slug}.png")) {
+                $logo = "uploads/clients/{$slug}.png";
+                $disk->put($logo, file_get_contents("{$base}/logos/{$slug}.png"));
+            }
+
+            $client = Client::firstOrNew(['name' => $name]);
+            $client->logo = $logo ?? $client->logo;
+            $client->sort_order = $client->sort_order ?: $order;
+            $client->is_active = true;
+            $client->save();
+
+            if (Work::where('slug', $slug)->exists()) {
+                continue;
+            }
+
+            $files = [];
+
+            foreach (array_merge(['cover'], array_map(fn ($n) => sprintf('%02d', $n), range(1, 99))) as $n) {
+                if (is_file("{$base}/{$slug}/{$n}.webp")) {
+                    $files[$n] = "uploads/works/{$slug}/{$n}.webp";
+                    $disk->put($files[$n], file_get_contents("{$base}/{$slug}/{$n}.webp"));
+
+                    if (is_file("{$base}/{$slug}/{$n}_thumb.webp")) {
+                        $disk->put("uploads/works/{$slug}/{$n}_thumb.webp", file_get_contents("{$base}/{$slug}/{$n}_thumb.webp"));
+                    }
+                }
+            }
+
+            $work = Work::create([
+                'slug' => $slug, 'category' => 'social',
+                'title_en' => $name, 'title_id' => $name, 'client' => $name,
+                'is_featured' => false,
+                'summary_en' => $summaryEn, 'summary_id' => $summaryId,
+                'description_en' => $descEn, 'description_id' => $descId,
+                'cover_photo' => $files['cover'] ?? null,
+                'sort_order' => $order,
+            ]);
+
+            foreach ($files as $n => $path) {
+                if ($n === 'cover') {
+                    continue;
+                }
+
+                [$kind, $caption, $position] = $manifest[$slug][$n] ?? ['other', null, (int) $n];
+                $work->photos()->create(['path' => $path, 'kind' => $kind, 'caption' => $caption, 'sort_order' => $position + 1]);
+            }
+        }
+    }
+
+    /**
+     * Adds pictures that were shipped after a work was created (runs once per call site): every numbered picture of the
+     * given works that the work does not have yet. Pictures the admin deleted earlier are only re-added by this single
+     * run, so list works here only when new material was added to them.
+     */
+    private function portfolioTopUp(array $slugs): void
+    {
+        $base = database_path('data/portfolio');
+        $disk = Storage::disk('public');
+        $manifest = self::portfolioManifest();
+
+        foreach ($slugs as $slug) {
+            $work = Work::where('slug', $slug)->first();
+
+            if (! $work) {
+                continue;
+            }
+
+            $prefix = "uploads/works/{$slug}/";
+            $known = $work->photos->pluck('path')->push($work->cover_photo)->all();
+
+            foreach ($manifest[$slug] ?? [] as $number => [$kind, $caption, $position]) {
+                $path = "{$prefix}{$number}.webp";
+
+                if (in_array($path, $known, true) || ! is_file("{$base}/{$slug}/{$number}.webp")) {
+                    continue;
+                }
+
+                // Only genuinely new numbers: a number the work once had and the admin removed stays removed
+                if ((int) $number <= (int) $work->photos->map(fn ($p) => (int) basename($p->path, '.webp'))->max()) {
+                    continue;
+                }
+
+                $disk->put($path, file_get_contents("{$base}/{$slug}/{$number}.webp"));
+
+                if (is_file("{$base}/{$slug}/{$number}_thumb.webp")) {
+                    $disk->put("{$prefix}{$number}_thumb.webp", file_get_contents("{$base}/{$slug}/{$number}_thumb.webp"));
+                }
+
                 $work->photos()->create(['path' => $path, 'kind' => $kind, 'caption' => $caption, 'sort_order' => $position + 1]);
             }
         }
