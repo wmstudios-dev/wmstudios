@@ -81,7 +81,7 @@
                 <a href="{{ $work->project_url }}" target="_blank" rel="noopener" class="btn-primary">{{ __('site.works.visit_project') }} <x-icon name="arrow-up-right" class="h-4 w-4" /></a>
             @endif
             @if($work->instagram_url)
-                <a href="{{ $work->instagram_url }}" target="_blank" rel="noopener" class="{{ $work->project_url ? 'btn-ghost' : 'btn-primary' }}"><x-icon name="instagram" class="h-4 w-4" /> {{ __('site.works.view_instagram') }}</a>
+                <a href="{{ $work->instagram_url }}" target="_blank" rel="noopener" class="btn border-0 bg-[linear-gradient(45deg,#f09433_0%,#e6683c_25%,#dc2743_50%,#cc2366_75%,#bc1888_100%)] text-white shadow-lg shadow-[#dc2743]/25 hover:-translate-y-0.5 hover:brightness-110 active:scale-95"><x-icon name="instagram" class="h-4 w-4" /> {{ __('site.works.view_instagram') }}</a>
             @endif
             @if($video && $video['type'] === 'link')
                 <a href="{{ $video['url'] }}" target="_blank" rel="noopener" class="btn-primary">{{ __('site.works.watch_video') }} <x-icon name="arrow-up-right" class="h-4 w-4" /></a>
