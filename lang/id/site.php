@@ -74,6 +74,7 @@ return [
         'category' => 'Kategori',
         'visit_project' => 'Kunjungi proyek',
         'view_instagram' => 'Lihat di Instagram',
+        'open_site' => 'Buka situs',
         'watch_video' => 'Putar video',
         'before' => 'Sebelum',
         'after' => 'Sesudah',

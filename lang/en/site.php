@@ -74,6 +74,7 @@ return [
         'category' => 'Category',
         'visit_project' => 'Visit project',
         'view_instagram' => 'View on Instagram',
+        'open_site' => 'Open the site',
         'watch_video' => 'Play video',
         'before' => 'Before',
         'after' => 'After',

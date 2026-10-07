@@ -40,6 +40,21 @@
         </dl>
     </header>
 
+    {{-- Open the live site: big, with the address, because for a web project this is the main thing to look at --}}
+    @if($work->project_url)
+        @php $siteHost = preg_replace('/^www\./i', '', (string) parse_url($work->project_url, PHP_URL_HOST)); @endphp
+        <a href="{{ $work->project_url }}" target="_blank" rel="noopener"
+           class="reveal group mt-8 inline-flex max-w-full items-center gap-4 rounded-full bg-brand-500 py-3 pl-7 pr-3 text-white shadow-xl shadow-brand-500/30 transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-600 hover:shadow-2xl hover:shadow-brand-500/40 active:scale-[0.98]">
+            <span class="min-w-0 text-left">
+                <span class="block text-lg font-bold leading-tight sm:text-xl">{{ __('site.works.open_site') }}</span>
+                @if($siteHost)<span class="block truncate text-xs text-white/75 sm:text-sm">{{ $siteHost }}</span>@endif
+            </span>
+            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-brand-600 transition-transform duration-300 group-hover:rotate-12 sm:h-14 sm:w-14">
+                <x-icon name="arrow-up-right" class="h-6 w-6" stroke="2.2" />
+            </span>
+        </a>
+    @endif
+
     {{-- Main media --}}
     <div class="reveal mt-10">
         @if($video && $video['type'] === 'link')
@@ -80,9 +95,6 @@
         </div>
 
         <div class="flex flex-wrap items-start gap-3 lg:col-span-4 lg:justify-end">
-            @if($work->project_url)
-                <a href="{{ $work->project_url }}" target="_blank" rel="noopener" class="btn-primary">{{ __('site.works.visit_project') }} <x-icon name="arrow-up-right" class="h-4 w-4" /></a>
-            @endif
             @if($work->instagram_url)
                 <a href="{{ $work->instagram_url }}" target="_blank" rel="noopener" class="btn border-0 bg-[linear-gradient(45deg,#f09433_0%,#e6683c_25%,#dc2743_50%,#cc2366_75%,#bc1888_100%)] text-white shadow-lg shadow-[#dc2743]/25 hover:-translate-y-0.5 hover:brightness-110 active:scale-95"><x-icon name="instagram" class="h-4 w-4" /> {{ __('site.works.view_instagram') }}</a>
             @endif
