@@ -43,7 +43,7 @@ class StorageSetup
 
         $disk = Storage::disk('public');
 
-        if ($disk->exists($path)) {
+        if ($disk->exists($path) && is_file($disk->path($path))) {
             return $disk->path($path);
         }
 
