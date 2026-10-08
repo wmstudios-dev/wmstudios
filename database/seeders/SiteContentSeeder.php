@@ -53,6 +53,7 @@ class SiteContentSeeder extends Seeder
         $this->once('overlander_web_hq_v1', fn () => $this->overlanderWebHighRes());
         $this->once('featured_mix_v1', fn () => $this->featuredMix());
         $this->once('richer_texts_v1', fn () => $this->richerTexts());
+        $this->once('relaxed_texts_v2', fn () => $this->relaxedTexts());
         $this->once('home_images_v1', fn () => $this->homeImages());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
@@ -1130,9 +1131,24 @@ class SiteContentSeeder extends Seeder
      */
     private function richerTexts(): void
     {
-        $new = require database_path('data/descriptions.php');
         $oldFile = database_path('data/descriptions_old.json');
         $old = is_file($oldFile) ? (json_decode(file_get_contents($oldFile), true) ?: []) : [];
+
+        $this->applyTexts(require database_path('data/descriptions.php'), $old);
+    }
+
+    /**
+     * The same texts in a more relaxed voice (runs once). Only fields that still equal the previous version
+     * (data/descriptions.php) are replaced.
+     */
+    private function relaxedTexts(): void
+    {
+        $this->applyTexts(require database_path('data/descriptions_v2.php'), require database_path('data/descriptions.php'));
+    }
+
+    /** Replaces a text only while it still equals its expected old value, so edits made in the admin are kept. */
+    private function applyTexts(array $new, array $old): void
+    {
         $same = fn ($a, $b) => trim(str_replace("\r\n", "\n", (string) $a)) === trim(str_replace("\r\n", "\n", (string) $b));
 
         foreach ($new['projects'] as $slug => $text) {
