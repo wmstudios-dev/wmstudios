@@ -16,21 +16,30 @@ use Illuminate\Support\Facades\Storage;
 Route::get('/', [SiteController::class, 'home'])->name('home');
 Route::get('/proyek', [WorkController::class, 'index'])->name('works.index');
 Route::get('/proyek/{work}', [WorkController::class, 'show'])->name('works.show');
-// The old English addresses keep working: permanent redirects, so shared links and search results are not lost.
-Route::get('/works', fn (\Illuminate\Http\Request $request) => redirect()->route('works.index', $request->query(), 301));
-Route::get('/works/{work}', fn (string $work) => redirect()->route('works.show', $work, 301));
-Route::get('/about', [SiteController::class, 'about'])->name('about');
-Route::get('/services', [SiteController::class, 'services'])->name('services');
-Route::get('/services/{service}', [SiteController::class, 'service'])->name('services.show');
-Route::get('/process', [SiteController::class, 'process'])->name('process');
-Route::get('/space', [SiteController::class, 'space'])->name('space');
-Route::get('/thoughts', [ThoughtController::class, 'index'])->name('thoughts.index');
-Route::get('/thoughts/{thought}', [ThoughtController::class, 'show'])->name('thoughts.show');
-Route::get('/contact', [ContactController::class, 'show'])->name('contact');
-Route::get('/privacy', [LegalController::class, 'privacy'])->name('privacy');
-Route::get('/terms', [LegalController::class, 'terms'])->name('terms');
-Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,1,contact')->name('contact.store');
+Route::get('/tentang', [SiteController::class, 'about'])->name('about');
+Route::get('/layanan', [SiteController::class, 'services'])->name('services');
+Route::get('/layanan/{service}', [SiteController::class, 'service'])->name('services.show');
+Route::get('/proses', [SiteController::class, 'process'])->name('process');
+Route::get('/ruang', [SiteController::class, 'space'])->name('space');
+Route::get('/catatan', [ThoughtController::class, 'index'])->name('thoughts.index');
+Route::get('/catatan/{thought}', [ThoughtController::class, 'show'])->name('thoughts.show');
+Route::get('/kontak', [ContactController::class, 'show'])->name('contact');
+Route::get('/privasi', [LegalController::class, 'privacy'])->name('privacy');
+Route::get('/ketentuan', [LegalController::class, 'terms'])->name('terms');
+Route::post('/kontak', [ContactController::class, 'store'])->middleware('throttle:5,1,contact')->name('contact.store');
 
+// The earlier English addresses keep working: permanent redirects (query strings kept), so links that were already
+// shared, bookmarked or indexed are not lost. A form still open on an old page can also still be sent.
+foreach ([
+    '/works' => 'works.index', '/about' => 'about', '/services' => 'services', '/process' => 'process',
+    '/space' => 'space', '/thoughts' => 'thoughts.index', '/contact' => 'contact', '/privacy' => 'privacy', '/terms' => 'terms',
+] as $old => $name) {
+    Route::get($old, fn (\Illuminate\Http\Request $request) => redirect()->route($name, $request->query(), 301));
+}
+Route::get('/works/{work}', fn (string $work) => redirect()->route('works.show', $work, 301));
+Route::get('/services/{service}', fn (string $service) => redirect()->route('services.show', $service, 301));
+Route::get('/thoughts/{thought}', fn (string $thought) => redirect()->route('thoughts.show', $thought, 301));
+Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,1,contact');
 Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');
 // Fallback for hosts where public/storage cannot be linked: serves uploaded pictures straight from the public disk.
 // (When the symlink exists the web server answers first and this is never reached.)
