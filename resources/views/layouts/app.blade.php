@@ -13,7 +13,7 @@
     $logo = Setting::image('logo') ?: asset('images/logo.png');
     $whatsappUrl = WhatsApp::chatUrl();
     $navItems = [
-        ['works.index', 'works*', 'site.nav.works', 'works'],
+        ['works.index', 'proyek*', 'site.nav.works', 'works'],
         ['services', 'services', 'site.nav.services', 'services'],
         ['process', 'process', 'site.nav.process', 'process'],
         ['space', 'space', 'site.nav.space', 'space'],

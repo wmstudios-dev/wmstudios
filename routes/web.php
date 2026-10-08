@@ -14,8 +14,11 @@ use Illuminate\Support\Facades\Storage;
 
 // Public site
 Route::get('/', [SiteController::class, 'home'])->name('home');
-Route::get('/works', [WorkController::class, 'index'])->name('works.index');
-Route::get('/works/{work}', [WorkController::class, 'show'])->name('works.show');
+Route::get('/proyek', [WorkController::class, 'index'])->name('works.index');
+Route::get('/proyek/{work}', [WorkController::class, 'show'])->name('works.show');
+// The old English addresses keep working: permanent redirects, so shared links and search results are not lost.
+Route::get('/works', fn (\Illuminate\Http\Request $request) => redirect()->route('works.index', $request->query(), 301));
+Route::get('/works/{work}', fn (string $work) => redirect()->route('works.show', $work, 301));
 Route::get('/about', [SiteController::class, 'about'])->name('about');
 Route::get('/services', [SiteController::class, 'services'])->name('services');
 Route::get('/process', [SiteController::class, 'process'])->name('process');
