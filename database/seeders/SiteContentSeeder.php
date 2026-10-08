@@ -52,6 +52,7 @@ class SiteContentSeeder extends Seeder
         $this->once('overlander_web_info_v1', fn () => $this->overlanderWebInfo());
         $this->once('overlander_web_hq_v1', fn () => $this->overlanderWebHighRes());
         $this->once('featured_mix_v1', fn () => $this->featuredMix());
+        $this->once('richer_texts_v1', fn () => $this->richerTexts());
         $this->once('home_images_v1', fn () => $this->homeImages());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
@@ -1118,6 +1119,52 @@ class SiteContentSeeder extends Seeder
         foreach (['hero_photo_1' => 'omah-latareombo', 'hero_photo_2' => 'maza-coffee-and-resto', 'hero_photo_3' => 'semarang-ban'] as $key => $workSlug) {
             if (! Setting::get($key) && ($path = $cover($workSlug))) {
                 Setting::put($key, $path);
+            }
+        }
+    }
+
+    /**
+     * Fuller texts for projects, services and process steps (runs once). database/data/descriptions.php holds the new
+     * texts and descriptions_old.json the ones seeded earlier: a field is only replaced while it still equals the old
+     * text, so anything edited in the admin is left alone.
+     */
+    private function richerTexts(): void
+    {
+        $new = require database_path('data/descriptions.php');
+        $oldFile = database_path('data/descriptions_old.json');
+        $old = is_file($oldFile) ? (json_decode(file_get_contents($oldFile), true) ?: []) : [];
+        $same = fn ($a, $b) => trim(str_replace("\r\n", "\n", (string) $a)) === trim(str_replace("\r\n", "\n", (string) $b));
+
+        foreach ($new['projects'] as $slug => $text) {
+            if ($work = Work::where('slug', $slug)->first()) {
+                foreach (['id', 'en'] as $lang) {
+                    if (isset($old['projects'][$slug][$lang]) && $same($work->{"description_{$lang}"}, $old['projects'][$slug][$lang])) {
+                        $work->{"description_{$lang}"} = $text[$lang];
+                    }
+                }
+                $work->save();
+            }
+        }
+
+        foreach ($new['services'] as $slug => $fields) {
+            if ($service = Service::where('slug', $slug)->first()) {
+                foreach ($fields as $field => $value) {
+                    if (isset($old['services'][$slug][$field]) && $same($service->{$field}, $old['services'][$slug][$field])) {
+                        $service->{$field} = $value;
+                    }
+                }
+                $service->save();
+            }
+        }
+
+        foreach ($new['steps'] as $order => $text) {
+            if ($step = ProcessStep::where('sort_order', $order)->first()) {
+                foreach (['id', 'en'] as $lang) {
+                    if (isset($old['steps'][$order][$lang]) && $same($step->{"description_{$lang}"}, $old['steps'][$order][$lang])) {
+                        $step->{"description_{$lang}"} = $text[$lang];
+                    }
+                }
+                $step->save();
             }
         }
     }
