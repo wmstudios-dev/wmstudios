@@ -96,6 +96,32 @@ class Work extends Model
         return VideoEmbed::parse($this->video_url);
     }
 
+    /**
+     * The extra videos of the project: one per line as "link | title | vertical" (title and "vertical" are optional).
+     * Links the player cannot embed are skipped.
+     *
+     * @return array<int, array{embed: string, type: string, thumb: ?string, vertical: bool, title: string}>
+     */
+    public function moreVideos(): array
+    {
+        $videos = [];
+
+        foreach (preg_split('/\R/', (string) $this->extra_videos) as $line) {
+            $parts = array_map('trim', explode('|', $line));
+            $video = VideoEmbed::parse($parts[0] ?? '');
+
+            if (! $video || $video['type'] === 'link') {
+                continue;
+            }
+
+            $video['vertical'] = $video['vertical'] || (isset($parts[2]) && stripos($parts[2], 'vert') === 0);
+            $video['title'] = ($parts[1] ?? '') !== '' ? $parts[1] : __('site.works.video_n', ['n' => count($videos) + 2]);
+            $videos[] = $video;
+        }
+
+        return $videos;
+    }
+
     /** Main category first, then the extra ones (only known categories, no duplicates). */
     public function allCategories(): array
     {

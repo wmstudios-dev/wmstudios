@@ -101,6 +101,8 @@ return [
             'documentation' => 'Foto dari acara',
             'other' => '',
         ],
+        'more_videos' => 'Video lainnya',
+        'video_n' => 'Video :n',
         'features' => 'Fitur utama',
         'tech' => 'Dibangun dengan',
         'swipe' => 'Geser',

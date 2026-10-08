@@ -127,6 +127,37 @@
         </div>
     </div>
 
+    {{-- More videos --}}
+    @php $moreVideos = $work->moreVideos(); @endphp
+    @if($moreVideos)
+        <section class="mt-16">
+            <h2 class="display text-4xl text-ink sm:text-5xl">{{ __('site.works.more_videos') }}</h2>
+            <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach($moreVideos as $extra)
+                    <button type="button" data-video="{{ $extra['embed'] }}" data-type="{{ $extra['type'] }}" data-vertical="{{ $extra['vertical'] ? 1 : 0 }}"
+                            class="reveal group text-left" style="--d: {{ ($loop->index % 3) * 70 }}ms" aria-label="{{ __('site.works.watch_video') }}: {{ $extra['title'] }}">
+                        <span class="relative block aspect-video overflow-hidden rounded-3xl bg-ink">
+                            @if($extra['thumb'])
+                                <img src="{{ $extra['thumb'] }}" alt="" loading="lazy" class="h-full w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100">
+                            @else
+                                <span class="absolute inset-0 bg-gradient-to-br from-brand-500 via-brand-600 to-ink"></span>
+                            @endif
+                            <span class="absolute inset-0 flex items-center justify-center">
+                                <span class="flex h-14 w-14 items-center justify-center rounded-full bg-white text-brand-600 shadow-xl transition-transform duration-300 group-hover:scale-110">
+                                    <x-icon name="play" class="ml-0.5 h-6 w-6" />
+                                </span>
+                            </span>
+                            @if($extra['vertical'])
+                                <span class="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-ink">9:16</span>
+                            @endif
+                        </span>
+                        <span class="mt-3 block text-sm font-semibold text-ink">{{ $extra['title'] }}</span>
+                    </button>
+                @endforeach
+            </div>
+        </section>
+    @endif
+
     {{-- Before / after --}}
     @if(! $simple && $work->hasBeforeAfter())
         <section class="mt-16">
