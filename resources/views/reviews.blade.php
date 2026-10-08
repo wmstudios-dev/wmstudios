@@ -26,7 +26,11 @@
             @foreach($reviews as $item)
                 <article class="reveal flex flex-col rounded-[2rem] bg-soft p-6" style="--d: {{ ($loop->index % 3) * 70 }}ms">
                     <span class="text-lg tracking-[0.2em] text-amber-400" role="img" aria-label="{{ __('site.reviews.stars', ['n' => $item->rating]) }}">{{ str_repeat('★', $item->rating) }}<span class="text-ink/15">{{ str_repeat('★', 5 - $item->rating) }}</span></span>
-                    <blockquote class="mt-4 flex-1 leading-relaxed text-ink">&ldquo;{{ $item->t('quote') }}&rdquo;</blockquote>
+                    @if($item->chatImageUrl())
+                        <div class="mt-4 flex-1">@include('partials.review-box', ['item' => $item])</div>
+                    @else
+                        <blockquote class="mt-4 flex-1 leading-relaxed text-ink">&ldquo;{{ $item->t('quote') }}&rdquo;</blockquote>
+                    @endif
                     <div class="mt-5 flex items-center gap-3">
                         @if($item->photoUrl())
                             <img src="{{ $item->photoUrl() }}" alt="" class="h-10 w-10 rounded-full object-cover">

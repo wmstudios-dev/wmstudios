@@ -268,6 +268,7 @@ class AdminResources
                     ['name' => 'quote', 'label' => 'Quote', 'type' => 'textarea', 'rows' => 4, 'bilingual' => true, 'required' => true],
                     ['name' => 'rating', 'label' => 'Stars (1 to 5)', 'type' => 'number', 'default' => 5, 'hint' => 'The rating the client gave or meant.'],
                     ['name' => 'channel', 'label' => 'Where the review came from', 'type' => 'select', 'options' => ['WhatsApp' => 'WhatsApp', 'Instagram' => 'Instagram DM', 'Email' => 'Email', 'Telegram' => 'Telegram'], 'hint' => 'Shown as a small note under the review, e.g. "Received on WhatsApp". Leave empty to hide it.'],
+                    ['name' => 'chat_image', 'label' => 'Review screenshot', 'type' => 'image', 'folder' => 'testimonials', 'hint' => 'A screenshot of the real chat (ask the client first and hide phone numbers). It is shown as a box on the home page. With no screenshot, a chat box is drawn from the quote below.'],
                     ['name' => 'photo', 'label' => 'Photo', 'type' => 'image', 'folder' => 'testimonials'],
                     ['name' => 'logo', 'label' => 'Client logo (optional)', 'type' => 'image', 'folder' => 'testimonials', 'hint' => 'Shown next to the name on the home page. A logo with a transparent or white background looks best.'],
                     ['name' => 'is_active', 'label' => 'Visible on the site', 'type' => 'checkbox', 'default' => true],

@@ -270,6 +270,7 @@ return [
 
     'reviews' => [
         'title' => 'Customer Reviews',
+        'around_title' => 'What they say',
         'via' => 'Received on :channel',
         'subtitle' => 'Messages from clients who have worked with us, shown as they were sent.',
         'all' => 'See all reviews',
