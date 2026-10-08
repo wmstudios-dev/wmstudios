@@ -49,7 +49,7 @@ class StorageSetup
 
         $base = database_path('data/portfolio');
 
-        if (preg_match('#^uploads/works/([a-z0-9-]+)/((?:\d\d|cover[a-z0-9-]*?)(?:_thumb)?\.webp)$#', $path, $m)) {
+        if (preg_match('#^uploads/works/([a-z0-9-]+)/((?:\d\d(?:-[a-z0-9]+?)?|cover[a-z0-9-]*?)(?:_thumb)?\.webp)$#', $path, $m)) {
             $file = "{$base}/{$m[1]}/{$m[2]}";
         } elseif (preg_match('#^uploads/clients/([a-z0-9-]+\.png)$#', $path, $m)) {
             $file = "{$base}/logos/{$m[1]}";
