@@ -8,7 +8,7 @@
     $pageTitle = trim($__env->yieldContent('title'));
     $fullTitle = $pageTitle ? $pageTitle . ' — ' . $siteName : $siteName . ' — ' . $tagline;
     $metaDescription = trim($__env->yieldContent('meta_description')) ?: $tagline;
-    $metaImage = trim($__env->yieldContent('og_image')) ?: Setting::image('hero_photo_1') ?: Setting::image('logo');
+    $metaImage = trim($__env->yieldContent('og_image')) ?: asset('images/og-default.png');
     // The studio's own wordmark ships with the site; a logo uploaded in the admin replaces it.
     $logo = Setting::image('logo') ?: asset('images/logo.png');
     $whatsappUrl = WhatsApp::chatUrl();
@@ -37,6 +37,10 @@
         <meta name="twitter:card" content="summary_large_image">
     @endif
     <meta name="theme-color" content="#2e59bf">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('icon-192.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
