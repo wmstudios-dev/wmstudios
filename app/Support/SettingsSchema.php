@@ -23,6 +23,9 @@ class SettingsSchema
                 ['key' => 'hero_photo_1', 'label' => 'Hero photo 1', 'type' => 'image'],
                 ['key' => 'hero_photo_2', 'label' => 'Hero photo 2', 'type' => 'image'],
                 ['key' => 'hero_photo_3', 'label' => 'Hero photo 3', 'type' => 'image'],
+                ['key' => 'motto_label', 'label' => 'Motto label', 'type' => 'text', 'bilingual' => true, 'hint' => 'The small pill above the motto on the home page. Leave empty for the default.'],
+                ['key' => 'motto', 'label' => 'Motto', 'type' => 'textarea', 'bilingual' => true, 'hint' => 'The big sentence under the reviews on the home page. Leave empty for the default.'],
+                ['key' => 'motto_by', 'label' => 'Motto signed by', 'type' => 'text', 'bilingual' => true, 'hint' => 'Shown under the motto, e.g. a founder name. Leave empty for the default.'],
             ],
             'Proof (numbers & rating)' => [
                 ['key' => 'stat_1_value', 'label' => 'Number 1', 'type' => 'text', 'hint' => 'Real figures only, e.g. 120+. The numbers section on the home page shows only the ones you fill in; leave all empty to hide it.'],

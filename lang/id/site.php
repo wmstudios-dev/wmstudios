@@ -40,6 +40,8 @@ return [
 
     'home' => [
         'why_title' => 'Kenapa :name?',
+        'motto_label' => 'Yang kami pegang',
+        'motto_by' => 'Tim WMSTUDIOS',
         'culture' => 'Karya bagus lahir dari ruang yang baik: obrolan jujur, orang-orang yang penasaran, dan kopi yang tidak pernah habis.',
         'faq_more' => 'Pertanyaan lainnya',
         'statement' => 'Kami bukan sekadar membuat konten. Kami merancang *cerita*, *visual*, dan *pengalaman digital* yang terasa jujur, konsisten, dan *menghasilkan*.',
@@ -268,8 +270,7 @@ return [
 
     'reviews' => [
         'title' => 'Ulasan Pelanggan',
-        'tab_chat' => 'Ulasan lewat chat',
-        'tab_text' => 'Ulasan teks',
+        'via' => 'Diterima lewat :channel',
         'subtitle' => 'Pesan dari klien yang sudah bekerja sama dengan kami, ditampilkan apa adanya seperti saat mereka mengirimnya.',
         'all' => 'Lihat semua ulasan',
         'lead' => 'Ulasan ini kami terima langsung lewat :channel dan kami tampilkan apa adanya, lengkap dengan percakapannya.',

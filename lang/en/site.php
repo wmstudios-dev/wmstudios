@@ -41,6 +41,8 @@ return [
     'home' => [
         'faq_more' => 'More questions',
         'why_title' => 'Why :name?',
+        'motto_label' => 'What we stand for',
+        'motto_by' => 'The WMSTUDIOS team',
         'culture' => 'Good work comes from a good space: honest conversations, curious people and a lot of coffee.',
         'statement' => 'We do not just make content. We shape *stories*, *visuals* and *digital experiences* that feel honest, consistent and *deliver results*.',
         'services_eyebrow' => 'Services',
@@ -268,8 +270,7 @@ return [
 
     'reviews' => [
         'title' => 'Customer Reviews',
-        'tab_chat' => 'Chat reviews',
-        'tab_text' => 'Text reviews',
+        'via' => 'Received on :channel',
         'subtitle' => 'Messages from clients who have worked with us, shown as they were sent.',
         'all' => 'See all reviews',
         'lead' => 'We received this review directly through :channel and show it as it is, conversation included.',

@@ -26,9 +26,7 @@
             @foreach($reviews as $item)
                 <article class="reveal flex flex-col rounded-[2rem] bg-soft p-6" style="--d: {{ ($loop->index % 3) * 70 }}ms">
                     <span class="text-lg tracking-[0.2em] text-amber-400" role="img" aria-label="{{ __('site.reviews.stars', ['n' => $item->rating]) }}">{{ str_repeat('★', $item->rating) }}<span class="text-ink/15">{{ str_repeat('★', 5 - $item->rating) }}</span></span>
-                    <div class="mt-4 flex-1">
-                        @include('partials.chat-review', ['item' => $item, 'compact' => true])
-                    </div>
+                    <blockquote class="mt-4 flex-1 leading-relaxed text-ink">&ldquo;{{ $item->t('quote') }}&rdquo;</blockquote>
                     <div class="mt-5 flex items-center gap-3">
                         @if($item->photoUrl())
                             <img src="{{ $item->photoUrl() }}" alt="" class="h-10 w-10 rounded-full object-cover">
@@ -39,7 +37,11 @@
                             <span class="block text-sm font-bold text-ink">{{ $item->name }}</span>
                             @if($item->role)<span class="block text-xs text-muted">{{ $item->role }}</span>@endif
                         </span>
+                        @if($item->logoUrl())<img src="{{ $item->logoUrl() }}" alt="" class="ml-auto h-8 max-w-[6rem] shrink-0 object-contain opacity-80">@endif
                     </div>
+                    @if($item->channel)
+                        <p class="mt-4 inline-flex items-center gap-1.5 self-start rounded-full bg-white px-3 py-1 text-xs font-semibold text-ink/70"><x-icon name="whatsapp" class="h-3.5 w-3.5 text-[#128c7e]" /> {{ __('site.reviews.via', ['channel' => $item->channel]) }}</p>
+                    @endif
                 </article>
             @endforeach
         </div>

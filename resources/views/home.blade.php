@@ -301,11 +301,10 @@
 </section>
 @endif
 
-{{-- Culture: one big sentence with photos from the Space page scattered around it --}}
-{{-- Reviews, shown as chats --}}
+{{-- Reviews, as text --}}
 @include('partials.review-showcase')
 
-@if($space->isNotEmpty())
+{{-- Motto: one big sentence with photos from the Space page scattered around it --}}
 @php
     $scatter = [
         'left-0 top-2 w-36 rotate-[-6deg]',
@@ -314,33 +313,39 @@
         'right-[10%] bottom-2 w-36 rotate-[-4deg]',
     ];
     $shots = $space->take(4)->values();
+    $mottoLabel = Setting::t('motto_label', __('site.home.motto_label'));
+    $motto = Setting::t('motto', __('site.home.culture'));
+    $mottoBy = Setting::t('motto_by', __('site.home.motto_by'));
 @endphp
 <section class="mx-auto mt-28 max-w-7xl px-5 sm:px-8">
-    <div class="relative py-6 lg:py-24">
-        {{-- Phone: a small row of photos above the text --}}
-        <div class="reveal mb-8 grid grid-cols-4 gap-2 lg:hidden">
+    <div class="relative py-6 lg:py-28">
+        @if($shots->isNotEmpty())
+            {{-- Phone: a small row of photos above the text --}}
+            <div class="reveal mb-8 grid grid-cols-4 gap-2 lg:hidden">
+                @foreach($shots as $item)
+                    <a href="{{ route('space') }}" class="aspect-square overflow-hidden rounded-2xl bg-soft {{ $loop->odd ? 'rotate-[-3deg]' : 'rotate-[3deg]' }}">
+                        <img src="{{ $item->photoUrl(true) }}" alt="{{ $item->t('caption') }}" loading="lazy" class="h-full w-full object-cover">
+                    </a>
+                @endforeach
+            </div>
+
+            {{-- Desktop: scattered around the text --}}
             @foreach($shots as $item)
-                <a href="{{ route('space') }}" class="aspect-square overflow-hidden rounded-2xl bg-soft {{ $loop->odd ? 'rotate-[-3deg]' : 'rotate-[3deg]' }}">
+                <a href="{{ route('space') }}" class="reveal group absolute z-10 hidden aspect-[3/4] overflow-hidden rounded-3xl bg-soft shadow-xl shadow-ink/10 transition-all duration-500 hover:z-20 hover:scale-105 hover:rotate-0 lg:block {{ $scatter[$loop->index] }}" style="--d: {{ $loop->index * 80 }}ms">
                     <img src="{{ $item->photoUrl(true) }}" alt="{{ $item->t('caption') }}" loading="lazy" class="h-full w-full object-cover">
                 </a>
             @endforeach
-        </div>
-
-        {{-- Desktop: scattered around the text --}}
-        @foreach($shots as $item)
-            <a href="{{ route('space') }}" class="reveal group absolute z-10 hidden aspect-[3/4] overflow-hidden rounded-3xl bg-soft shadow-xl shadow-ink/10 transition-all duration-500 hover:z-20 hover:scale-105 hover:rotate-0 lg:block {{ $scatter[$loop->index] }}" style="--d: {{ $loop->index * 80 }}ms">
-                <img src="{{ $item->photoUrl(true) }}" alt="{{ $item->t('caption') }}" loading="lazy" class="h-full w-full object-cover">
-            </a>
-        @endforeach
+        @endif
 
         <div class="relative mx-auto max-w-3xl text-center">
-            <p class="eyebrow reveal">{{ __('site.home.space_eyebrow') }}</p>
-            <p class="display reveal mt-4 text-4xl text-ink sm:text-6xl" style="--d: 60ms">{{ __('site.home.culture') }}</p>
-            <a href="{{ route('space') }}" class="btn-dark reveal mt-8" style="--d: 120ms">{{ __('site.home.space_all') }} <x-icon name="arrow" class="h-4 w-4" /></a>
+            <span class="reveal inline-flex rounded-full border border-ink/25 px-4 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-ink">{{ $mottoLabel }}</span>
+            <p class="reveal mt-8 text-balance text-3xl font-light leading-[1.25] tracking-tight text-ink sm:text-[2.75rem]" style="--d: 60ms">{{ $motto }}</p>
+            @if($mottoBy)
+                <p class="reveal mt-6 text-sm text-muted" style="--d: 120ms">&mdash; {{ $mottoBy }}</p>
+            @endif
         </div>
     </div>
 </section>
-@endif
 {{-- Thoughts --}}
 @if($thoughts->isNotEmpty())
 <section class="mx-auto mt-28 max-w-7xl px-5 sm:px-8">
