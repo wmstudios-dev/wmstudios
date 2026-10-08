@@ -21,6 +21,7 @@ Route::get('/works', fn (\Illuminate\Http\Request $request) => redirect()->route
 Route::get('/works/{work}', fn (string $work) => redirect()->route('works.show', $work, 301));
 Route::get('/about', [SiteController::class, 'about'])->name('about');
 Route::get('/services', [SiteController::class, 'services'])->name('services');
+Route::get('/services/{service}', [SiteController::class, 'service'])->name('services.show');
 Route::get('/process', [SiteController::class, 'process'])->name('process');
 Route::get('/space', [SiteController::class, 'space'])->name('space');
 Route::get('/thoughts', [ThoughtController::class, 'index'])->name('thoughts.index');

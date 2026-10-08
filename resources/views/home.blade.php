@@ -154,6 +154,14 @@
         ->map(fn ($n) => ['value' => Setting::get("stat_{$n}_value"), 'label' => Setting::t("stat_{$n}_label")])
         ->filter(fn ($s) => filled($s['value']))
         ->values();
+    // Nothing filled in the admin yet: show real counts taken from the site itself, so the section is never made up.
+    if ($stats->isEmpty()) {
+        $stats = collect([
+            ['value' => $clients->count(), 'label' => __('site.consult.stat_clients')],
+            ['value' => \App\Models\Work::active()->count(), 'label' => __('site.consult.stat_works')],
+            ['value' => $services->count(), 'label' => __('site.consult.stat_services')],
+        ])->filter(fn ($s) => $s['value'] > 0)->values();
+    }
     $statStyles = [
         ['bg-lilac', 'spark'],
         ['bg-butter', 'heart'],
@@ -222,7 +230,7 @@
                     </div>
                     <h3 class="display mt-8 text-4xl text-ink">{{ $service->t('title') }}</h3>
                     <p class="mt-3 max-w-sm text-sm leading-relaxed text-ink/80">{{ $service->t('summary') }}</p>
-                    <a href="{{ route('services') }}#{{ $service->slug }}" class="btn-dark mt-6">{{ __('site.home.service_more') }}</a>
+                    <a href="{{ route('services.show', $service) }}" class="btn-dark mt-6">{{ __('site.home.service_more') }}</a>
                 </article>
             @endforeach
         </div>
@@ -231,7 +239,7 @@
         <ul class="reveal divide-y divide-line border-b border-line lg:col-span-7" style="--d: 80ms">
             @foreach($services as $service)
                 <li>
-                    <a href="{{ route('services') }}#{{ $service->slug }}" data-svc="{{ $loop->index }}"
+                    <a href="{{ route('services.show', $service) }}" data-svc="{{ $loop->index }}"
                        class="svc-item flex items-center justify-between gap-6 py-4 {{ $loop->first ? 'active' : '' }}">
                         <span class="svc-title display min-w-0 text-4xl sm:text-5xl lg:text-[3.3rem] xl:text-[3.6rem]">{{ $service->t('title') }}</span>
                         <span class="svc-icon flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-lilac text-ink">
@@ -376,6 +384,8 @@
     </div>
 </section>
 @endif
+
+@include('partials.consult-band')
 
 @include('partials.faq', ['more' => true])
 

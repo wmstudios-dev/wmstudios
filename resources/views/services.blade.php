@@ -53,7 +53,10 @@
                         </ul>
                     @endif
 
-                    <a href="{{ route('contact', ['service' => $service->slug]) }}" class="btn-dark mt-7">{{ __('site.services.ask') }} <x-icon name="arrow" class="h-4 w-4" /></a>
+                    <div class="mt-7 flex flex-wrap gap-3">
+                        <a href="{{ route('contact', ['service' => $service->slug]) }}" class="btn-dark">{{ __('site.services.ask') }} <x-icon name="arrow" class="h-4 w-4" /></a>
+                        <a href="{{ route('services.show', $service) }}" class="btn-ghost">{{ __('site.service_page.details') }}</a>
+                    </div>
                 </div>
             </div>
         @endforeach

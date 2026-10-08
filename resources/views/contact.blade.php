@@ -112,7 +112,7 @@
 
                 <div>
                     <label for="message" class="mb-2 block text-sm font-semibold">{{ __('site.contact.message') }}</label>
-                    <textarea id="message" name="message" rows="6" required minlength="10" maxlength="3000" placeholder="{{ __('site.contact.message_placeholder') }}" class="field resize-y">{{ old('message') }}</textarea>
+                    <textarea id="message" name="message" rows="6" required minlength="10" maxlength="3000" placeholder="{{ __('site.contact.message_placeholder') }}" class="field resize-y">{{ old('message', $prefill ?? '') }}</textarea>
                     @error('message')<p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>@enderror
                 </div>
 

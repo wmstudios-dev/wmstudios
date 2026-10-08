@@ -43,6 +43,17 @@ class SiteController extends Controller
         ]);
     }
 
+    public function service(Service $service)
+    {
+        abort_unless($service->is_active, 404);
+
+        return view('services.show', [
+            'service' => $service,
+            'others' => Service::active()->ordered()->where('id', '!=', $service->id)->get(),
+            'faqs' => Faq::active()->ordered()->take(6)->get(),
+        ]);
+    }
+
     public function process()
     {
         return view('process', [

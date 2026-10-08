@@ -21,6 +21,7 @@ class ContactController extends Controller
             'services' => Service::active()->ordered()->get(),
             'budgets' => self::BUDGETS,
             'selectedService' => $request->query('service'),
+            'prefill' => $request->query('topic') === 'audit' ? __('site.consult.audit_message') : null,
         ]);
     }
 
