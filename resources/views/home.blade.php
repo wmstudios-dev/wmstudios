@@ -304,48 +304,6 @@
 {{-- Reviews, as text --}}
 @include('partials.review-showcase')
 
-{{-- Motto: one big sentence with photos from the Space page scattered around it --}}
-@php
-    $scatter = [
-        'left-0 top-2 w-36 rotate-[-6deg]',
-        'right-2 top-0 w-40 rotate-[5deg]',
-        'left-[9%] bottom-0 w-32 rotate-[4deg]',
-        'right-[10%] bottom-2 w-36 rotate-[-4deg]',
-    ];
-    $shots = $space->take(4)->values();
-    $mottoLabel = Setting::t('motto_label', __('site.home.motto_label'));
-    $motto = Setting::t('motto', __('site.home.culture'));
-    $mottoBy = Setting::t('motto_by', __('site.home.motto_by'));
-@endphp
-<section class="mx-auto mt-28 max-w-7xl px-5 sm:px-8">
-    <div class="relative py-6 lg:py-28">
-        @if($shots->isNotEmpty())
-            {{-- Phone: a small row of photos above the text --}}
-            <div class="reveal mb-8 grid grid-cols-4 gap-2 lg:hidden">
-                @foreach($shots as $item)
-                    <a href="{{ route('space') }}" class="aspect-square overflow-hidden rounded-2xl bg-soft {{ $loop->odd ? 'rotate-[-3deg]' : 'rotate-[3deg]' }}">
-                        <img src="{{ $item->photoUrl(true) }}" alt="{{ $item->t('caption') }}" loading="lazy" class="h-full w-full object-cover">
-                    </a>
-                @endforeach
-            </div>
-
-            {{-- Desktop: scattered around the text --}}
-            @foreach($shots as $item)
-                <a href="{{ route('space') }}" class="reveal group absolute z-10 hidden aspect-[3/4] overflow-hidden rounded-3xl bg-soft shadow-xl shadow-ink/10 transition-all duration-500 hover:z-20 hover:scale-105 hover:rotate-0 lg:block {{ $scatter[$loop->index] }}" style="--d: {{ $loop->index * 80 }}ms">
-                    <img src="{{ $item->photoUrl(true) }}" alt="{{ $item->t('caption') }}" loading="lazy" class="h-full w-full object-cover">
-                </a>
-            @endforeach
-        @endif
-
-        <div class="relative mx-auto max-w-3xl text-center">
-            <span class="reveal inline-flex rounded-full border border-ink/25 px-4 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-ink">{{ $mottoLabel }}</span>
-            <p class="reveal mt-8 text-balance text-3xl font-light leading-[1.25] tracking-tight text-ink sm:text-[2.75rem]" style="--d: 60ms">{{ $motto }}</p>
-            @if($mottoBy)
-                <p class="reveal mt-6 text-sm text-muted" style="--d: 120ms">&mdash; {{ $mottoBy }}</p>
-            @endif
-        </div>
-    </div>
-</section>
 {{-- Thoughts --}}
 @if($thoughts->isNotEmpty())
 <section class="mx-auto mt-28 max-w-7xl px-5 sm:px-8">
@@ -365,6 +323,42 @@
 </section>
 @endif
 
+{{-- Motto: a blue band with one big sentence, and a row of photos from the Space page --}}
+@php
+    $shots = $space->take(4)->values();
+    $mottoLabel = Setting::t('motto_label', __('site.home.motto_label'));
+    $motto = Setting::t('motto', __('site.home.culture'));
+    $mottoBy = Setting::t('motto_by', __('site.home.motto_by'));
+    $tilt = ['-rotate-3', 'rotate-2', '-rotate-1', 'rotate-3'];
+@endphp
+<section class="mx-auto mt-28 max-w-[88rem] px-3 sm:px-5">
+    <div class="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-tr from-brand-700 via-brand-600 to-brand-500 px-5 py-16 text-white sm:px-10 sm:py-24">
+        <div class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-white/10 blur-3xl"></div>
+        <div class="pointer-events-none absolute -bottom-32 left-1/4 h-80 w-80 rounded-full bg-lime/15 blur-3xl"></div>
+
+        <div class="relative mx-auto max-w-3xl text-center">
+            <span class="reveal inline-flex rounded-full border border-white/40 px-4 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-white">{{ $mottoLabel }}</span>
+            <p class="reveal mt-8 text-balance text-3xl font-light leading-[1.25] tracking-tight text-white sm:text-5xl" style="--d: 60ms">{{ $motto }}</p>
+            @if($mottoBy)
+                <p class="reveal mt-6 text-sm text-white/70" style="--d: 120ms">&mdash; {{ $mottoBy }}</p>
+            @endif
+        </div>
+
+        @if($shots->isNotEmpty())
+            <div class="relative mx-auto mt-14 grid max-w-5xl grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+                @foreach($shots as $item)
+                    <a href="{{ route('space') }}" class="reveal group aspect-[3/4] overflow-hidden rounded-3xl bg-white/10 shadow-xl shadow-ink/30 ring-4 ring-white/20 transition-transform duration-500 hover:rotate-0 hover:scale-105 {{ $tilt[$loop->index % 4] }}" style="--d: {{ $loop->index * 80 }}ms">
+                        <img src="{{ $item->photoUrl(true) }}" alt="{{ $item->t('caption') }}" loading="lazy" class="h-full w-full object-cover">
+                    </a>
+                @endforeach
+            </div>
+        @endif
+
+        <div class="relative mt-12 text-center">
+            <a href="{{ route('space') }}" class="btn-light reveal">{{ __('site.home.space_all') }} <x-icon name="arrow" class="h-4 w-4" /></a>
+        </div>
+    </div>
+</section>
 @include('partials.consult-band')
 
 @include('partials.faq', ['more' => true])
