@@ -150,6 +150,11 @@
             $groups = collect(\App\Models\WorkPhoto::KINDS)
                 ->map(fn ($label, $kind) => $work->photos->where('kind', $kind)->values())
                 ->filter(fn ($photos) => $photos->isNotEmpty());
+            // phone screenshots belong to the website showcase when there are website screenshots too
+            $phones = $work->photos->where('kind', 'mobile')->values();
+            if ($groups->has('web') && $phones->isNotEmpty()) {
+                $groups->forget('mobile');
+            }
         @endphp
         <section class="mt-16">
             @if($groups->count() > 1)
@@ -214,20 +219,73 @@
                             </div>
                         @endforeach
                     @elseif($kind === 'web')
-                        {{-- Screenshots in a simple browser frame --}}
-                        <div class="mt-6 grid gap-5 sm:grid-cols-2">
-                            @foreach($photos as $photo)
-                                <a href="{{ $photo->url() }}" data-lightbox="gallery-web" data-caption="{{ $photo->caption }}"
-                                   class="reveal group block overflow-hidden rounded-2xl border border-line bg-white shadow-sm" style="--d: {{ ($loop->index % 2) * 70 }}ms">
-                                    <span class="flex items-center gap-1.5 border-b border-line bg-soft px-4 py-2.5" aria-hidden="true">
-                                        <span class="h-2.5 w-2.5 rounded-full bg-ink/15"></span>
-                                        <span class="h-2.5 w-2.5 rounded-full bg-ink/15"></span>
-                                        <span class="h-2.5 w-2.5 rounded-full bg-ink/15"></span>
-                                    </span>
-                                    <img src="{{ $photo->url(true) }}" alt="{{ $photo->caption }}" loading="lazy" class="aspect-[16/10] w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]">
-                                </a>
-                            @endforeach
+                        {{-- Website showcase: one big device, tabs for the pages, switch between desktop and phone --}}
+                        @php
+                            $desktopShots = $photos->map(fn ($p) => ['url' => $p->url(), 'caption' => $p->caption])->values();
+                            $phoneShots = $phones->map(fn ($p) => ['url' => $p->url(), 'caption' => $p->caption])->values();
+                        @endphp
+                        <div data-device-show data-desktop="{{ json_encode($desktopShots) }}" data-phone="{{ json_encode($phoneShots) }}" class="mt-6">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                @if($phoneShots->isNotEmpty())
+                                    <div class="inline-flex rounded-full bg-soft p-1 text-sm font-semibold" role="group">
+                                        <button type="button" data-mode="desktop" data-active="true" class="rounded-full px-4 py-1.5 text-ink transition-colors data-[active=true]:bg-ink data-[active=true]:text-white">Desktop</button>
+                                        <button type="button" data-mode="phone" data-active="false" class="rounded-full px-4 py-1.5 text-ink transition-colors data-[active=true]:bg-ink data-[active=true]:text-white">{{ __('site.works.kinds.mobile') }}</button>
+                                    </div>
+                                @endif
+                                @if($desktopShots->count() > 1)
+                                    <div class="flex flex-wrap gap-2">
+                                        @foreach($desktopShots as $i => $shot)
+                                            <button type="button" data-page="{{ $i }}" data-active="{{ $i === 0 ? 'true' : 'false' }}" class="rounded-full border border-line px-4 py-1.5 text-sm font-semibold text-ink transition-colors hover:border-brand-500 data-[active=true]:border-brand-500 data-[active=true]:bg-brand-500 data-[active=true]:text-white">{{ $shot['caption'] ?: ($i + 1) }}</button>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="reveal mt-6 rounded-[2rem] bg-soft px-4 py-8 sm:px-10 sm:py-12">
+                                {{-- laptop --}}
+                                <div data-stage="desktop" class="mx-auto max-w-4xl">
+                                    <a href="{{ $desktopShots[0]['url'] }}" data-device-link data-lightbox="gallery-device" data-caption="{{ $desktopShots[0]['caption'] }}" class="block rounded-t-2xl border-[6px] border-ink bg-ink shadow-xl sm:border-[10px]">
+                                        <img data-device-img src="{{ $desktopShots[0]['url'] }}" alt="{{ $desktopShots[0]['caption'] }}" class="aspect-[16/10] w-full rounded-md bg-white object-cover object-top">
+                                    </a>
+                                    <div class="-mx-[4%] h-2.5 rounded-b-2xl bg-gradient-to-b from-ink/80 to-ink/60 sm:h-3.5"></div>
+                                </div>
+                                {{-- phone --}}
+                                <div data-stage="phone" class="hidden">
+                                    <a href="#" data-device-link data-lightbox="gallery-device" class="mx-auto block w-56 overflow-hidden rounded-[2.25rem] border-[7px] border-ink bg-ink shadow-xl sm:w-64">
+                                        <img data-device-img src="" alt="" class="aspect-[739/1600] w-full rounded-[1.6rem] bg-white object-cover object-top">
+                                    </a>
+                                </div>
+                            </div>
                         </div>
+                        <script>
+                            (function () {
+                                var root = document.currentScript.previousElementSibling;
+                                if (!root || !root.hasAttribute('data-device-show')) return;
+                                var desktop = JSON.parse(root.dataset.desktop), phone = JSON.parse(root.dataset.phone);
+                                var mode = 'desktop', page = 0;
+                                function pick(list, i) {
+                                    var cap = desktop[i] && desktop[i].caption;
+                                    return list.filter(function (s) { return cap && s.caption === cap; })[0] || list[i] || list[0];
+                                }
+                                function render() {
+                                    var shot = pick(mode === 'phone' ? phone : desktop, page);
+                                    root.querySelectorAll('[data-stage]').forEach(function (el) { el.classList.toggle('hidden', el.dataset.stage !== mode); });
+                                    var stage = root.querySelector('[data-stage="' + mode + '"]');
+                                    var img = stage.querySelector('[data-device-img]'), link = stage.querySelector('[data-device-link]');
+                                    img.src = shot.url; img.alt = shot.caption || ''; link.href = shot.url; link.dataset.caption = shot.caption || '';
+                                    root.querySelectorAll('[data-mode]').forEach(function (b) { b.dataset.active = String(b.dataset.mode === mode); });
+                                    root.querySelectorAll('[data-page]').forEach(function (b) { b.dataset.active = String(Number(b.dataset.page) === page); });
+                                }
+                                root.addEventListener('click', function (e) {
+                                    var m = e.target.closest('[data-mode]'), p = e.target.closest('[data-page]');
+                                    if (m) { mode = m.dataset.mode; render(); }
+                                    if (p) { page = Number(p.dataset.page); render(); }
+                                });
+                                phone.forEach(function (s) { new Image().src = s.url; });
+                                desktop.forEach(function (s) { new Image().src = s.url; });
+                                render();
+                            })();
+                        </script>
                     @elseif($kind === 'mobile')
                         {{-- Phone screenshots in a phone-shaped frame --}}
                         <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
