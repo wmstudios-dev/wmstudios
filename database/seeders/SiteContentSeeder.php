@@ -54,6 +54,7 @@ class SiteContentSeeder extends Seeder
         $this->once('featured_mix_v1', fn () => $this->featuredMix());
         $this->once('richer_texts_v1', fn () => $this->richerTexts());
         $this->once('relaxed_texts_v2', fn () => $this->relaxedTexts());
+        $this->once('sample_space_thoughts_v1', fn () => $this->sampleSpaceAndThoughts());
         $this->once('home_images_v1', fn () => $this->homeImages());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
@@ -1182,6 +1183,38 @@ class SiteContentSeeder extends Seeder
                 }
                 $step->save();
             }
+        }
+    }
+
+    /**
+     * Placeholder items for the Space and Thoughts pages (runs once, and only while both are still empty), so it is
+     * clear what each page needs. Each is marked "Contoh" / "Sample" and reuses project covers instead of new files;
+     * replace or delete them in the admin.
+     */
+    private function sampleSpaceAndThoughts(): void
+    {
+        if (\App\Models\SpaceItem::exists() || \App\Models\Thought::exists()) {
+            return;
+        }
+
+        $data = require database_path('data/samples_space_thoughts.php');
+        $cover = fn (string $slug) => Work::where('slug', $slug)->value('cover_photo');
+
+        foreach ($data['space'] as [$tag, $coverSlug, $order, $captionId, $captionEn]) {
+            if ($photo = $cover($coverSlug)) {
+                \App\Models\SpaceItem::create(['photo' => $photo, 'tag' => $tag, 'caption_id' => $captionId, 'caption_en' => $captionEn, 'is_active' => true, 'sort_order' => $order]);
+            }
+        }
+
+        foreach ($data['thoughts'] as $t) {
+            \App\Models\Thought::create([
+                'slug' => $t['slug'],
+                'title_id' => $t['title_id'], 'title_en' => $t['title_en'],
+                'excerpt_id' => $t['excerpt_id'], 'excerpt_en' => $t['excerpt_en'],
+                'body_id' => $t['body_id'], 'body_en' => $t['body_en'],
+                'cover_photo' => $cover($t['cover']),
+                'published_at' => $t['date'], 'is_published' => true,
+            ]);
         }
     }
 
