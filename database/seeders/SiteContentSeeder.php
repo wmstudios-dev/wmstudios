@@ -50,6 +50,7 @@ class SiteContentSeeder extends Seeder
         $this->once('overlander_split_v1', fn () => $this->splitOverlander());
         $this->once('overlander_web_screens_v1', fn () => $this->overlanderWebScreens());
         $this->once('overlander_web_info_v1', fn () => $this->overlanderWebInfo());
+        $this->once('overlander_web_hq_v1', fn () => $this->overlanderWebHighRes());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -1024,6 +1025,47 @@ class SiteContentSeeder extends Seeder
         $work->features_en = $work->features_en ?: "Bilingual site (Indonesian and English)\nDestinations and trip packages with itineraries\nVisitor reviews and ratings\nBooking enquiries sent to WhatsApp\nSign in with Google or email, with email verification\nAdmin panel to manage all content";
         $work->features_id = $work->features_id ?: "Situs dua bahasa (Indonesia dan Inggris)\nDestinasi dan paket perjalanan lengkap dengan itinerary\nUlasan dan rating pengunjung\nPemesanan lewat WhatsApp\nMasuk dengan Google atau email, dengan verifikasi email\nPanel admin untuk mengelola semua konten";
         $work->save();
+    }
+
+    /**
+     * Sharper desktop screenshots for the Overlander website project (runs once). Each of the five desktop pictures is
+     * swapped for its high-resolution version in place, so caption, order and anything edited in the admin stay; a
+     * picture the admin deleted is not brought back. The cover is only swapped while it is still the earlier one.
+     */
+    private function overlanderWebHighRes(): void
+    {
+        $work = Work::where('slug', 'the-overlander-web')->first();
+
+        if (! $work) {
+            return;
+        }
+
+        $slug = 'the-overlander-web';
+        $base = database_path("data/portfolio/{$slug}");
+        $disk = Storage::disk('public');
+        $put = function (string $name) use ($base, $disk, $slug) {
+            $disk->put("uploads/works/{$slug}/{$name}.webp", file_get_contents("{$base}/{$name}.webp"));
+            $disk->put("uploads/works/{$slug}/{$name}_thumb.webp", file_get_contents("{$base}/{$name}_thumb.webp"));
+
+            return "uploads/works/{$slug}/{$name}.webp";
+        };
+
+        if (is_file("{$base}/cover-3.webp") && str_ends_with((string) $work->cover_photo, '/cover-2.webp')) {
+            $work->cover_photo = $put('cover-3');
+            $work->save();
+        }
+
+        foreach (['01', '02', '03', '04', '05'] as $n) {
+            if (! is_file("{$base}/{$n}-hq.webp")) {
+                continue;
+            }
+
+            $photo = $work->photos()->where('path', "uploads/works/{$slug}/{$n}.webp")->first();
+
+            if ($photo) {
+                $photo->update(['path' => $put("{$n}-hq")]);
+            }
+        }
     }
 
     /**
