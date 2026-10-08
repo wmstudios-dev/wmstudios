@@ -271,6 +271,8 @@ return [
     'reviews' => [
         'title' => 'Customer Reviews',
         'around_title' => 'What they say',
+        'headline' => 'Messages from clients who have worked with us, shown as they were sent.',
+        'headline_by' => 'WMSTUDIOS clients',
         'via' => 'Received on :channel',
         'subtitle' => 'Messages from clients who have worked with us, shown as they were sent.',
         'all' => 'See all reviews',

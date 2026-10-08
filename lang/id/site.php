@@ -271,6 +271,8 @@ return [
     'reviews' => [
         'title' => 'Ulasan Pelanggan',
         'around_title' => 'Apa kata mereka',
+        'headline' => 'Pesan dari klien yang sudah bekerja sama dengan kami, kami tampilkan apa adanya.',
+        'headline_by' => 'Klien WMSTUDIOS',
         'via' => 'Diterima lewat :channel',
         'subtitle' => 'Pesan dari klien yang sudah bekerja sama dengan kami, ditampilkan apa adanya seperti saat mereka mengirimnya.',
         'all' => 'Lihat semua ulasan',

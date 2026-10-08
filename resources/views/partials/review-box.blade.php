@@ -1,12 +1,13 @@
 {{-- One review as a small box: a screenshot of the real chat when there is one, otherwise a chat bubble drawn from the text.
      $item (Testimonial). --}}
 @php
+    $compact = $compact ?? false;
     $image = $item->chatImageUrl();
     $channel = $item->channel ?: 'WhatsApp';
 @endphp
 @if($image)
     <a href="{{ $image }}" data-lightbox="reviews" data-caption="{{ $item->name }}" class="block overflow-hidden rounded-2xl border border-line bg-white shadow-lg shadow-ink/10 transition-transform duration-300 hover:scale-[1.03]">
-        <img src="{{ $image }}" alt="{{ __('site.reviews.chat_alt', ['name' => $item->name]) }}" loading="lazy" class="max-h-[22rem] w-full object-cover object-top">
+        <img src="{{ $image }}" alt="{{ __('site.reviews.chat_alt', ['name' => $item->name]) }}" loading="lazy" class="w-full object-cover object-top {{ $compact ? 'max-h-44' : 'max-h-[22rem]' }}">
     </a>
 @else
     <div class="overflow-hidden rounded-2xl border border-line bg-[#efeae2] shadow-lg shadow-ink/10 transition-transform duration-300 hover:scale-[1.03]">
@@ -19,7 +20,7 @@
         </div>
         <div class="px-3.5 py-4">
             <p class="rounded-xl rounded-tl-sm bg-white px-3 py-2.5 text-[0.82rem] leading-relaxed text-ink shadow-sm">
-                {{ $item->t('quote') }}
+                <span @class(['block', 'line-clamp-4' => $compact])>{{ $item->t('quote') }}</span>
                 <span class="mt-1.5 flex items-center justify-between text-[0.65rem] text-muted">
                     <span class="tracking-[0.15em] text-amber-400" role="img" aria-label="{{ __('site.reviews.stars', ['n' => $item->rating]) }}">{{ str_repeat('★', $item->rating) }}</span>
                     <span>&#10003;&#10003;</span>
