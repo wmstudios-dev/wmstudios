@@ -55,6 +55,8 @@ class SiteContentSeeder extends Seeder
         $this->once('richer_texts_v1', fn () => $this->richerTexts());
         $this->once('relaxed_texts_v2', fn () => $this->relaxedTexts());
         $this->once('sample_space_thoughts_v1', fn () => $this->sampleSpaceAndThoughts());
+        $this->once('friendly_texts_v3', fn () => $this->friendlyTexts());
+        $this->once('sample_texts_v2', fn () => $this->friendlySamples());
         $this->once('home_images_v1', fn () => $this->homeImages());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
@@ -1155,7 +1157,7 @@ class SiteContentSeeder extends Seeder
         foreach ($new['projects'] as $slug => $text) {
             if ($work = Work::where('slug', $slug)->first()) {
                 foreach (['id', 'en'] as $lang) {
-                    if (isset($old['projects'][$slug][$lang]) && $same($work->{"description_{$lang}"}, $old['projects'][$slug][$lang])) {
+                    if (isset($text[$lang], $old['projects'][$slug][$lang]) && $same($work->{"description_{$lang}"}, $old['projects'][$slug][$lang])) {
                         $work->{"description_{$lang}"} = $text[$lang];
                     }
                 }
@@ -1177,7 +1179,7 @@ class SiteContentSeeder extends Seeder
         foreach ($new['steps'] as $order => $text) {
             if ($step = ProcessStep::where('sort_order', $order)->first()) {
                 foreach (['id', 'en'] as $lang) {
-                    if (isset($old['steps'][$order][$lang]) && $same($step->{"description_{$lang}"}, $old['steps'][$order][$lang])) {
+                    if (isset($text[$lang], $old['steps'][$order][$lang]) && $same($step->{"description_{$lang}"}, $old['steps'][$order][$lang])) {
                         $step->{"description_{$lang}"} = $text[$lang];
                     }
                 }
@@ -1215,6 +1217,37 @@ class SiteContentSeeder extends Seeder
                 'cover_photo' => $cover($t['cover']),
                 'published_at' => $t['date'], 'is_published' => true,
             ]);
+        }
+    }
+
+    /**
+     * Indonesian texts in a friendly but proper voice (runs once), replacing the very casual wording. Only fields that
+     * still equal the previous version (data/descriptions_v2.php) are replaced.
+     */
+    private function friendlyTexts(): void
+    {
+        $this->applyTexts(require database_path('data/descriptions_v3.php'), require database_path('data/descriptions_v2.php'));
+    }
+
+    /** Same wording update for the sample Space and Thoughts items; only items still marked "Contoh" are touched. */
+    private function friendlySamples(): void
+    {
+        $data = require database_path('data/samples_space_thoughts.php');
+
+        foreach ($data['thoughts'] as $t) {
+            $thought = \App\Models\Thought::where('slug', $t['slug'])->first();
+
+            if ($thought && str_starts_with((string) $thought->title_id, '[Contoh]')) {
+                $thought->update(['title_id' => $t['title_id'], 'excerpt_id' => $t['excerpt_id'], 'body_id' => $t['body_id']]);
+            }
+        }
+
+        foreach ($data['space'] as [$tag, $coverSlug, $order, $captionId]) {
+            $item = \App\Models\SpaceItem::where('sort_order', $order)->where('tag', $tag)->first();
+
+            if ($item && str_starts_with((string) $item->caption_id, 'Contoh foto')) {
+                $item->update(['caption_id' => $captionId]);
+            }
         }
     }
 
