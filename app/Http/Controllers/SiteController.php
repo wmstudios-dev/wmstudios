@@ -54,6 +54,18 @@ class SiteController extends Controller
         ]);
     }
 
+    public function reviews()
+    {
+        $reviews = Testimonial::active()->ordered()->get();
+
+        return view('reviews', [
+            'reviews' => $reviews,
+            'average' => $reviews->avg('rating') ?: 0,
+            // The average is only shown for real reviews, never while sample reviews ("Contoh") are still in the list.
+            'showSummary' => $reviews->isNotEmpty() && ! $reviews->contains(fn ($r) => str_starts_with($r->name, 'Contoh')),
+        ]);
+    }
+
     public function process()
     {
         return view('process', [

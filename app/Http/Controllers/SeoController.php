@@ -9,7 +9,7 @@ class SeoController extends Controller
 {
     public function sitemap()
     {
-        $urls = collect(['home', 'about', 'works.index', 'services', 'process', 'space', 'thoughts.index', 'contact', 'privacy', 'terms'])
+        $urls = collect(['home', 'about', 'works.index', 'services', 'process', 'reviews', 'space', 'thoughts.index', 'contact', 'privacy', 'terms'])
             ->map(fn ($name) => route($name))
             ->merge(\App\Models\Service::active()->get()->map(fn ($s) => route('services.show', $s)))
             ->merge(Work::active()->get()->map(fn ($w) => route('works.show', $w)))

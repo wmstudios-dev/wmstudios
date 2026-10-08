@@ -56,7 +56,7 @@
     <div id="mega-overlay" class="pointer-events-none fixed inset-0 z-40 bg-ink/45 opacity-0 backdrop-blur-[2px] transition-opacity duration-200" aria-hidden="true"></div>
 
     {{-- Header --}}
-    <header id="site-header" data-over-hero="{{ request()->routeIs('home', 'about', 'works.index', 'services', 'process', 'space', 'thoughts.index', 'contact', 'privacy', 'terms') ? 'true' : 'false' }}"
+    <header id="site-header" data-over-hero="{{ request()->routeIs('home', 'about', 'works.index', 'services', 'process', 'space', 'reviews', 'thoughts.index', 'contact', 'privacy', 'terms') ? 'true' : 'false' }}"
             class="group/header sticky top-0 z-50 border-b border-line bg-white/85 backdrop-blur-md transition-all duration-300 data-[over-hero=true]:border-white/15 data-[over-hero=true]:bg-transparent data-[over-hero=true]:backdrop-blur-none">
         <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-5 sm:px-8">
             <a href="{{ route('home') }}" class="group flex shrink-0 items-center" aria-label="{{ $siteName }}">
@@ -205,6 +205,7 @@
             <div class="mt-14 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/45 sm:flex-row sm:items-center">
                 <p>&copy; {{ date('Y') }} {{ $siteName }}. {{ __('site.footer.rights') }}
                     <span class="ml-2 inline-flex gap-3">
+                        <a href="{{ route('reviews') }}" class="underline-offset-4 transition-colors hover:text-white hover:underline">{{ __('site.reviews.title') }}</a>
                         <a href="{{ route('privacy') }}" class="underline-offset-4 transition-colors hover:text-white hover:underline">{{ __('site.footer.privacy') }}</a>
                         <a href="{{ route('terms') }}" class="underline-offset-4 transition-colors hover:text-white hover:underline">{{ __('site.footer.terms') }}</a>
                     </span>

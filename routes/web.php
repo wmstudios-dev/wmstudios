@@ -20,6 +20,7 @@ Route::get('/tentang', [SiteController::class, 'about'])->name('about');
 Route::get('/layanan', [SiteController::class, 'services'])->name('services');
 Route::get('/layanan/{service}', [SiteController::class, 'service'])->name('services.show');
 Route::get('/proses', [SiteController::class, 'process'])->name('process');
+Route::get('/ulasan', [SiteController::class, 'reviews'])->name('reviews');
 Route::get('/ruang', [SiteController::class, 'space'])->name('space');
 Route::get('/catatan', [ThoughtController::class, 'index'])->name('thoughts.index');
 Route::get('/catatan/{thought}', [ThoughtController::class, 'show'])->name('thoughts.show');

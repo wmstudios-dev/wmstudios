@@ -57,6 +57,7 @@ class SiteContentSeeder extends Seeder
         $this->once('sample_space_thoughts_v1', fn () => $this->sampleSpaceAndThoughts());
         $this->once('friendly_texts_v3', fn () => $this->friendlyTexts());
         $this->once('sample_texts_v2', fn () => $this->friendlySamples());
+        $this->once('sample_reviews_v1', fn () => $this->sampleReviews());
         $this->once('home_images_v1', fn () => $this->homeImages());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
@@ -1248,6 +1249,47 @@ class SiteContentSeeder extends Seeder
             if ($item && str_starts_with((string) $item->caption_id, 'Contoh foto')) {
                 $item->update(['caption_id' => $captionId]);
             }
+        }
+    }
+
+    /**
+     * Sample reviews so the chat layout can be seen (runs once, only while there are no reviews). They are marked
+     * "Contoh" and are not real: replace them in Admin > Testimonials with real chats from clients.
+     */
+    private function sampleReviews(): void
+    {
+        if (\App\Models\Testimonial::exists()) {
+            return;
+        }
+
+        $rows = [
+            ['Contoh · Pemilik Kafe', 'Contoh klien', 'WhatsApp', 5,
+                'Contoh ulasan: Kak, hasil desain feed-nya rapi banget, semua jadi seragam. Terima kasih ya!',
+                'Sample review: The feed designs look so tidy, everything is consistent now. Thank you!',
+                'Sama-sama! Senang bisa membantu. Kabari kalau ada yang mau ditambah ya.',
+                'You are welcome! Glad we could help. Let us know if you want to add anything.'],
+            ['Contoh · Pemilik Toko', 'Contoh klien', 'WhatsApp', 5,
+                'Contoh ulasan: Prosesnya jelas dan komunikatif, revisi dibalas cepat. Akun toko jadi lebih hidup.',
+                'Sample review: The process was clear and communicative, revisions answered fast. The shop account feels more alive.',
+                'Terima kasih sudah percaya sama kami. Kita lanjutkan terus ya.',
+                'Thank you for trusting us. Let us keep going.'],
+            ['Contoh · Penyelenggara Acara', 'Contoh klien', 'WhatsApp', 5,
+                'Contoh ulasan: Video dokumentasinya enak ditonton dan cepat selesai. Pesertanya senang semua.',
+                'Sample review: The documentation video is a pleasure to watch and was done quickly. All the participants loved it.',
+                null, null],
+            ['Contoh · Pemilik Usaha', 'Contoh klien', 'Instagram', 4,
+                'Contoh ulasan: Websitenya cepat dan gampang saya kelola sendiri. Sangat membantu usaha saya.',
+                'Sample review: The website is fast and easy for me to manage myself. It really helps my business.',
+                'Senang dengarnya! Kalau ada kendala, langsung kabari kami.',
+                'Great to hear! If anything comes up, let us know right away.'],
+        ];
+
+        foreach ($rows as $i => [$name, $role, $channel, $rating, $quoteId, $quoteEn, $replyId, $replyEn]) {
+            \App\Models\Testimonial::create([
+                'name' => $name, 'role' => $role, 'channel' => $channel, 'rating' => $rating,
+                'quote_id' => $quoteId, 'quote_en' => $quoteEn, 'reply_id' => $replyId, 'reply_en' => $replyEn,
+                'is_active' => true, 'sort_order' => $i,
+            ]);
         }
     }
 

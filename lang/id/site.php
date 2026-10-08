@@ -265,4 +265,22 @@ return [
         'stat_works' => 'Proyek di portofolio',
         'stat_services' => 'Layanan kreatif dan digital',
     ],
+
+    'reviews' => [
+        'title' => 'Ulasan Pelanggan',
+        'subtitle' => 'Pesan dari klien yang sudah bekerja sama dengan kami, ditampilkan apa adanya seperti saat mereka mengirimnya.',
+        'all' => 'Lihat semua ulasan',
+        'lead' => 'Ulasan ini kami terima langsung lewat :channel dan kami tampilkan apa adanya, lengkap dengan percakapannya.',
+        'stars' => ':n dari 5 bintang',
+        'count' => 'dari :n ulasan',
+        'note' => 'Rata-rata dihitung dari ulasan yang tampil di halaman ini.',
+        'prev' => 'Ulasan sebelumnya',
+        'next' => 'Ulasan berikutnya',
+        'chat_alt' => 'Tangkapan layar percakapan dengan :name',
+        'empty' => 'Ulasan pelanggan akan tampil di sini.',
+        'cta_title' => 'Punya cerita bersama kami?',
+        'cta_text' => 'Kami senang mendengar pengalamanmu. Kirim ulasanmu lewat WhatsApp, siapa tahu muncul di halaman ini.',
+        'send' => 'Kirim ulasan lewat WhatsApp',
+        'wa_message' => "Halo WMSTUDIOS, saya ingin memberikan ulasan.\n\nNama:\nBrand atau usaha:\nUlasan saya:",
+    ],
 ];

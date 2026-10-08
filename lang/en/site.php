@@ -265,4 +265,22 @@ return [
         'stat_works' => 'Projects in the portfolio',
         'stat_services' => 'Creative and digital services',
     ],
+
+    'reviews' => [
+        'title' => 'Customer Reviews',
+        'subtitle' => 'Messages from clients who have worked with us, shown as they were sent.',
+        'all' => 'See all reviews',
+        'lead' => 'We received this review directly through :channel and show it as it is, conversation included.',
+        'stars' => ':n out of 5 stars',
+        'count' => 'from :n reviews',
+        'note' => 'The average is worked out from the reviews shown on this page.',
+        'prev' => 'Previous review',
+        'next' => 'Next review',
+        'chat_alt' => 'Screenshot of the conversation with :name',
+        'empty' => 'Customer reviews will show up here.',
+        'cta_title' => 'Got a story with us?',
+        'cta_text' => 'We would love to hear about your experience. Send your review on WhatsApp and it might show up on this page.',
+        'send' => 'Send a review on WhatsApp',
+        'wa_message' => "Hello WMSTUDIOS, I would like to leave a review.\n\nName:\nBrand or business:\nMy review:",
+    ],
 ];

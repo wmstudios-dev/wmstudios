@@ -338,33 +338,8 @@
     </div>
 </section>
 @endif
-{{-- Testimonials --}}
-@if($testimonials->isNotEmpty())
-<section class="mx-auto mt-28 max-w-7xl px-5 sm:px-8">
-    <p class="eyebrow reveal">{{ __('site.home.testimonials_eyebrow') }}</p>
-    <h2 class="display reveal mt-2 text-5xl text-ink sm:text-7xl" style="--d: 60ms">{{ __('site.home.testimonials_title') }}</h2>
-
-    <div class="mt-10 grid gap-5 md:grid-cols-3">
-        @foreach($testimonials->take(3) as $item)
-            <figure class="reveal flex flex-col rounded-3xl bg-soft p-8" style="--d: {{ $loop->index * 80 }}ms">
-                <span class="display text-6xl leading-none text-brand-500">&ldquo;</span>
-                <blockquote class="mt-2 flex-1 text-lg leading-relaxed text-ink">{{ $item->t('quote') }}</blockquote>
-                <figcaption class="mt-8 flex items-center gap-3">
-                    @if($item->photoUrl())
-                        <img src="{{ $item->photoUrl() }}" alt="" class="h-11 w-11 rounded-full object-cover">
-                    @else
-                        <span class="flex h-11 w-11 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-600">{{ strtoupper(mb_substr($item->name, 0, 1)) }}</span>
-                    @endif
-                    <span>
-                        <span class="block text-sm font-bold text-ink">{{ $item->name }}</span>
-                        @if($item->role)<span class="block text-xs text-muted">{{ $item->role }}</span>@endif
-                    </span>
-                </figcaption>
-            </figure>
-        @endforeach
-    </div>
-</section>
-@endif
+{{-- Reviews, shown as chats --}}
+@include('partials.review-showcase')
 
 {{-- Thoughts --}}
 @if($thoughts->isNotEmpty())
