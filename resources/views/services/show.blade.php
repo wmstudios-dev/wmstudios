@@ -13,6 +13,30 @@
     @section('og_image', $cover)
 @endif
 
+@push('head')
+    <script type="application/ld+json">{!! json_encode([
+        '@context' => 'https://schema.org',
+        '@graph' => [
+            [
+                '@type' => 'Service',
+                'name' => $service->t('title'),
+                'description' => strip_tags($service->t('summary')),
+                'url' => route('services.show', $service),
+                'areaServed' => 'ID',
+                'provider' => ['@type' => 'ProfessionalService', 'name' => \App\Models\Setting::get('site_name', config('app.name')), 'url' => url('/')],
+            ],
+            [
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => __('site.nav.home'), 'item' => url('/')],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => __('site.nav.services'), 'item' => route('services')],
+                    ['@type' => 'ListItem', 'position' => 3, 'name' => $service->t('title'), 'item' => route('services.show', $service)],
+                ],
+            ],
+        ],
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+@endpush
+
 @section('content')
 @include('partials.page-header', ['eyebrow' => __('site.service_page.eyebrow'), 'title' => $service->t('title'), 'subtitle' => $service->t('summary')])
 

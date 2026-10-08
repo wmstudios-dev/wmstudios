@@ -15,6 +15,31 @@
     @section('og_image', $cover)
 @endif
 
+@push('head')
+    <script type="application/ld+json">{!! json_encode([
+        '@context' => 'https://schema.org',
+        '@graph' => array_values(array_filter([
+            [
+                '@type' => 'CreativeWork',
+                'name' => $work->t('title'),
+                'description' => strip_tags((string) ($work->t('summary') ?: $description)),
+                'url' => route('works.show', $work),
+                'image' => $cover,
+                'dateCreated' => $work->year ? (string) $work->year : null,
+                'creator' => ['@type' => 'ProfessionalService', 'name' => \App\Models\Setting::get('site_name', config('app.name')), 'url' => url('/')],
+            ],
+            [
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => __('site.nav.home'), 'item' => url('/')],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => __('site.nav.works'), 'item' => route('works.index')],
+                    ['@type' => 'ListItem', 'position' => 3, 'name' => $work->t('title'), 'item' => route('works.show', $work)],
+                ],
+            ],
+        ])),
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+@endpush
+
 @section('content')
 <article class="mx-auto max-w-7xl px-5 pt-10 sm:px-8 sm:pt-14">
     <a href="{{ route('works.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-brand-600">
