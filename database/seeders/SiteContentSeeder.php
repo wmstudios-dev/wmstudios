@@ -51,6 +51,8 @@ class SiteContentSeeder extends Seeder
         $this->once('overlander_web_screens_v1', fn () => $this->overlanderWebScreens());
         $this->once('overlander_web_info_v1', fn () => $this->overlanderWebInfo());
         $this->once('overlander_web_hq_v1', fn () => $this->overlanderWebHighRes());
+        $this->once('featured_mix_v1', fn () => $this->featuredMix());
+        $this->once('home_images_v1', fn () => $this->homeImages());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -1064,6 +1066,58 @@ class SiteContentSeeder extends Seeder
 
             if ($photo) {
                 $photo->update(['path' => $put("{$n}-hq")]);
+            }
+        }
+    }
+
+    /**
+     * Home page "Featured" projects: a mix of types instead of social media and design only (runs once). Only applies
+     * while the featured set is still the one seeded first, so a choice made in the admin is never overwritten.
+     */
+    private function featuredMix(): void
+    {
+        $original = ['omah-latareombo', 'cupfine', 'kandang-kopi', 'maza-coffee-and-resto', 'reamor', 'semarang-ban'];
+        $current = Work::where('is_featured', true)->pluck('slug')->all();
+
+        if (array_diff($current, $original) || array_diff($original, $current)) {
+            return;
+        }
+
+        $mix = ['omah-latareombo', 'lucky-adventure', 'cupfine', 'kandang-kopi', 'the-overlander-web', 'karya-satria-tubing-trip'];
+
+        Work::query()->update(['is_featured' => false]);
+        Work::whereIn('slug', $mix)->update(['is_featured' => true]);
+    }
+
+    /**
+     * Fills the empty pictures of the home page with real work from the portfolio (runs once): a picture for each
+     * service card and the three hero bubbles. They point at the projects' own cover files, so nothing is copied; only
+     * empty slots are filled, and each can be replaced in the admin (Services, Site settings).
+     */
+    private function homeImages(): void
+    {
+        $cover = fn (string $slug) => Work::where('slug', $slug)->value('cover_photo');
+
+        $services = [
+            'social-media' => 'lucky-adventure',
+            'documentation' => 'rewarding-sios-balen-magelang',
+            'design' => 'cupfine',
+            'photo-video-production' => 'kandang-kopi',
+            'web-design-development' => 'the-overlander-web',
+        ];
+
+        foreach ($services as $serviceSlug => $workSlug) {
+            $service = Service::where('slug', $serviceSlug)->first();
+
+            if ($service && ! $service->cover_photo && ($path = $cover($workSlug))) {
+                $service->cover_photo = $path;
+                $service->save();
+            }
+        }
+
+        foreach (['hero_photo_1' => 'omah-latareombo', 'hero_photo_2' => 'maza-coffee-and-resto', 'hero_photo_3' => 'semarang-ban'] as $key => $workSlug) {
+            if (! Setting::get($key) && ($path = $cover($workSlug))) {
+                Setting::put($key, $path);
             }
         }
     }
