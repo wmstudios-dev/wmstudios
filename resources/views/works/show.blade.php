@@ -92,6 +92,29 @@
             @if($description)
                 <div class="mt-6 whitespace-pre-line text-lg leading-relaxed text-ink/80">{{ $description }}</div>
             @endif
+            @php
+                $features = array_values(array_filter(array_map('trim', preg_split('/\R/', (string) $work->t('features')))));
+                $tools = array_values(array_filter(array_map('trim', explode(',', (string) $work->tech))));
+            @endphp
+            @if($features)
+                <h2 class="display mt-10 text-3xl text-ink sm:text-4xl">{{ __('site.works.features') }}</h2>
+                <ul class="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+                    @foreach($features as $feature)
+                        <li class="flex items-start gap-3 text-ink/80">
+                            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600"><x-icon name="check" class="h-3.5 w-3.5" /></span>
+                            <span>{{ $feature }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+            @if($tools)
+                <h2 class="display mt-10 text-3xl text-ink sm:text-4xl">{{ __('site.works.tech') }}</h2>
+                <div class="mt-4 flex flex-wrap gap-2">
+                    @foreach($tools as $tool)
+                        <span class="chip bg-soft text-ink">{{ $tool }}</span>
+                    @endforeach
+                </div>
+            @endif
         </div>
 
         <div class="flex flex-wrap items-start gap-3 lg:col-span-4 lg:justify-end">

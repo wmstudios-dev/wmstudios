@@ -49,6 +49,7 @@ class SiteContentSeeder extends Seeder
         $this->once('doc_video_clients_v1', fn () => $this->documentationVideoClients());
         $this->once('overlander_split_v1', fn () => $this->splitOverlander());
         $this->once('overlander_web_screens_v1', fn () => $this->overlanderWebScreens());
+        $this->once('overlander_web_info_v1', fn () => $this->overlanderWebInfo());
         $this->once('portfolio_overlander_web_v1', fn () => $this->portfolioOverlanderWeb());
         $this->once('portfolio_design_clients_v1', fn () => $this->portfolioDesignClients());
         $this->once('sample_kinds_v1', fn () => $this->sampleKinds());
@@ -1007,6 +1008,22 @@ class SiteContentSeeder extends Seeder
             $disk->put("uploads/works/{$slug}/{$n}_thumb.webp", file_get_contents("{$base}/{$n}_thumb.webp"));
             $work->photos()->firstOrCreate(['path' => $path], ['kind' => $kind, 'caption' => $caption, 'sort_order' => $position + 1]);
         }
+    }
+
+    /** Tools and main features of the Overlander website project (runs once; only fills what is still empty). */
+    private function overlanderWebInfo(): void
+    {
+        $work = Work::where('slug', 'the-overlander-web')->first();
+
+        if (! $work) {
+            return;
+        }
+
+        $work->tech = $work->tech ?: 'Laravel, MySQL, Tailwind CSS, Railway, Google Sign-In';
+        $work->year = $work->year ?: 2026;
+        $work->features_en = $work->features_en ?: "Bilingual site (Indonesian and English)\nDestinations and trip packages with itineraries\nVisitor reviews and ratings\nBooking enquiries sent to WhatsApp\nSign in with Google or email, with email verification\nAdmin panel to manage all content";
+        $work->features_id = $work->features_id ?: "Situs dua bahasa (Indonesia dan Inggris)\nDestinasi dan paket perjalanan lengkap dengan itinerary\nUlasan dan rating pengunjung\nPemesanan lewat WhatsApp\nMasuk dengan Google atau email, dengan verifikasi email\nPanel admin untuk mengelola semua konten";
+        $work->save();
     }
 
     /**

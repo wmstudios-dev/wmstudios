@@ -101,6 +101,8 @@ return [
             'documentation' => 'Photos from the event',
             'other' => '',
         ],
+        'features' => 'Main features',
+        'tech' => 'Built with',
         'swipe' => 'Swipe',
         'gallery' => 'Gallery',
         'related' => 'More projects',

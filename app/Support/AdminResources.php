@@ -79,6 +79,8 @@ class AdminResources
                     ['name' => 'video_vertical', 'label' => 'The video is vertical (9:16)', 'type' => 'checkbox', 'hint' => 'Tick for a phone or reel video, so it plays in a tall player.'],
                     ['name' => 'instagram_url', 'label' => 'Instagram account', 'type' => 'url', 'hint' => 'For social media projects: the client\'s Instagram profile, e.g. https://www.instagram.com/name/. Shows a "View on Instagram" button.'],
                     ['name' => 'project_url', 'label' => 'Live project link', 'type' => 'url', 'hint' => 'For websites: link to the live site.'],
+                    ['name' => 'tech', 'label' => 'Tools used (websites)', 'type' => 'text', 'hint' => 'Comma separated, e.g. Laravel, MySQL, Tailwind CSS. Shown as small tags on the project page.'],
+                    ['name' => 'features', 'label' => 'Main features (websites)', 'type' => 'lines', 'bilingual' => true, 'hint' => 'One feature per line. Shown as a checklist on the project page.'],
                     ['name' => 'before_photo', 'label' => 'Before photo', 'type' => 'image', 'folder' => 'works', 'hint' => 'Fill both before and after to show a comparison slider.'],
                     ['name' => 'after_photo', 'label' => 'After photo', 'type' => 'image', 'folder' => 'works'],
                     ['name' => 'photos', 'label' => 'Gallery photos', 'type' => 'gallery', 'kinds' => true, 'cover_field' => 'cover_photo', 'folder' => 'works', 'relation' => 'photos', 'model' => \App\Models\WorkPhoto::class, 'fk' => 'work_id', 'max' => 12],

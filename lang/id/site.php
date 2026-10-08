@@ -101,6 +101,8 @@ return [
             'documentation' => 'Foto dari acara',
             'other' => '',
         ],
+        'features' => 'Fitur utama',
+        'tech' => 'Dibangun dengan',
         'swipe' => 'Geser',
         'gallery' => 'Galeri',
         'related' => 'Proyek lainnya',
