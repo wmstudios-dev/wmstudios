@@ -268,6 +268,8 @@ return [
 
     'reviews' => [
         'title' => 'Ulasan Pelanggan',
+        'tab_chat' => 'Ulasan lewat chat',
+        'tab_text' => 'Ulasan teks',
         'subtitle' => 'Pesan dari klien yang sudah bekerja sama dengan kami, ditampilkan apa adanya seperti saat mereka mengirimnya.',
         'all' => 'Lihat semua ulasan',
         'lead' => 'Ulasan ini kami terima langsung lewat :channel dan kami tampilkan apa adanya, lengkap dengan percakapannya.',

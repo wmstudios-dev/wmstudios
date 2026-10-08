@@ -470,3 +470,9 @@ a:hover > * > .logo-word,
 .gal-tile.is-removing img { filter: grayscale(1); }
 .gal-cover.is-cover { background: var(--color-lime, #cdfba6); border-color: var(--color-lime, #cdfba6); }
 .gal-group:not([data-kind="carousel"]) .gal-caption { display: none; }
+
+/* Reviews on the home page: each bar segment fills up over the time one review stays on screen */
+@keyframes review-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.review-bar-fill { transform-origin: left; transform: scaleX(0); }
+.review-bar-fill[data-state="done"] { transform: scaleX(1); }
+.review-bar-fill[data-state="on"] { animation: review-bar 9s linear forwards; }

@@ -27,6 +27,11 @@ class Testimonial extends Model
         return $query->orderBy('sort_order')->orderBy('id');
     }
 
+    public function logoUrl(): ?string
+    {
+        return \App\Support\ImageUploader::url($this->logo, true);
+    }
+
     public function chatImageUrl(): ?string
     {
         return \App\Support\ImageUploader::url($this->chat_image);

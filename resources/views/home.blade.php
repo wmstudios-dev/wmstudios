@@ -302,6 +302,9 @@
 @endif
 
 {{-- Culture: one big sentence with photos from the Space page scattered around it --}}
+{{-- Reviews, shown as chats --}}
+@include('partials.review-showcase')
+
 @if($space->isNotEmpty())
 @php
     $scatter = [
@@ -338,9 +341,6 @@
     </div>
 </section>
 @endif
-{{-- Reviews, shown as chats --}}
-@include('partials.review-showcase')
-
 {{-- Thoughts --}}
 @if($thoughts->isNotEmpty())
 <section class="mx-auto mt-28 max-w-7xl px-5 sm:px-8">

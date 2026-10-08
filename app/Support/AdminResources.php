@@ -271,6 +271,7 @@ class AdminResources
                     ['name' => 'chat_image', 'label' => 'Chat screenshot', 'type' => 'image', 'folder' => 'testimonials', 'hint' => 'Best: a screenshot of the real chat (ask the client first, and hide phone numbers). With no screenshot, the chat is drawn from the quote below.'],
                     ['name' => 'reply', 'label' => 'Our reply (optional)', 'type' => 'textarea', 'rows' => 2, 'bilingual' => true, 'hint' => 'Shown as a reply bubble when the chat is drawn from text.'],
                     ['name' => 'photo', 'label' => 'Photo', 'type' => 'image', 'folder' => 'testimonials'],
+                    ['name' => 'logo', 'label' => 'Client logo (optional)', 'type' => 'image', 'folder' => 'testimonials', 'hint' => 'Shown next to the name on the home page. A logo with a transparent or white background looks best.'],
                     ['name' => 'is_active', 'label' => 'Visible on the site', 'type' => 'checkbox', 'default' => true],
                     ['name' => 'sort_order', 'label' => 'Order (smaller = first)', 'type' => 'number', 'default' => 0],
                 ],

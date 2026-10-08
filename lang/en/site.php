@@ -268,6 +268,8 @@ return [
 
     'reviews' => [
         'title' => 'Customer Reviews',
+        'tab_chat' => 'Chat reviews',
+        'tab_text' => 'Text reviews',
         'subtitle' => 'Messages from clients who have worked with us, shown as they were sent.',
         'all' => 'See all reviews',
         'lead' => 'We received this review directly through :channel and show it as it is, conversation included.',
